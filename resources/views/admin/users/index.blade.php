@@ -38,9 +38,6 @@
                             {{ trans('cruds.user.fields.roles') }}
                         </th>
                         <th>
-                            Can read book
-                        </th>
-                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -67,19 +64,6 @@
                                 @foreach($user->roles as $key => $item)
                                     <span class="badge badge-info">{{ $item->title }}</span>
                                 @endforeach
-                            </td>
-                            <td>
-                                @if($user->user_detail)
-                                    @if($user->user_detail->can_read_book == 0)
-                                        <span class="badge badge-info">Pending</span>
-                                    @elseif($user->user_detail->can_read_book == 1)
-                                        <span class="badge badge-success">Yes</span>
-                                    @else
-                                        <span class="badge badge-warning">No</span>
-                                    @endif
-                                @else
-                                    <span>-</span>
-                                @endif
                             </td>
                             <td>
                                 @can('user_show')

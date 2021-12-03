@@ -2,8 +2,8 @@
 
 return [
     'userManagement'    => [
-        'title'          => 'User management',
-        'title_singular' => 'User management',
+        'title'          => 'User Management',
+        'title_singular' => 'User Management',
     ],
     'permission'        => [
         'title'          => 'Permissions',
@@ -65,9 +65,9 @@ return [
             'deleted_at_helper'        => '',
         ],
     ],
-    'productManagement' => [
-        'title'          => 'Product Management',
-        'title_singular' => 'Product Management',
+    'cms'    => [
+        'title'          => 'CMS',
+        'title_singular' => 'CMS',
     ],
     'productCategory'   => [
         'title'          => 'Menus',

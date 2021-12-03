@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
 use App\ProductCategory;
-use App\ProductTag;
-use App\Book;
 use App\Slider;
 use App\Popup;
 use Illuminate\Http\Request;
@@ -14,25 +11,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $products = Product::with('categories.parentCategory.parentCategory.parentCategory')
-            ->inRandomOrder()
-            ->take(6)
-            ->get();
-        
-        $recent_products = Product::with('categories.parentCategory.parentCategory.parentCategory')
-            ->latest()
-            ->take(10)
-            ->get();
-
-        $featured_products = Product::where('featured',1)->with('categories.parentCategory.parentCategory.parentCategory')
-        ->inRandomOrder()
-        ->take(8)
-        ->get();
-        // dd($featured_products);
         $sliders = Slider::where('status',0)->latest()->get();
-        // dd($sliders);
         $popups = Popup::where('status',0)->latest()->get();
-        return view('site.index', compact('products','recent_products','featured_products','sliders','popups'));
+        // dd($sliders);
+        return view('site.index', compact('sliders','popups'));
     }
 
     public function category(ProductCategory $category, ProductCategory $childCategory = null, $childCategory2 = null, $childCategory3 = null)

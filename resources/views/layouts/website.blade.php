@@ -40,26 +40,6 @@
         <form action="{{route('search')}}" class="header-section__form">
           <div class="form__group">
             <input type="text" name="query" placeholder="Search for books by keyword / title / author" value="{{ request()->input('query')}}" required/>
-            <!-- <select id="Categories" class="select">
-              <option value="hide">All Categories</option>
-              <option value="all categories">All Categories</option>
-              <option value="uncategorized">uncategorized</option>
-              <option value="schoolLevel">School Level</option>
-              <option value="one">One</option>
-              <option value="two">two</option>
-              <option value="three">three</option>
-              <option value="four">four</option>
-              <option value="five">five</option>
-              <option value="six">six</option>
-              <option value="seven">seven</option>
-              <option value="eight">eight</option>
-              <option value="nine">nine</option>
-              <option value="ten">ten</option>
-              <option value="ten">ten</option>
-              <option value="MBBS">MBBS</option>
-              <option value="BCA">BCA</option>
-              <option value="BBS">BBS</option>
-            </select> -->
               <div class="delete__search">
               <i class="fas fa-times"></i>
               </div>
@@ -74,26 +54,6 @@
         <form action="{{route('search')}}" class="header-section__form myForm">
           <div class="form__group">
             <input type="text" name="query" placeholder="Search for books by keyword / title / author" value="{{ request()->input('query')}}" required/>
-            <!-- <select id="Categories" class="select">
-              <option value="hide">All Categories</option>
-              <option value="all categories">All Categories</option>
-              <option value="uncategorized">uncategorized</option>
-              <option value="schoolLevel">School Level</option>
-              <option value="one">One</option>
-              <option value="two">two</option>
-              <option value="three">three</option>
-              <option value="four">four</option>
-              <option value="five">five</option>
-              <option value="six">six</option>
-              <option value="seven">seven</option>
-              <option value="eight">eight</option>
-              <option value="nine">nine</option>
-              <option value="ten">ten</option>
-              <option value="ten">ten</option>
-              <option value="MBBS">MBBS</option>
-              <option value="BCA">BCA</option>
-              <option value="BBS">BBS</option>
-            </select> -->
             <div class="delete__search">
               <i class="fas fa-times"></i>
               </div>
@@ -179,28 +139,6 @@
               </ul>
             </div>
             <div class="nav-sign">
-              <div>
-                <a href="{{route('cart')}}">
-                  <i class="fa fa-shopping-cart" aria-hidden="true">
-                  </i></a>
-                 
-                  
-                  
-                  @if(auth::user()==null)
-                    <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
-                  @else
-                    @php
-                      $userCart = auth::user()->cart;
-                    @endphp
-                      @if(!isset($userCart))
-                        <span class="badge badge-pill badge-danger">{{ count((array)$userCart) }}</span>
-                      @else
-                        <span class="badge badge-pill badge-danger">{{ count(auth::user()->cart->products) }}</span>
-                      @endif
-                  @endif
-
-              </div>
-                          
               @guest
                 <a href="{{ route('login') }}" class="sign-in"
                   ><i class="fas fa-user"></i> <span> Sign In</span></a
@@ -234,26 +172,6 @@
               <form action="{{route('search')}}" class="header-section__form sticky-form">
                 <div class="form__group">
                   <input type="text" name="query" placeholder="Search for books by keyword / title / author" value="{{ request()->input('query')}}" required/>
-                  <!-- <select id="Categories" class="select">
-                    <option value="hide">All Categories</option>
-                    <option value="all categories">All Categories</option>
-                    <option value="uncategorized">uncategorized</option>
-                    <option value="schoolLevel">School Level</option>
-                    <option value="one">One</option>
-                    <option value="two">two</option>
-                    <option value="three">three</option>
-                    <option value="four">four</option>
-                    <option value="five">five</option>
-                    <option value="six">six</option>
-                    <option value="seven">seven</option>
-                    <option value="eight">eight</option>
-                    <option value="nine">nine</option>
-                    <option value="ten">ten</option>
-                    <option value="ten">ten</option>
-                    <option value="MBBS">MBBS</option>
-                    <option value="BCA">BCA</option>
-                    <option value="BBS">BBS</option>
-                  </select> -->
                   <div class="delete__search">
                 <i class="fas fa-times"></i>
                 </div>
@@ -297,17 +215,8 @@
             </a>
           </div>
         </div>
-        <!-- <button class="btn-top">
-          <i class="fas fa-chevron-up"></i>
-        </button> -->
       </div>
     </footer>
-    <!-- <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-      defer
-    ></script> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script

@@ -11,8 +11,7 @@
                 </a>
             </li>
             @can('user_management_access')
-            <li
-                class="nav-item nav-dropdown {{ request()->is('admin/permissions/*') || request()->is('admin/roles/*') || request()->is('admin/users/*') ? 'open' : '' }}">
+            <li class="nav-item nav-dropdown {{ request()->is('admin/permissions/*') || request()->is('admin/roles/*') || request()->is('admin/users/*') ? 'open' : '' }}">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
                     <i class="fa-fw fas fa-users nav-icon">
 
@@ -57,154 +56,55 @@
             </li>
             @endcan
 
-            @can('product_category_access')
-            <li class="nav-item nav-dropdown">
-                <li class="nav-item">
-                    <a href="{{ route("admin.product-categories.index") }}"
-                        class="nav-link {{ request()->is('admin/product-categories') || request()->is('admin/product-categories/*') ? 'active' : '' }}">
-                        <i class="fa-fw fas fa-list nav-icon">
-
-                        </i>
-                        {{ trans('cruds.productCategory.title') }}
-                    </a>
-                </li>
-            </li>
-            @endcan
-
-            @can('author_access')
-            <li class="nav-item nav-dropdown">
-                <li class="nav-item">
-                    <a href="{{ route("admin.authors.index") }}" class="nav-link {{ request()->is('admin/authors') || request()->is('admin/authors/*') ? 'active' : '' }}">
-                        <i class="fa-fw fas fa-briefcase nav-icon">
-
-                        </i>
-                        {{ trans('cruds.author.title') }}
-                    </a>
-                </li>
-            </li>
-            @endcan
-
-            @can('license_access')
-            <li class="nav-item nav-dropdown">
-                <li class="nav-item">
-                    <a href="{{ route("admin.licenses.index") }}" class="nav-link {{ request()->is('admin/licenses') || request()->is('admin/licenses/*') ? 'active' : '' }}">
-                        <i class="fa-fw fas fa-briefcase nav-icon">
-
-                        </i>
-                        {{ trans('cruds.license.title') }}
-                    </a>
-                </li>
-            </li>
-            @endcan
-
-            @can('support_access')
-            <li class="nav-item nav-dropdown">
-                <li class="nav-item">
-                    <a href="{{ route("admin.supports.index") }}" class="nav-link {{ request()->is('admin/supports') || request()->is('admin/supports/*') ? 'active' : '' }}">
-                        <i class="fa-fw fas fa-briefcase nav-icon">
-
-                        </i>
-                        {{ trans('cruds.support.title') }}
-                    </a>
-                </li>
-            </li>
-            @endcan
-
-            @can('product_management_access')
-            <li
-                class="nav-item nav-dropdown {{ request()->is('admin/product-categories/*') || request()->is('admin/product-tags/*') || request()->is('admin/products/*') ? 'open' : '' }}">
+            @can('cms_access')
+            <li class="nav-item nav-dropdown {{ request()->is('admin/permissions/*') || request()->is('admin/roles/*') || request()->is('admin/users/*') ? 'open' : '' }}">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
-                    <i class="fa-fw fas fa-shopping-cart nav-icon">
+                    <i class="fa-fw fas fa-users nav-icon">
 
                     </i>
-                    {{ trans('cruds.productManagement.title') }}
+                    {{ trans('cruds.cms.title') }}
                 </a>
                 <ul class="nav-dropdown-items">
+                    @can('product_category_access')
+                    <li class="nav-item nav-dropdown">
+                        <li class="nav-item">
+                            <a href="{{ route("admin.product-categories.index") }}"
+                                class="nav-link {{ request()->is('admin/product-categories') || request()->is('admin/product-categories/*') ? 'active' : '' }}">
+                                <i class="fa-fw fas fa-list nav-icon">
 
-                    @can('product_tag_access')
-                    <li class="nav-item">
-                        <a href="{{ route("admin.product-tags.index") }}"
-                            class="nav-link {{ request()->is('admin/product-tags') || request()->is('admin/product-tags/*') ? 'active' : '' }}">
-                            <i class="fa-fw fas fa-tag nav-icon">
-
-                            </i>
-                            {{ trans('cruds.productTag.title') }}
-                        </a>
+                                </i>
+                                {{ trans('cruds.productCategory.title') }}
+                            </a>
+                        </li>
                     </li>
                     @endcan
-                    @can('level_access')
-                    <li class="nav-item">
-                        <a href="{{ route("admin.levels.index") }}" 
-                            class="nav-link {{ request()->is('admin/levels') || request()->is('admin/levels/*') ? 'active' : '' }}">
-                            <i class="fa-fw fas fa-plus nav-icon">
 
-                            </i>
-                            {{ trans('cruds.level.title') }}
-                        </a>
+                    @can('slider_access')
+                    <li class="nav-item nav-dropdown">
+                        <li class="nav-item">
+                            <a href="{{ route("admin.sliders.index") }}" class="nav-link {{ request()->is('admin/sliders') || request()->is('admin/sliders/*') ? 'active' : '' }}">
+                                <i class="fa-fw fas fa-plus nav-icon">
+
+                                </i>
+                                {{ trans('cruds.slider.title') }}
+                            </a>
+                        </li>
                     </li>
                     @endcan
-                    @can('product_access')
-                    <li class="nav-item">
-                        <a href="{{ route("admin.products.index") }}"
-                            class="nav-link {{ request()->is('admin/products') || request()->is('admin/products/*') ? 'active' : '' }}">
-                            <i class="fa-fw fas fa-shopping-cart nav-icon">
 
-                            </i>
-                            {{ trans('cruds.product.title') }}
-                        </a>
+                    @can('popup_access')
+                    <li class="nav-item nav-dropdown">
+                        <li class="nav-item">
+                            <a href="{{ route("admin.popups.index") }}" class="nav-link {{ request()->is('admin/popups') || request()->is('admin/popups/*') ? 'active' : '' }}">
+                                <i class="fa-fw fas fa-plus nav-icon">
+
+                                </i>
+                                {{ trans('cruds.popup.title') }}
+                            </a>
+                        </li>
                     </li>
                     @endcan
                 </ul>
-            </li>
-            @endcan
-            
-            @can('book_access')
-            <!-- <li class="nav-item">
-                <a class="nav-link {{ request()->is('admin/books') || request()->is('admin/books/*') ? 'active' : '' }}"
-                    href="{{ route('admin.books.index') }}">
-                    <i class="fa-fw fas fa-book nav-icon">
-                    </i>
-                    {{ trans('global.book') }}
-                </a>
-            </li> -->
-            @endcan
-
-            @can('review_access')
-            <li class="nav-item nav-dropdown">
-                <li class="nav-item">
-                    <a href="{{ route("admin.reviews.index") }}" class="nav-link {{ request()->is('admin/reviews') || request()->is('admin/reviews/*') ? 'active' : '' }}">
-                        <i class="fa-fw fas fa-comments nav-icon">
-
-                        </i>
-                        {{ trans('cruds.review.title') }}
-                    </a>
-                </li>
-            </li>
-            @endcan
-
-            @can('slider_access')
-            <li class="nav-item nav-dropdown">
-                <li class="nav-item">
-                    <a href="{{ route("admin.sliders.index") }}" class="nav-link {{ request()->is('admin/sliders') || request()->is('admin/sliders/*') ? 'active' : '' }}">
-                        <i class="fa-fw fas fa-plus nav-icon">
-
-                        </i>
-                        {{ trans('cruds.slider.title') }}
-                    </a>
-                </li>
-            </li>
-            @endcan
-
-            @can('popup_access')
-            <li class="nav-item nav-dropdown">
-                <li class="nav-item">
-                    <a href="{{ route("admin.popups.index") }}" class="nav-link {{ request()->is('admin/popups') || request()->is('admin/popups/*') ? 'active' : '' }}">
-                        <i class="fa-fw fas fa-plus nav-icon">
-
-                        </i>
-                        {{ trans('cruds.popup.title') }}
-                    </a>
-                </li>
             </li>
             @endcan
             

@@ -41,7 +41,7 @@ class FrontPageComposer
         //     });
 
             $this->frontCategories = ProductCategory::whereNull('category_id')
-                ->with(['childCategories.childCategories.childCategories','childCategories.products'])
+                ->with(['childCategories.childCategories.childCategories'])
                 ->orderBy('sort_order', 'ASC')
                 ->get();
     }
