@@ -2,7 +2,7 @@
 
 namespace App\Http\View\Composers;
 
-use App\ProductCategory;
+use App\Models\Product\ProductCategory;
 use Illuminate\View\View;
 
 class FrontPageComposer

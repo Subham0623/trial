@@ -56,13 +56,13 @@
             </li>
             @endcan
 
-            @can('cms_access')
-            <li class="nav-item nav-dropdown {{ request()->is('admin/permissions/*') || request()->is('admin/roles/*') || request()->is('admin/users/*') ? 'open' : '' }}">
+            @can('product_management_access')
+            <li class="nav-item nav-dropdown {{ request()->is('admin/product-categories/*') ? 'open' : '' }}">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
                     <i class="fa-fw fas fa-users nav-icon">
 
                     </i>
-                    {{ trans('cruds.cms.title') }}
+                    {{ trans('cruds.productManagement.title') }}
                 </a>
                 <ul class="nav-dropdown-items">
                     @can('product_category_access')
@@ -78,7 +78,19 @@
                         </li>
                     </li>
                     @endcan
+                </ul>
+            </li>
+            @endcan
 
+            @can('cms_access')
+            <li class="nav-item nav-dropdown {{ request()->is('admin/permissions/*') || request()->is('admin/roles/*') || request()->is('admin/users/*') ? 'open' : '' }}">
+                <a class="nav-link  nav-dropdown-toggle" href="#">
+                    <i class="fa-fw fas fa-users nav-icon">
+
+                    </i>
+                    {{ trans('cruds.cms.title') }}
+                </a>
+                <ul class="nav-dropdown-items">
                     @can('slider_access')
                     <li class="nav-item nav-dropdown">
                         <li class="nav-item">

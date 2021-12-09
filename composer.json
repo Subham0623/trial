@@ -21,7 +21,6 @@
         "laravel/passport": "^8.4",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
-        "mikemclin/laravel-wp-password": "^2.0",
         "nicolaslopezj/searchable": "^1.13",
         "spatie/laravel-medialibrary": "^7.19",
         "yajra/laravel-datatables-oracle": "^9.9",
@@ -52,6 +51,9 @@
         "classmap": [
             "database/seeds",
             "database/factories"
+        ],
+        "files": [
+            "app/Http/helpers.php"
         ]
     },
     "autoload-dev": {

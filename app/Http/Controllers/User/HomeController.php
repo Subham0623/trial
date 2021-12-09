@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Product;
-use App\ProductCategory;
-use App\ProductTag;
-use App\Book;
-use App\Review;
-use App\Slider;
-use App\Popup;
+use App\Models\Product\ProductCategory;
+use App\Models\CMS\Slider;
+use App\Models\CMS\Popup;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller

@@ -7,7 +7,6 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Attempting;
-use App\Listeners\WordPressPasswordUpdate;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,18 +16,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Attempting::class => [
-            WordPressPasswordUpdate::class,
-        ],
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
         'Illuminate\Auth\Events\Verified' => [
             'App\Listeners\WelcomeMail',
         ],
-        // 'Illuminate\Auth\Events\Attempting' => [
-        //     'App\Listeners\WordPressPasswordUpdate',
-        // ],
         'Illuminate\Auth\Events\Login' => [
             'App\Listeners\AddToCartListener',
         ],

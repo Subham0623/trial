@@ -1,100 +1,79 @@
-@extends('layouts.website')
-
-@section('styles')
-  <link rel="stylesheet" href="{{ asset('site/css/login.css')}}" />
-@endsection
-
+@extends('layouts.app')
 @section('content')
-  <section class="section-log">
-    <div class="row-log">
-      <div class="brandLogo">
-        <img src="site/img/asmita.png" alt="" />
-      </div>
-      <div class="logIn__form">
-        @if(session('error'))
-          <div class="alert alert-info" role="alert">
-              {{ session('error') }}
-          </div>
-        @endif
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mx-4">
+            <div class="card-body p-4">
+                <h1>{{ trans('panel.site_title') }}</h1>
 
-        <form class="form" method="POST" action="{{ route('login') }}">
-          @csrf
+                <p class="text-muted">{{ trans('global.login') }}</p>
 
-          <div class="form__group">
-            <input
-              type="email"
-              class="form__input @error('email') is-invalid @enderror"
-              placeholder="Email Address"
-              id="email"
-              name="email"
-              required
-            />
-            <label for="email" class="form__label">Email Address</label>
-            @error('email')
-              <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-              </span>
-            @enderror
-          </div>
-          <div class="form__group">
-            <input
-              type="password"
-              class="form__input @error('password') is-invalid @enderror"
-              placeholder="Password"
-              id="password"
-              name="password"
-              required
-            />
-            <label for="password" class="form__label ">Password</label>
-            @error('password')
-              <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-              </span>
-            @enderror
-          </div>
+                @if(session('message'))
+                    <div class="alert alert-info" role="alert">
+                        {{ session('message') }}
+                    </div>
+                @endif
 
-          <div class="form__group align-center">
-            <input type="submit" class="btn__log btn--log" value="Log In" />
-          </div>
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
 
-          <div class="form__group">
-            <div class="other--option">
-              <ul class="options__links">
-                <li>
-                  <a href="{{ route('register') }}">
-                    <span class="icon-2"
-                      ><i class="fas fa-arrow-right"></i
-                    ></span>
-                    <span class="effect">Register</span>
-                  </a>
-                </li>
-                <li>
-                  @if(Route::has('password.request'))
-                    <a href="{{ route('password.request') }}">
-                      <span class="icon-2"
-                        ><i class="fas fa-arrow-right"></i
-                      ></span>
-                      <span class="effect">Reset Password</span>
-                    </a>
-                  @endif
-                </li>
-                <li>
-                  <a href="{{ route('index') }}">
-                    <span class="icon-2"
-                      ><i class="fas fa-arrow-right"></i
-                    ></span>
-                    <span class="effect">Home</span>
-                  </a>
-                </li>
-              </ul>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-user"></i>
+                            </span>
+                        </div>
+
+                        <input id="email" name="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" required autocomplete="email" autofocus placeholder="{{ trans('global.login_email') }}" value="{{ old('email', null) }}">
+
+                        @if($errors->has('email'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('email') }}
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                        </div>
+
+                        <input id="password" name="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" required placeholder="{{ trans('global.login_password') }}">
+
+                        @if($errors->has('password'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('password') }}
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="input-group mb-4">
+                        <div class="form-check checkbox">
+                            <input class="form-check-input" name="remember" type="checkbox" id="remember" style="vertical-align: middle;" />
+                            <label class="form-check-label" for="remember" style="vertical-align: middle;">
+                                {{ trans('global.remember_me') }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary px-4">
+                                {{ trans('global.login') }}
+                            </button>
+                        </div>
+                        <div class="col-6 text-right">
+                            @if(Route::has('password.request'))
+                                <a class="btn btn-link px-0" href="{{ route('password.request') }}">
+                                    {{ trans('global.forgot_password') }}
+                                </a><br>
+                            @endif
+
+                        </div>
+                    </div>
+                </form>
             </div>
-          </div>
-
-          <!-- <div class="form-group">
-            <span>Or Sign In With</span>
-          </div> -->
-        </form>
-      </div>
+        </div>
     </div>
-  </section>
+</div>
 @endsection

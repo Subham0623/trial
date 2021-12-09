@@ -140,6 +140,10 @@ class PermissionsTableSeeder extends Seeder
                 'id'    => '33',
                 'title' => 'setting_create',
             ],
+            [
+                'id'    => '34',
+                'title' => 'product_management_access',
+            ],
         ];
 
         Permission::insert($permissions);

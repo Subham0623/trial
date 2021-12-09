@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Setting;
+use App\Models\Setting;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\StoreSettingRequest;

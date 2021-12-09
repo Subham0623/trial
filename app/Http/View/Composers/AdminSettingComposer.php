@@ -2,7 +2,7 @@
 
 namespace App\Http\View\Composers;
 
-use App\Setting;
+use App\Models\Setting;
 use Illuminate\View\View;
 
 class AdminSettingComposer

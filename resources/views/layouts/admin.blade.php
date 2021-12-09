@@ -57,7 +57,7 @@
         </button>
         <a class="navbar-brand" href="#">
           @if(isset($setting))
-            <img class="navbar-brand-full" src="{{asset('storage/uploads/logo/'.$setting->logo)}}" alt="{{$setting->title}}" width="150">
+            <img class="navbar-brand-full" src="{{asset('storage/uploads/logo/'.$setting->logo)}}" alt="{{$setting->title}}" width="50">
             <img class="navbar-brand-minimized" src="{{asset('storage/uploads/favicon/'.$setting->favicon)}}" alt="{{$setting->title}}" width="40">
           @else 
             <span class="navbar-brand-full">{{ trans('panel.site_title') }}</span>

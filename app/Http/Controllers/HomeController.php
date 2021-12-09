@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductCategory;
-use App\Slider;
-use App\Popup;
+use App\Models\Product\ProductCategory;
+use App\Models\CMS\Slider;
+use App\Models\CMS\Popup;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        // dd('hello');
         $sliders = Slider::where('status',0)->latest()->get();
         $popups = Popup::where('status',0)->latest()->get();
-        // dd($sliders);
         return view('site.index', compact('sliders','popups'));
     }
 

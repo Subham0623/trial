@@ -12,7 +12,7 @@
                 <div class="modal-body">
                 <img
                   class="d-block w-100"
-                  src="{{$popup->photo->url}}"
+                  src="{{$popup->photo?$popup->photo->url:''}}"
                   alt=""
                 />
                     
