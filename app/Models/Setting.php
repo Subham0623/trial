@@ -20,10 +20,20 @@ class Setting extends Model
       'logo',
       'favicon',
       'copyright',
-      'footer-logo',
+      'footer_logo',
       'created_at',
       'updated_at',
       'deleted_at',
+      'rightclick',
+      'inspect',
+      'wel_email',
+      'w_email_enable',
+      'meta_data_desc',
+      'meta_data_keyword',
+      'google_ana',
+      'fb_login_enable',
+      'gitlab_login_enable',
+      'google_login_enable',
   ];
 
 }
