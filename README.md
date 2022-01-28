@@ -88,38 +88,5 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-### API Endpoints
-##### Wishlist
-* Wishlist
-    * View user's wishlist GET `/api/v1/wishlist`
-    * Store product to wishlist POST `/api/v1/add-to-wishlist`
-    * Remove product from wishlist DELETE `/api/v1/remove-from-wishlist/258`
-    * Move to cart from wishlist DELETE `/api/v1//move-to-cart/258`
-
-##### Login 
-POST `/api/login`
-##### Register
-POST `/api/register`
-##### Logout
-POST `/api/logout`
-
-##### Order
-* Order
-    * View user's orders GET `/api/v1/orders`
-    * Checkout form GET `/api/v1/checkout`
-    * Store orders POST `/api/v1/order-store/{paymentmode}/{total}`
-
-##### Cart
-* Cart
-    * View user's cart GET `/api/cart`
-    * Add product to cart GET `/api/add-to-cart/{id}`
-    * Update cart PATCH `/api/update-cart/{id}/{quantity}`
-    * Remove product from cart DELETE `/api/remove-from-cart/{id}`
-
-##### Product
-* Product
-    * View product detail GET `/api/{product}/{productSlug}/{category}`
-    * View category GET `/api/{category:slug}/{childCategory:slug?}/{childCategory2?}/{childCategory3?}`
-    * Home page GET `/api`
 
     
