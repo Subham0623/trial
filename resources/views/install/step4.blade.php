@@ -76,7 +76,7 @@
               </form>
    				</div>
    			</div>
-        <p class="text-center m-3 text-white">&copy;{{ date('Y') }} | eClass - Learning Management System | Installer v1.1 | <a class="text-white" href="http://mediacity.co.in">Media City</a></p>
+         <p class="text-center m-3 text-white">&copy;{{ date('Y') }} | Installer v1.1 | Powered By <a class="text-white" href="#">Codeaiders Pvt. Ltd.</a></p>
    		</div>
       
       <div class="corner-ribbon bottom-right sticky green shadow">Step 4 </div>
