@@ -39,7 +39,7 @@ Route::middleware(['IsInstalled'])->group(function () {
 
     // Admin
     Route::group([
-            'prefix' => 'admin', 
+            'prefix' => 'admins', 
             'as' => 'admin.', 
             'namespace' => 'Admin', 
             'middleware' => ['auth', 'admin']

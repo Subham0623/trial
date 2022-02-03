@@ -11,29 +11,13 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index()
-    {
-        $products = Product::with('categories.parentCategory.parentCategory.parentCategory')
-            ->inRandomOrder()
-            ->take(6)
-            ->get();
-        
-        $recent_products = Product::with('categories.parentCategory.parentCategory.parentCategory')
-            ->latest()
-            ->take(10)
-            ->get();
-
-        $featured_products = Product::where('featured',1)->with('categories.parentCategory.parentCategory.parentCategory')
-        ->inRandomOrder()
-        ->take(8)
-        ->get();
-        // dd($featured_products);
-        
+    {        
         $sliders = Slider::where('status',0)->latest()->get();
 
         $popups = Popup::where('status',0)->latest()->get();
         // dd($popups);
 
-        return view('site.index', compact('products','recent_products','featured_products','sliders','popups'));
+        return view('site.index', compact('sliders','popups'));
     }
 
     public function category(ProductCategory $category, ProductCategory $childCategory = null, $childCategory2 = null, $childCategory3 = null)

@@ -12,7 +12,7 @@ class InitializeController extends Controller
         $d = \Request::getHost();
         $domain = str_replace("www.", "", $d);   
      
-        $alldata = ['app_id' => "25613271", 'ip' => "127.0.0.1", 'domain' => $domain , 'code' => $request->code];
+        $alldata = ['item_id' => "25613271", 'ip' => "127.0.0.1", 'domain' => $domain , 'product_key' => $request->code];
         // $data = $this->make_request($alldata);
 
         // rajan's line
@@ -42,7 +42,7 @@ class InitializeController extends Controller
         $message = null;
         $ch = curl_init();
         $options = array(
-            CURLOPT_URL => "https://mediacity.co.in/purchase/public/api/verifycode",
+            CURLOPT_URL => "https://codeaiders.mangosoftsolution.com/api/purchase/verifycode",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 20,
             CURLOPT_POSTFIELDS => json_encode($alldata) ,
@@ -73,7 +73,7 @@ class InitializeController extends Controller
             {
                 $file = public_path() . '/intialize.txt';
                 file_put_contents($file, $body->token);
-                file_put_contents(public_path() . '/code.txt', $alldata['code']);
+                file_put_contents(public_path() . '/code.txt', $alldata['product_key']);
                 file_put_contents(public_path() . '/ddtl.txt', $alldata['domain']);
                 return array(
                     'msg' => $body->message,
