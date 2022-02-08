@@ -21,14 +21,13 @@ class Tracker
                 $domain = str_replace("www.", "", $d);
 
                 $rdomain = @file_get_contents(public_path().'/ddtl.txt');
-                
                 if(!$traced || $domain != $rdomain){
                     $response = Http::retry(5,100)->post('https://codeaiders.mangosoftsolution.com/api/purchase/track', [
-                        'product_key' => $code == 0 ? 'No Purchase Code' : $code,
-                        'domain' => \Request::getHost(),
-                        'ip_address' => $ip,
+                        'product_key' => $code == '' ? 'No Purchase Code' : $code,
+                        'domain' => $domain,
+                        'ip' => $ip,
                     ]);
-
+                    
                     if($response->serverError()){
                         Log::emergency('Could not be tracked ! 500 error API');
                     }

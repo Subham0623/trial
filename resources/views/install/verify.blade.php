@@ -33,9 +33,19 @@
                   <div class="form-row">
                    
                     <br>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-3">
                       <label for="validationCustom01">Envato User Name:</label>
                       <input name="user_id" type="text" class="form-control" id="validationCustom01" placeholder="Username" value="" required>
+                      <div class="valid-feedback">
+                        Looks good!
+                      </div>
+                      <div class="invalid-feedback">
+                          Please fill name.
+                      </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label for="validationCustom03">Item ID:</label>
+                      <input name="item_id" type="text" class="form-control" id="validationCustom03" placeholder="item id" value="" required>
                       <div class="valid-feedback">
                         Looks good!
                       </div>

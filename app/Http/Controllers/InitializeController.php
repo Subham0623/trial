@@ -11,12 +11,24 @@ class InitializeController extends Controller
 
         $d = \Request::getHost();
         $domain = str_replace("www.", "", $d);   
-     
-        $alldata = ['item_id' => "25613271", 'ip' => "127.0.0.1", 'domain' => $domain , 'product_key' => $request->code];
-        // $data = $this->make_request($alldata);
+
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = @$_SERVER['HTTP_CLIENT_IP'];
+        }
+        //whether ip is from proxy
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        //whether ip is from remote address
+        else {
+            $ip = @$_SERVER['REMOTE_ADDR'];
+        }
+        
+        $alldata = ['item_id' => $request->item_id, 'ip' => $ip, 'domain' => $domain , 'product_key' => $request->code];
+        $data = $this->make_request($alldata);
 
         // rajan's line
-        $data = ['status' => 1];
+        // $data = ['status' => 1];
 
         if ($data['status'] == 1)
         {   
@@ -27,9 +39,9 @@ class InitializeController extends Controller
             @file_put_contents('../public/step3.txt', $status);
             return redirect()->route('installApp');
         }
-        elseif ($data['msg'] == 'Already Register')
+        elseif ($data['msg'] == 'Already Registered')
         {   
-            return back()->withErrors(['User is already registered']);
+            return back()->withErrors(['Project is already installed']);
         }
         else
         {
@@ -65,14 +77,14 @@ class InitializeController extends Controller
             );
         }
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
         if ($responseCode == 200)
         {
             $body = json_decode($response);
+
             if ($body->status == '1')
             {
                 $file = public_path() . '/intialize.txt';
-                file_put_contents($file, $body->token);
+                file_put_contents($file, $body->access_token);
                 file_put_contents(public_path() . '/code.txt', $alldata['product_key']);
                 file_put_contents(public_path() . '/ddtl.txt', $alldata['domain']);
                 return array(
