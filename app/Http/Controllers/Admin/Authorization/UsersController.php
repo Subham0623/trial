@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Mail\CanReadBook;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class UsersController extends Controller
 {
@@ -36,7 +37,14 @@ class UsersController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        $user = User::create($request->all());
+        $data = [
+            'name' =>$request->name,
+            'email' => $request->email,
+            'email_verified_at' => Carbon::now(),
+            'password' => $request->password,
+            ];
+            
+        $user = User::create($data);
         $user->roles()->sync($request->input('roles', []));
 
         return redirect()->route('admin.users.index');
