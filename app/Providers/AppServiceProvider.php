@@ -46,13 +46,13 @@ class AppServiceProvider extends ServiceProvider
         View::composer(
             'layouts.admin', 'App\Http\View\Composers\AdminSettingComposer'
         );
-
+        
         try {
             \DB::connection()->getPdo();
             Schema::defaultStringLength(191);
 
-            $code = @file_get_contents(public_path() . '/code.txt');
-                        
+            $code = @file_get_contents(public_path() . '/code.txt');        
+            
             if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
                 $ip_address = @$_SERVER['HTTP_CLIENT_IP'];
             }

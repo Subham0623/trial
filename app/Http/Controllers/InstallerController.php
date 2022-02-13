@@ -410,10 +410,10 @@ class InstallerController extends Controller
 
             $setting->save();
 
-            // $apistatus = $this->update_status('1');
+            $apistatus = $this->update_status('1');
 
             // Rajan's code
-            $apistatus = 1;
+            // $apistatus = 1;
 
             if($apistatus == 1){
               $env_update = $this->changeEnv([
@@ -504,7 +504,7 @@ class InstallerController extends Controller
         $ch = curl_init();
 
         $options = array(
-            CURLOPT_URL => "https://mediacity.co.in/purchase/public/api/updatestatus",
+            CURLOPT_URL => "https://codeaiders.mangosoftsolution.com/api/purchase/update-status",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 20,
             CURLOPT_POSTFIELDS => "status={$status}&domain={$domain}",
