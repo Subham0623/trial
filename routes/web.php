@@ -46,6 +46,16 @@ Route::middleware(['IsInstalled'])->group(function () {
         ], function () {
             Route::get('/', 'HomeController@index')->name('home');
             includeRouteFiles(__DIR__ . '/AdminBackend/');
+
+            //Subject Areas
+            Route::delete('subject-areas/destroy', 'SubjectAreaController@massDestroy')->name('subject-areas.massDestroy');
+            Route::get('subject-areas/check-slug', 'SubjectAreaController@checkSlug')->name('subject-areas.checkSlug');
+            Route::resource('subject-areas','SubjectAreaController');
+
+            //Parameters and options
+            Route::delete('parameters/destroy', 'ParameterController@massDestroy')->name('parameters.massDestroy');
+            Route::get('parameters/check-slug', 'ParameterController@checkSlug')->name('parameters.checkSlug');
+            Route::resource('parameters','ParameterController');
             
     });
 

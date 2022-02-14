@@ -120,6 +120,16 @@
             </li>
             @endcan
             
+            @can('subject_area_create')
+            <li class="nav-item">
+                <a href="{{ route('admin.subject-areas.index') }}"
+                    class="nav-link {{ request()->is('admin/subject-areas') || request()->is('admin/subject-areas/*') ? 'active' : '' }}">
+                    <i class=" nav-icon fa fa-gear"></i>
+                    {{ trans('cruds.subjectarea.title') }}
+                </a>
+            </li>
+            @endcan
+
             @can('setting_create')
             <li class="nav-item">
                 <a href="{{ route('admin.settings.create') }}"

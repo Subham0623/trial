@@ -19,6 +19,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
 
 Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'middleware' => ['auth:api']], function () {
 
+Route::get('/form','HomeApiController@form')->name('form');
+
     // Route::get('/wishlist','WishlistApiController@index')->name('wishlist');
     // Route::post('/add-to-wishlist','WishlistApiController@store');
     // Route::delete('/remove-from-wishlist','WishlistApiController@remove');
@@ -36,7 +38,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
 
 
 
-// Route::get('/', 'HomeApiController@index')->name('index');
+Route::get('/', 'HomeApiController@index')->name('index');
 
 // Route::get('/{product}/{productSlug}/{category}', 'HomeApiController@product')->name('product');
 // Route::get('/{category:slug}/{childCategory:slug?}/{childCategory2?}/{childCategory3?}', 'HomeApiController@category')->name('category');
@@ -47,6 +49,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
 
 
 // Route::get('/hello', 'Api\V1\LoginApiController@hello');
+
 
 Route::post('/login','Api\V1\LoginApiController@login');
 Route::middleware('auth:api')->post('/logout','Api\V1\LoginApiController@logout');
