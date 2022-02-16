@@ -718,6 +718,7 @@ class ComposerStaticInitc39f2958b5f0d5735c2c3c04a58f0fce
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Events\\UserLoggedInEvent' => __DIR__ . '/../..' . '/app/Events/UserLoggedInEvent.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Helpers\\Tracker' => __DIR__ . '/../..' . '/app/Helpers/Tracker.php',
         'App\\Http\\Controllers\\Admin\\Authorization\\PermissionsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/Authorization/PermissionsController.php',
         'App\\Http\\Controllers\\Admin\\Authorization\\RolesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/Authorization/RolesController.php',
         'App\\Http\\Controllers\\Admin\\Authorization\\UsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/Authorization/UsersController.php',

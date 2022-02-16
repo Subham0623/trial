@@ -5,6 +5,7 @@ namespace App\Models\Authorization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \DateTimeInterface;
+use App\Models\Authorization\User\User;
 
 class Role extends Model
 {
@@ -20,9 +21,13 @@ class Role extends Model
 
     protected $fillable = [
         'title',
+        'can_shareable',
         'created_at',
         'updated_at',
         'deleted_at',
+        'created_by',
+        'updated_by',
+        'deleted_by'
     ];
 
     protected function serializeDate(DateTimeInterface $date)
@@ -41,5 +46,15 @@ class Role extends Model
     {
         return $this->belongsToMany(Product::class);
 
+    }
+
+    public function scopeOfAllowedRoles($query)
+    {
+        $user = User::find(auth()->user()->id);
+        
+        if (!$user->isMainAdmin) {
+            return $query->where('created_by', $user->id)->orWhere('can_shareable',1);
+        }
+        return $query;
     }
 }

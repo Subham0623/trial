@@ -9,6 +9,7 @@ return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Events\\UserLoggedInEvent' => $baseDir . '/app/Events/UserLoggedInEvent.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Helpers\\Tracker' => $baseDir . '/app/Helpers/Tracker.php',
     'App\\Http\\Controllers\\Admin\\Authorization\\PermissionsController' => $baseDir . '/app/Http/Controllers/Admin/Authorization/PermissionsController.php',
     'App\\Http\\Controllers\\Admin\\Authorization\\RolesController' => $baseDir . '/app/Http/Controllers/Admin/Authorization/RolesController.php',
     'App\\Http\\Controllers\\Admin\\Authorization\\UsersController' => $baseDir . '/app/Http/Controllers/Admin/Authorization/UsersController.php',
