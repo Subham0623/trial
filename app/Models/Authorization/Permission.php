@@ -5,6 +5,7 @@ namespace App\Models\Authorization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \DateTimeInterface;
+use App\Models\Authorization\User\User;
 
 class Permission extends Model
 {
@@ -29,5 +30,31 @@ class Permission extends Model
     {
         return $date->format('Y-m-d H:i:s');
 
+    }
+
+    public function scopeOfAllowedPermissions()
+    {
+        $user = User::with('roles.permissions')->find(auth()->user()->id);
+        
+        if (!$user->isMainAdmin) {
+            // $roles = $user->roles;
+            $permissions = $user->roles->map(function($role, $key) {
+                return $role->permissions;
+             });
+
+             $datas = [];
+
+            if(isset($permissions) && !empty($permissions)){
+                foreach($permissions as $permission){
+                    foreach($permission as $p){
+                        $datas[] = $p;
+                    }
+                }
+            }
+            $datas = collect($datas);
+            // dd($datas);
+            return $datas;
+        }
+        return $this;
     }
 }
