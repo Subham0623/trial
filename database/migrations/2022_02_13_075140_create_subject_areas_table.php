@@ -15,9 +15,9 @@ class CreateSubjectAreasTable extends Migration
     {
         Schema::create('subject_areas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title')->nullable();
-            $table->integer('sort')->nullable()->unique();
-            $table->string('slug')->nullable()->unique();
+            $table->longText('title')->nullable();
+            $table->integer('sort')->nullable();
+            $table->longText('slug')->nullable()->unique();
             $table->timestamps();
             $table->softDeletes();
         });

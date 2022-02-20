@@ -20,6 +20,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
 Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'middleware' => ['auth:api']], function () {
 
 Route::get('/form','HomeApiController@form')->name('form');
+Route::post('/store','HomeApiController@store')->name('form-store');
+
 
     // Route::get('/wishlist','WishlistApiController@index')->name('wishlist');
     // Route::post('/add-to-wishlist','WishlistApiController@store');
@@ -38,7 +40,8 @@ Route::get('/form','HomeApiController@form')->name('form');
 
 
 
-Route::get('/', 'HomeApiController@index')->name('index');
+Route::get('/', 'Api\V1\HomeApiController@index')->name('index');
+Route::get('/province','Api\V1\HomeApiController@province')->name('province');
 
 // Route::get('/{product}/{productSlug}/{category}', 'HomeApiController@product')->name('product');
 // Route::get('/{category:slug}/{childCategory:slug?}/{childCategory2?}/{childCategory3?}', 'HomeApiController@category')->name('category');

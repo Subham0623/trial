@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreParameterRequest;
+use App\Http\Requests\UpdateParameterRequest;
+use App\Http\Requests\MassDestroyParameterRequest;
 use App\SubjectArea;
 use App\Parameter;
 use App\Option;
+use App\Document;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
 use Cviebrock\EloquentSluggable\Services\SlugService;
@@ -37,8 +41,10 @@ class ParameterController extends Controller
         abort_if(Gate::denies('parameter_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $subject_areas = SubjectArea::all();
+        $parameter = Parameter::latest()->first();
+        $sort = ($parameter)?$parameter->sort + 5:1;
 
-        return view('admin.parameters.create',compact('subject_areas'));
+        return view('admin.parameters.create',compact('subject_areas','sort'));
     }
 
     /**
@@ -47,14 +53,15 @@ class ParameterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreParameterRequest $request)
     {
         // dd($request->all());
         $data = [
-            'title' => $request->title,
-            'subject_area_id' => $request->subject_area_id,
-            'sort' => $request->sort,
-            'slug' =>$request->slug,
+            'title'             => $request->title,
+            'subject_area_id'   => $request->subject_area_id,
+            'sort'              => $request->sort,
+            'slug'              =>$request->slug,
+            'description'       => $request->description,
         ];
         // dd($data);
         $parameter = Parameter::create($data);
@@ -71,8 +78,20 @@ class ParameterController extends Controller
                 'points' => $value['points'],
                 'parameter_id' => $parameter->id
             ]);
-
         }
+
+            $request->validate([
+                'addmore1.*.title' => 'required',
+            ]);
+        
+            foreach ($request->addmore1 as $key => $value) {
+                // dd($value['title']);
+                Document::create([
+                    'title' => $value['title'],
+                    'parameter_id' => $parameter->id
+                ]);
+            }
+        
 
         return redirect()->route('admin.parameters.index')->with('message','New Parameter added successfully!');
         
@@ -113,12 +132,15 @@ class ParameterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Parameter $parameter)
+    public function update(UpdateParameterRequest $request, Parameter $parameter)
     {
+        // dd($request->all());
         $data = [
-            'title' => $request->title,
-            'subject_area_id' => $request->subject_area_id,
-            'slug' =>$request->slug,
+            'title'             => $request->title,
+            'subject_area_id'   => $request->subject_area_id,
+            'slug'              => $request->slug,
+            'sort'              => $request->sort,
+            'description'       => $request->description,
         ];
         // dd($data);
         $parameter->update($data);
@@ -129,12 +151,28 @@ class ParameterController extends Controller
         }
 
         foreach ($request->addmore as $key => $value) {
-            // dd($value['title']);
+            // dd($value['points']);
             
 
                 Option::create([
                     'title' => $value['title'],
                     'points' => $value['points'],
+                    'parameter_id' => $parameter->id
+                ]);
+            
+        }
+
+        foreach($parameter->documents as $document)
+        {
+            $document->delete();
+        }
+
+        foreach ($request->addmore1 as $key => $value) {
+            // dd($value['title']);
+            
+
+                Document::create([
+                    'title' => $value['title'],
                     'parameter_id' => $parameter->id
                 ]);
             
@@ -164,6 +202,14 @@ class ParameterController extends Controller
         $slug = SlugService::createSlug(Parameter::class, 'slug', $request->title);
 
         return response()->json(['slug' => $slug]);
+
+    }
+
+    public function massDestroy(MassDestroyParameterRequest $request)
+    {
+        Parameter::whereIn('id', request('ids'))->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
 
     }
 }

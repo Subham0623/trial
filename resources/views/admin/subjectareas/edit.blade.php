@@ -12,7 +12,9 @@
             @csrf
             <div class="form-group">
                 <label class="required" for="title">{{ trans('cruds.subjectarea.fields.title') }}</label>
-                <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', $subjectArea->title) }}" required>
+                <!-- <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', $subjectArea->title) }}" required> -->
+                <textarea name="title" placeholder="Enter title" class="input form-control" id="title">{{ $subjectArea->title }}</textarea>
+                
                 @if($errors->has('title'))
                     <div class="invalid-feedback">
                         {{ $errors->first('title') }}

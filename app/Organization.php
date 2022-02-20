@@ -7,11 +7,11 @@ use \DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
 
-class Parameter extends Model
+class Organization extends Model
 {
     use SoftDeletes, Sluggable;
 
-    public $table = 'parameters';
+    public $table = 'organizations';
 
     protected $dates = [
         'created_at',
@@ -20,11 +20,12 @@ class Parameter extends Model
     ];
 
     protected $fillable = [
-        'title',
-        'sort',
+        'name',
         'slug',
-        'description',
-        'subject_area_id',
+        'address',
+        'province_id',
+        'district_id',
+        'contact',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -40,25 +41,23 @@ class Parameter extends Model
     {
         return [
             'slug' => [
-                'source' => 'title'
+                'source' => 'name'
             ]
         ];
     }
 
-    public function subjectArea()
+    public function province()
     {
-        return $this->belongsTo(SubjectArea::class);
+        return $this->belongsTo(Province::class);
     }
 
-    public function options()
+    public function district()
     {
-        return $this->hasMany(Option::class);
+        return $this->belongsTo(District::class);
     }
 
-    public function documents()
+    public function users()
     {
-        return $this->hasMany(Document::class);
+        return $this->hasMany(User::class);
     }
-
-    
 }

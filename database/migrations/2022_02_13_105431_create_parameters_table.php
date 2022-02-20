@@ -15,9 +15,9 @@ class CreateParametersTable extends Migration
     {
         Schema::create('parameters', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title')->nullable();
+            $table->longText('title')->nullable();
             $table->integer('sort')->nullable();
-            $table->string('slug')->nullable()->unique();
+            $table->longText('slug')->nullable()->unique();
             $table->longText('description')->nullable();
             $table->unsignedInteger('subject_area_id')->nullable();
             $table->foreign('subject_area_id')->references('id')->on('subject_areas')->onDelete('cascade');

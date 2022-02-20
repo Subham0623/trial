@@ -47,15 +47,27 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('/', 'HomeController@index')->name('home');
             includeRouteFiles(__DIR__ . '/AdminBackend/');
 
+            
             //Subject Areas
             Route::delete('subject-areas/destroy', 'SubjectAreaController@massDestroy')->name('subject-areas.massDestroy');
             Route::get('subject-areas/check-slug', 'SubjectAreaController@checkSlug')->name('subject-areas.checkSlug');
             Route::resource('subject-areas','SubjectAreaController');
-
+            
             //Parameters and options
             Route::delete('parameters/destroy', 'ParameterController@massDestroy')->name('parameters.massDestroy');
             Route::get('parameters/check-slug', 'ParameterController@checkSlug')->name('parameters.checkSlug');
             Route::resource('parameters','ParameterController');
+            
+            //Provinces and districts
+            Route::delete('provinces/destroy', 'ProvinceController@massDestroy')->name('provinces.massDestroy');
+            Route::get('provinces/check-slug', 'ProvinceController@checkSlug')->name('provinces.checkSlug');
+            Route::resource('provinces','ProvinceController');
+            
+            //Organizations
+            Route::get('organizations/organization-province','OrganizationController@organizationProvince')->name('organization-province');
+            Route::delete('organizations/destroy', 'OrganizationController@massDestroy')->name('organizations.massDestroy');
+            Route::get('organizations/check-slug', 'OrganizationController@checkSlug')->name('organizations.checkSlug');
+            Route::resource('organizations','OrganizationController');
             
     });
 

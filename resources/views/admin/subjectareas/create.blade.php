@@ -11,7 +11,9 @@
             @csrf
             <div class="form-group">
                 <label class="required" for="title">{{ trans('cruds.subjectarea.fields.title') }}</label>
-                <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', '') }}" required>
+                <!-- <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', '') }}" required> -->
+                <textarea name="title" placeholder="Enter title" class="input form-control" id="title">{{ old('title','') }}</textarea>
+                
                 @if($errors->has('title'))
                     <div class="invalid-feedback">
                         {{ $errors->first('title') }}
@@ -20,7 +22,7 @@
                 <span class="help-block">{{ trans('cruds.subjectarea.fields.title_helper') }}</span>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label class="required" for="sort">{{ trans('cruds.subjectarea.fields.sort') }}</label>
                 <input class="form-control {{ $errors->has('sort') ? 'is-invalid' : '' }}" type="text" name="sort" id="sort" value="{{ old('sort', '') }}" required>
                 @if($errors->has('sort'))
@@ -29,7 +31,9 @@
                     </div>
                 @endif
                 <span class="help-block">{{ trans('cruds.subjectarea.fields.sort_helper') }}</span>
-            </div>
+            </div> -->
+
+            <input type="hidden" name="sort" value="{{$sort}}" >
 
             <div class="form-group">
                 <label class="required" for="slug">{{ trans('cruds.subjectarea.fields.slug') }}</label>

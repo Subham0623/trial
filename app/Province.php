@@ -5,13 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use \DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
-// use Cviebrock\EloquentSluggable\Sluggable;
 
-class Option extends Model
+class Province extends Model
 {
     use SoftDeletes;
 
-    public $table = 'options';
+    public $table = 'provinces';
 
     protected $dates = [
         'created_at',
@@ -20,10 +19,7 @@ class Option extends Model
     ];
 
     protected $fillable = [
-        'title',
-        'sort',
-        'parameter_id',
-        'points',
+        'name',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -35,13 +31,14 @@ class Option extends Model
 
     }
 
-    public function parameter()
+    public function districts()
     {
-        return $this->belongsTo(Parameter::class);
+        return $this->hasMany(District::class);
     }
 
-    public function forms()
+    public function organizations()
     {
-        return $this->belongsToMany(Form::class);
+        return $this->hasMany(Organization::class);
     }
+    
 }

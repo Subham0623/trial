@@ -33,6 +33,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.parameter.fields.description') }}
+                        </th>
+                        <td>
+                            {{ $parameter->description }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.parameter.fields.subject_area') }}
                         </th>
                         <td>
@@ -55,22 +63,34 @@
                             {{ $parameter->slug }}
                         </td>
                     </tr>
-                    @foreach($parameter->options as $option)
                     <tr>
                         <th>
                             {{ trans('cruds.parameter.fields.option') }}
                         </th>
                         <td>
+                            @foreach($parameter->options as $option)
                             Title: {{ $option->title }}
                         <br>
-                            Points: {{ $option->points }}
+                            Points: {{ $option->points }}<br>
+                            @endforeach
                         </td>
                     </tr>
-                    @endforeach
+                    <tr>
+                        <th>
+                            {{ trans('cruds.parameter.fields.document') }}
+                        </th>
+                        <td>
+                            @foreach($parameter->documents as $document)
+                            Title: {{ $document->title }}
+                        <br>
+                            
+                            @endforeach
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.subject-areas.index') }}">
+                <a class="btn btn-default" href="{{ route('admin.parameters.index') }}">
                     {{ trans('global.back_to_list') }}
                 </a>
             </div>

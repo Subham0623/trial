@@ -2,16 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\SubjectArea;
+
+use App\Parameter;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 
-class StoreSubjectAreaRequest extends FormRequest
+class StoreParameterRequest extends FormRequest
 {
     public function authorize()
     {
-        abort_if(Gate::denies('subject_area_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('parameter_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return true;
 
@@ -24,9 +25,7 @@ class StoreSubjectAreaRequest extends FormRequest
                 'required'],
             'slug'         => [
                 'required',
-                'unique:subject_areas'],
-            'sort'   =>[
-                'required'],
+                'unique:parameters'],
             
         ];
 

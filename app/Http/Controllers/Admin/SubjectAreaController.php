@@ -38,7 +38,12 @@ class SubjectAreaController extends Controller
     {
         abort_if(Gate::denies('subject_area_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.subjectareas.create');
+        
+            $subject_area = SubjectArea::latest()->first();
+            $sort = ($subject_area)?$subject_area->sort + 5:1;
+        
+        // dd($sort);
+        return view('admin.subjectareas.create',compact('sort'));
     }
 
     /**
