@@ -64,6 +64,10 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::resource('provinces','ProvinceController');
             
             //Organizations
+            Route::get('organizations/download-format',function(){
+                return Illuminate\Support\Facades\Storage::download('organizations.xlsx');
+            })->name('download-format');
+            Route::post('organizations/import/organizations','OrganizationController@import')->name('import');
             Route::get('organizations/organization-province','OrganizationController@organizationProvince')->name('organization-province');
             Route::delete('organizations/destroy', 'OrganizationController@massDestroy')->name('organizations.massDestroy');
             Route::get('organizations/check-slug', 'OrganizationController@checkSlug')->name('organizations.checkSlug');

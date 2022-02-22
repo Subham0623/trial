@@ -11,8 +11,28 @@
 @endcan
 <div class="card">
     <div class="card-header">
-        {{ trans('cruds.organization.title_singular') }} {{ trans('global.list') }}
+        <div class ="row">
+
+            <div class="col">
+    
+                {{ trans('cruds.organization.title_singular') }} {{ trans('global.list') }}
+            </div>
+            <div class="col">
+                <div>
+                    
+                </div>
+                <form action="{{ route('admin.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="file" class="form-control">
+                    <br>
+                    <button class="btn btn-success">Import Organization Data</button>
+                    <a href = "{{asset('/organizations.xlsx')}}"class="btn btn-success" style="color:white">Download Format</a>
+                </form>  
+
+            </div>
+        </div>
     </div>
+    
 
     <div class="card-body">
         <div class="table-responsive">

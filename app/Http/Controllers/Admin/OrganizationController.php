@@ -11,6 +11,8 @@ use App\Organization;
 use App\Province;
 use App\District;
 use Gate;
+use App\Imports\OrganizationsImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
@@ -113,8 +115,8 @@ class OrganizationController extends Controller
         $data = [
             'name'      => $request->name,
             'contact'   => $request->contact,
-            'province'  => $request->province,
-            'district'  => $request->district,
+            'province_id'  => $request->province,
+            'district_id'  => $request->district,
             'address'   => $request->address,
             'slug'      => $request->slug,
         ];
@@ -161,6 +163,19 @@ class OrganizationController extends Controller
         // dd($request->province);
         $province = Province::findOrFail($request->province);
         return District::where('province_id',$request->province)->pluck('name','id');
+        
+    }
+
+    public function import(Request $request) 
+    {
+        $request->validate([
+                'file'=>'required|mimes:xlsx'
+            ]);
+        Excel::import(new OrganizationsImport,request()->file('file'));
+
+        
+           
+        return redirect()->route('admin.organizations.index')->with('message','New Organizations added successfully!');
         
     }
 }
