@@ -829,6 +829,7 @@ class ComposerStaticInitc39f2958b5f0d5735c2c3c04a58f0fce
         'App\\Http\\Resources\\Admin\\UserResource' => __DIR__ . '/../..' . '/app/Http/Resources/Admin/UserResource.php',
         'App\\Http\\View\\Composers\\AdminSettingComposer' => __DIR__ . '/../..' . '/app/Http/View/Composers/AdminSettingComposer.php',
         'App\\Http\\View\\Composers\\FrontPageComposer' => __DIR__ . '/../..' . '/app/Http/View/Composers/FrontPageComposer.php',
+        'App\\Imports\\OrganizationsImport' => __DIR__ . '/../..' . '/app/Imports/OrganizationsImport.php',
         'App\\Listeners\\AddToCartListener' => __DIR__ . '/../..' . '/app/Listeners/AddToCartListener.php',
         'App\\Listeners\\WelcomeMail' => __DIR__ . '/../..' . '/app/Listeners/WelcomeMail.php',
         'App\\Mail\\CanReadBook' => __DIR__ . '/../..' . '/app/Mail/CanReadBook.php',

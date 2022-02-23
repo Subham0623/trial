@@ -99,6 +99,7 @@ return array(
     'App\\Http\\Resources\\Admin\\UserResource' => $baseDir . '/app/Http/Resources/Admin/UserResource.php',
     'App\\Http\\View\\Composers\\AdminSettingComposer' => $baseDir . '/app/Http/View/Composers/AdminSettingComposer.php',
     'App\\Http\\View\\Composers\\FrontPageComposer' => $baseDir . '/app/Http/View/Composers/FrontPageComposer.php',
+    'App\\Imports\\OrganizationsImport' => $baseDir . '/app/Imports/OrganizationsImport.php',
     'App\\Listeners\\AddToCartListener' => $baseDir . '/app/Listeners/AddToCartListener.php',
     'App\\Listeners\\WelcomeMail' => $baseDir . '/app/Listeners/WelcomeMail.php',
     'App\\Mail\\CanReadBook' => $baseDir . '/app/Mail/CanReadBook.php',
