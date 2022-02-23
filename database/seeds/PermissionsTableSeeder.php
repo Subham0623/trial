@@ -148,6 +148,106 @@ class PermissionsTableSeeder extends Seeder
                 'id'    => '35',
                 'title' => 'profile_password_edit',
             ],
+            [
+                'id'    => '36',
+                'title' => 'subject_area_create',
+            ],
+            [
+                'id'    => '37',
+                'title' => 'subject_area_edit',
+            ],
+            [
+                'id'    => '38',
+                'title' => 'subject_area_show',
+            ],
+            [
+                'id'    => '39',
+                'title' => 'subject_area_delete',
+            ],
+            [
+                'id'    => '40',
+                'title' => 'subject_area_access',
+            ],
+            [
+                'id'    => '41',
+                'title' => 'parameter_create',
+            ],
+            [
+                'id'    => '42',
+                'title' => 'parameter_edit',
+            ],
+            [
+                'id'    => '43',
+                'title' => 'parameter_show',
+            ],
+            [
+                'id'    => '44',
+                'title' => 'parameter_delete',
+            ],
+            [
+                'id'    => '45',
+                'title' => 'parameter_access',
+            ],
+            [
+                'id'    => '46',
+                'title' => 'province_create',
+            ],
+            [
+                'id'    => '47',
+                'title' => 'province_edit',
+            ],
+            [
+                'id'    => '48',
+                'title' => 'province_show',
+            ],
+            [
+                'id'    => '49',
+                'title' => 'province_delete',
+            ],
+            [
+                'id'    => '50',
+                'title' => 'province_access',
+            ],
+            [
+                'id'    => '51',
+                'title' => 'organization_create',
+            ],
+            [
+                'id'    => '52',
+                'title' => 'organization_edit',
+            ],
+            [
+                'id'    => '53',
+                'title' => 'organization_show',
+            ],
+            [
+                'id'    => '54',
+                'title' => 'organization_delete',
+            ],
+            [
+                'id'    => '55',
+                'title' => 'organization_access',
+            ],
+            [
+                'id'    => '56',
+                'title' => 'document_create',
+            ],
+            [
+                'id'    => '57',
+                'title' => 'document_edit',
+            ],
+            [
+                'id'    => '58',
+                'title' => 'document_show',
+            ],
+            [
+                'id'    => '59',
+                'title' => 'document_delete',
+            ],
+            [
+                'id'    => '60',
+                'title' => 'document_access',
+            ],
         ];
 
         Permission::insert($permissions);

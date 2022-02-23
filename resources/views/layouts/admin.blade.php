@@ -102,7 +102,7 @@
             <div style="padding-top: 20px" class="container-fluid">
                 @if(session('message'))
                     <div class="row mb-2">
-                        <div class="col-lg-12">
+                        <div class="col-lg-12" id="message">
                             <div class="alert alert-success" role="alert">{{ session('message') }}</div>
                         </div>
                     </div>
@@ -259,6 +259,9 @@
 
     </script>
     @yield('scripts')
+    <script>
+      $('#message').delay(5000).slideUp(300);
+    </script>
 </body>
 
 </html>

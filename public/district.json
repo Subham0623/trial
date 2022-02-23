@@ -1,0 +1,12 @@
+[
+  {
+    "Province": "Province No. 1",
+    "Districts": ["Bhojpur", "Dhankuta"]
+  },
+  {
+    "Province": "Province No. 2",
+    "Districts": ["B", "D"]
+  }
+  
+  
+]

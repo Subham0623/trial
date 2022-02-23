@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'b9b553fc409cd233f92096f5be16b757025001e6',
+    'reference' => '7544e43777e5284b64ac91d17f552ae9099a22fb',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -52,15 +52,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '3c2d678269ba60e178bcd93e36f6a91c36b727f1',
-    ),
-    'bordoni/phpass' => 
-    array (
-      'pretty_version' => '0.3.5',
-      'version' => '0.3.5.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'fd57c109213e95150b7de1dc8908c55605cd8e55',
     ),
     'brick/math' => 
     array (
@@ -229,6 +220,15 @@ private static $installed = array (
       ),
       'reference' => '0dbf5d78455d4d6a41d186da50adc1122ec066f4',
     ),
+    'ezyang/htmlpurifier' => 
+    array (
+      'pretty_version' => 'v4.14.0',
+      'version' => '4.14.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '12ab42bd6e742c70c0a52f7b82477fcd44e64b75',
+    ),
     'facade/flare-client-php' => 
     array (
       'pretty_version' => '1.9.1',
@@ -343,13 +343,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '8c3d0a3f6af734494ad8f6fbbee0ba92422859f3',
-    ),
-    'hautelook/phpass' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.3.*',
-      ),
     ),
     'illuminate/auth' => 
     array (
@@ -604,7 +597,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'b9b553fc409cd233f92096f5be16b757025001e6',
+      'reference' => '7544e43777e5284b64ac91d17f552ae9099a22fb',
     ),
     'laravel/passport' => 
     array (
@@ -710,6 +703,15 @@ private static $installed = array (
         0 => '*',
       ),
     ),
+    'maatwebsite/excel' => 
+    array (
+      'pretty_version' => '3.1.36',
+      'version' => '3.1.36.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'eb31f30d72c51c3fb11644b636945accbe50404f',
+    ),
     'maennchen/zipstream-php' => 
     array (
       'pretty_version' => '2.1.0',
@@ -719,6 +721,24 @@ private static $installed = array (
       ),
       'reference' => 'c4c5803cc1f93df3d2448478ef79394a5981cc58',
     ),
+    'markbaker/complex' => 
+    array (
+      'pretty_version' => '3.0.1',
+      'version' => '3.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'ab8bc271e404909db09ff2d5ffa1e538085c0f22',
+    ),
+    'markbaker/matrix' => 
+    array (
+      'pretty_version' => '3.0.0',
+      'version' => '3.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c66aefcafb4f6c269510e9ac46b82619a904c576',
+    ),
     'maximebf/debugbar' => 
     array (
       'pretty_version' => 'v1.17.3',
@@ -727,19 +747,6 @@ private static $installed = array (
       array (
       ),
       'reference' => 'e8ac3499af0ea5b440908e06cc0abe5898008b3c',
-    ),
-    'mikemclin/laravel-wp-password' => 
-    array (
-      'pretty_version' => '2.0.3',
-      'version' => '2.0.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '5225c95f75aa0a5ad4040ec2074d1c8d7f10b5f4',
-      'replaced' => 
-      array (
-        0 => '2.0.3',
-      ),
     ),
     'mockery/mockery' => 
     array (
@@ -916,6 +923,15 @@ private static $installed = array (
       ),
       'reference' => 'a12f7e301eb7258bb68acd89d4aefa05c2906cae',
     ),
+    'phpoffice/phpspreadsheet' => 
+    array (
+      'pretty_version' => '1.22.0',
+      'version' => '1.22.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '3a9e29b4f386a08a151a33578e80ef1747037a48',
+    ),
     'phpoption/phpoption' => 
     array (
       'pretty_version' => '1.8.0',
@@ -1028,6 +1044,15 @@ private static $installed = array (
       array (
         0 => '1.0',
       ),
+    ),
+    'psr/http-client' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2dfb5f6c5eff0e91e20e913f8c5452ed95b86621',
     ),
     'psr/http-factory' => 
     array (

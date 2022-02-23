@@ -205,4 +205,73 @@ return [
         ],
     ],
 
+    'subjectarea'           => [
+        'title'          => 'Subject Areas',
+        'title_singular' => 'Subject Area',
+        'fields'         => [
+            'id'               => 'ID',
+            'id_helper'        => '',
+            'title'            => 'Title',
+            'title_helper'     => '',
+            'sort'             => 'Sort',
+            'sort_helper'      => '',
+            'slug'             => 'Slug',
+            'slug_helper'      => '',
+        ],
+    ],
+
+    'parameter'           => [
+        'title'          => 'Parameters',
+        'title_singular' => 'Parameter',
+        'fields'         => [
+            'id'                    => 'ID',
+            'id_helper'             => '',
+            'title'                 => 'Title',
+            'title_helper'          => '',
+            'description'           => 'Description',
+            'description_helper'    => '',
+            'sort'                  => 'Sort',
+            'sort_helper'           => '',
+            'subject_area'          => 'Subject Area',
+            'subject_area_helper'   => '',
+            'slug'                  => 'Slug',
+            'slug_helper'           => '',
+            'option'                => 'Options',
+            'document'              => 'Documents',
+        ],
+    ],
+
+    'province'           => [
+        'title'          => 'Provinces',
+        'title_singular' => 'Province',
+        'fields'         => [
+            'id'                    => 'ID',
+            'id_helper'             => '',
+            'name'                  => 'Name',
+            'name_helper'           => '',
+            'district'              => 'District',
+        ],
+    ],
+
+    'organization'           => [
+        'title'          => 'Organizations',
+        'title_singular' => 'Organization',
+        'fields'         => [
+            'id'                    => 'ID',
+            'id_helper'             => '',
+            'name'                  => 'Name',
+            'name_helper'           => '',
+            'contact'               => 'Contact',
+            'contact_helper'        => '',
+            'province'              => 'Province',
+            'province_helper'       => '',
+            'district'              => 'District',
+            'district_helper'       => '',
+            'address'               => 'Address',
+            'address_helper'        => '',
+            'slug'                  => 'Slug',
+            'slug_helper'           => '',
+        ],
+    ],
+
 ];

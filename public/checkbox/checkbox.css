@@ -1,0 +1,168 @@
+  @-webkit-keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  .check__box-design {
+    width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .check__box-design .check__box-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .check__box-design .check__all {
+    display: none;
+  }
+  
+  .check__box-design .check__all-design {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .check__box-design .check__all-design label {
+    -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+            order: 2;
+    font-size: 1rem;
+    font-family: poppins;
+    font-weight: bold;
+  }
+  
+  .check__box-design .check__all-design .check__all-box {
+    -webkit-box-ordinal-group: 2;
+        -ms-flex-order: 1;
+            order: 1;
+    width: 25px;
+    height: 25px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 0 0 2px #007ce2;
+            box-shadow: 0 0 0 2px #007ce2;
+    position: relative;
+  }
+  
+  .check__box-design .check__all-design .check__all-box .state {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  
+  .check__box-design .check__all-design .check__all-box .active-state {
+    display: block;
+  }
+  
+  .check__box-design .check__all-design .check__all-box .checked.active-state svg {
+    stroke-linecap: round;
+    stroke-dasharray: 27;
+    stroke-dashoffset: -23;
+    -webkit-animation: dash 500ms ease forwards;
+            animation: dash 500ms ease forwards;
+  }
+  
+  .check__box-design .check__all-design .check__all-box .some__checked {
+    background-color: #007ce2;
+  }
+  
+  .check__box-design .check__all-design .check__all-box .some__checked::after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 3px;
+    background: #fff;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+  }
+  
+  .child__box {
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    width: 200px;
+    -webkit-box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.04), -7px -7px 5px rgba(255, 255, 255, 0.8);
+            box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.04), -7px -7px 5px rgba(255, 255, 255, 0.8);
+    border: 2px solid #ebebeb;
+  }
+  
+  .child__box-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .child__box input[type="checkbox"] {
+    display: none;
+    pointer-events: none;
+  }
+  
+  .child__box input[type="checkbox"] + label {
+    cursor: pointer;
+    font-size: 1rem;
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: auto 3fr;
+        grid-template-columns: auto 3fr;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  
+  .child__box input[type="checkbox"] + label svg {
+    width: 2em;
+    stroke: #007ce2;
+    stroke-width: 5;
+    fill: white;
+  }
+  
+  .child__box input[type="checkbox"] + label svg .box {
+    stroke-dasharray: 320;
+    stroke-dashoffset: 0;
+    fill: white;
+    -webkit-transition: stroke-dashoffset 0.3s linear;
+    transition: stroke-dashoffset 0.3s linear;
+  }
+  
+  .child__box input[type="checkbox"] + label svg .check {
+    stroke-dasharray: 70;
+    stroke-dashoffset: 70;
+    fill: none;
+    -webkit-transition: stroke-dashoffset 0.3s linear;
+    transition: stroke-dashoffset 0.3s linear;
+  }
+  
+  .child__box input[type="checkbox"] + label span {
+    padding-top: 0.3rem;
+    margin-left: 0.3rem;
+  }
+  
+  .child__box input[type="checkbox"]:checked + label .box {
+    stroke-dashoffset: 320;
+  }
+  
+  .child__box input[type="checkbox"]:checked + label .check {
+    stroke-dashoffset: 0;
+  }
+  /*# sourceMappingURL=indes.css.map */

@@ -25,10 +25,10 @@ class InitializeController extends Controller
         }
         
         $alldata = ['item_id' => $request->item_id, 'ip' => $ip, 'domain' => $domain , 'product_key' => $request->code];
-        $data = $this->make_request($alldata);
+        // $data = $this->make_request($alldata);
 
         // rajan's line
-        // $data = ['status' => 1];
+        $data = ['status' => 1];
 
         if ($data['status'] == 1)
         {   

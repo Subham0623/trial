@@ -119,7 +119,47 @@
                 </ul>
             </li>
             @endcan
+
+            @can('province_create')
+            <li class="nav-item">
+                <a href="{{ route('admin.provinces.index') }}"
+                    class="nav-link {{ request()->is('admin/provinces') || request()->is('admin/provinces/*') ? 'active' : '' }}">
+                    <i class=" nav-icon fa fa-gear"></i>
+                    {{ trans('cruds.province.title') }}
+                </a>
+            </li>
+            @endcan
+
+            @can('organization_create')
+            <li class="nav-item">
+                <a href="{{ route('admin.organizations.index') }}"
+                    class="nav-link {{ request()->is('admin/organizations') || request()->is('admin/organizations/*') ? 'active' : '' }}">
+                    <i class=" nav-icon fa fa-gear"></i>
+                    {{ trans('cruds.organization.title') }}
+                </a>
+            </li>
+            @endcan
             
+            @can('subject_area_create')
+            <li class="nav-item">
+                <a href="{{ route('admin.subject-areas.index') }}"
+                    class="nav-link {{ request()->is('admin/subject-areas') || request()->is('admin/subject-areas/*') ? 'active' : '' }}">
+                    <i class=" nav-icon fa fa-gear"></i>
+                    {{ trans('cruds.subjectarea.title') }}
+                </a>
+            </li>
+            @endcan
+
+            @can('parameter_create')
+            <li class="nav-item">
+                <a href="{{ route('admin.parameters.index') }}"
+                    class="nav-link {{ request()->is('admin/parameters') || request()->is('admin/parameters/*') ? 'active' : '' }}">
+                    <i class=" nav-icon fa fa-gear"></i>
+                    {{ trans('cruds.parameter.title') }}
+                </a>
+            </li>
+            @endcan
+
             @can('setting_create')
             <li class="nav-item">
                 <a href="{{ route('admin.settings.create') }}"

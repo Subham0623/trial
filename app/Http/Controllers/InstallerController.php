@@ -60,7 +60,6 @@ class InstallerController extends Controller
     }
 
     public function consent(){
-      
       if(config('app.is_installed') == 0){
           return view('install.consent');
       }else{
@@ -410,10 +409,10 @@ class InstallerController extends Controller
 
             $setting->save();
 
-            $apistatus = $this->update_status('1');
+            // $apistatus = $this->update_status('1');
 
             // Rajan's code
-            // $apistatus = 1;
+            $apistatus = 1;
 
             if($apistatus == 1){
               $env_update = $this->changeEnv([
