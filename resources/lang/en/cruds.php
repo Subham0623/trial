@@ -31,6 +31,8 @@ return [
             'id_helper'          => '',
             'title'              => 'Title',
             'title_helper'       => '',
+            'can_shareable'              => 'Share with other Users?',
+            'can_shareable_helper'       => '',
             'permissions'        => 'Permissions',
             'permissions_helper' => '',
             'created_at'         => 'Created at',

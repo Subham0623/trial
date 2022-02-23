@@ -18,7 +18,7 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $roles = Role::all();
+        $roles = Role::ofAllowedRoles()->with('permissions')->get();
 
         return view('admin.roles.index', compact('roles'));
     }
@@ -27,14 +27,19 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $permissions = Permission::all()->pluck('title', 'id');
-
+        $permissions = Permission::ofAllowedPermissions()->pluck('title', 'id');
+        // dd($permissions);
         return view('admin.roles.create', compact('permissions'));
     }
 
     public function store(StoreRoleRequest $request)
     {
-        $role = Role::create($request->all());
+        $data = [
+            'title' =>$request->title,
+            'can_shareable' =>$request->can_shareable,
+            'created_by' => auth()->user()->id,
+            ];
+        $role = Role::create($data);
         $role->permissions()->sync($request->input('permissions', []));
 
         return redirect()->route('admin.roles.index');
@@ -45,7 +50,7 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $permissions = Permission::all()->pluck('title', 'id');
+        $permissions = Permission::ofAllowedPermissions()->pluck('title', 'id');
 
         $role->load('permissions');
 
@@ -54,7 +59,12 @@ class RolesController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        $role->update($request->all());
+        $data = [
+            'title' =>$request->title,
+            'can_shareable' =>$request->can_shareable,
+            'updated_by' => auth()->user()->id,
+            ];
+        $role->update($data);
         $role->permissions()->sync($request->input('permissions', []));
 
         return redirect()->route('admin.roles.index');
@@ -74,8 +84,11 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $role->delete();
+        if($role->delete()) { // If softdeleted
 
+            $role->update(array('deleted_by' => auth()->user()->id));
+        }
+        
         return back();
 
     }

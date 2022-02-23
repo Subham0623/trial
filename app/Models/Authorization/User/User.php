@@ -40,6 +40,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'created_at',
         'updated_at',
         'deleted_at',
+        'created_by',
+        'updated_by',
+        'deleted_by'
     ];
 
     protected function serializeDate(DateTimeInterface $date)
@@ -120,6 +123,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function organization()
     {
         return $this->belongsTo(Organization::class);
+    }
+    
+    public function getIsMainAdminAttribute()
+    {
+        return $this->roles()->whereIn('id', [1])->exists();
+
+    }
+
+    public function scopeOfUser($query)
+    {
+        $user = User::find(auth()->user()->id);
+        
+        if (!$user->isMainAdmin) {
+            return $query->where('created_by', $user->id);
+        }
+        return $query;
     }
 
 }

@@ -37,7 +37,7 @@
                         {{ $errors->first('password') }}
                     </div>
                 @endif
-                <span class="help-block">{{ trans('cruds.user.fields.password_helper') }}</span>
+                <!-- <span class="help-block">{{ trans('cruds.user.fields.password_helper') }}</span> -->
             </div>
             <div class="form-group">
                 <label class="required" for="roles">{{ trans('cruds.user.fields.roles') }}</label>

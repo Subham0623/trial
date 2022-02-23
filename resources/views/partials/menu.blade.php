@@ -11,7 +11,7 @@
                 </a>
             </li>
             @can('user_management_access')
-            <li class="nav-item nav-dropdown {{ request()->is('admin/permissions/*') || request()->is('admin/roles/*') || request()->is('admin/users/*') ? 'open' : '' }}">
+            <li class="nav-item nav-dropdown {{ request()->is('admins/permissions/*') || request()->is('admins/roles/*') || request()->is('admins/users/*') ? 'open' : '' }}">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
                     <i class="fa-fw fas fa-users nav-icon">
 
@@ -22,7 +22,7 @@
                     @can('permission_access')
                     <li class="nav-item">
                         <a href="{{ route("admin.permissions.index") }}"
-                            class="nav-link {{ request()->is('admin/permissions') || request()->is('admin/permissions/*') ? 'active' : '' }}">
+                            class="nav-link {{ request()->is('admins/permissions') || request()->is('admins/permissions/*') ? 'active' : '' }}">
                             <i class="fa-fw fas fa-unlock-alt nav-icon">
 
                             </i>
@@ -33,7 +33,7 @@
                     @can('role_access')
                     <li class="nav-item">
                         <a href="{{ route("admin.roles.index") }}"
-                            class="nav-link {{ request()->is('admin/roles') || request()->is('admin/roles/*') ? 'active' : '' }}">
+                            class="nav-link {{ request()->is('admins/roles') || request()->is('admins/roles/*') ? 'active' : '' }}">
                             <i class="fa-fw fas fa-briefcase nav-icon">
 
                             </i>
@@ -44,7 +44,7 @@
                     @can('user_access')
                     <li class="nav-item">
                         <a href="{{ route("admin.users.index") }}"
-                            class="nav-link {{ request()->is('admin/users') || request()->is('admin/users/*') ? 'active' : '' }}">
+                            class="nav-link {{ request()->is('admins/users') || request()->is('admins/users/*') ? 'active' : '' }}">
                             <i class="fa-fw fas fa-user nav-icon">
 
                             </i>
@@ -57,7 +57,7 @@
             @endcan
 
             @can('product_management_access')
-            <li class="nav-item nav-dropdown {{ request()->is('admin/product-categories/*') ? 'open' : '' }}">
+            <li class="nav-item nav-dropdown {{ request()->is('admins/product-categories/*') ? 'open' : '' }}">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
                     <i class="fa-fw fas fa-users nav-icon">
 
@@ -69,7 +69,7 @@
                     <li class="nav-item nav-dropdown">
                         <li class="nav-item">
                             <a href="{{ route("admin.product-categories.index") }}"
-                                class="nav-link {{ request()->is('admin/product-categories') || request()->is('admin/product-categories/*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->is('admins/product-categories') || request()->is('admins/product-categories/*') ? 'active' : '' }}">
                                 <i class="fa-fw fas fa-list nav-icon">
 
                                 </i>
@@ -83,7 +83,7 @@
             @endcan
 
             @can('cms_access')
-            <li class="nav-item nav-dropdown {{ request()->is('admin/permissions/*') || request()->is('admin/roles/*') || request()->is('admin/users/*') ? 'open' : '' }}">
+            <li class="nav-item nav-dropdown {{ request()->is('admins/permissions/*') || request()->is('admins/roles/*') || request()->is('admins/users/*') ? 'open' : '' }}">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
                     <i class="fa-fw fas fa-users nav-icon">
 
@@ -94,7 +94,7 @@
                     @can('slider_access')
                     <li class="nav-item nav-dropdown">
                         <li class="nav-item">
-                            <a href="{{ route("admin.sliders.index") }}" class="nav-link {{ request()->is('admin/sliders') || request()->is('admin/sliders/*') ? 'active' : '' }}">
+                            <a href="{{ route("admin.sliders.index") }}" class="nav-link {{ request()->is('admins/sliders') || request()->is('admins/sliders/*') ? 'active' : '' }}">
                                 <i class="fa-fw fas fa-plus nav-icon">
 
                                 </i>
@@ -107,7 +107,7 @@
                     @can('popup_access')
                     <li class="nav-item nav-dropdown">
                         <li class="nav-item">
-                            <a href="{{ route("admin.popups.index") }}" class="nav-link {{ request()->is('admin/popups') || request()->is('admin/popups/*') ? 'active' : '' }}">
+                            <a href="{{ route("admin.popups.index") }}" class="nav-link {{ request()->is('admins/popups') || request()->is('admins/popups/*') ? 'active' : '' }}">
                                 <i class="fa-fw fas fa-plus nav-icon">
 
                                 </i>
@@ -163,7 +163,7 @@
             @can('setting_create')
             <li class="nav-item">
                 <a href="{{ route('admin.settings.create') }}"
-                    class="nav-link {{ request()->is('admin/settings') || request()->is('admin/settings/*') ? 'active' : '' }}">
+                    class="nav-link {{ request()->is('admins/settings') || request()->is('admins/settings/*') ? 'active' : '' }}">
                     <i class=" nav-icon fa fa-gear"></i>
                     {{ trans('global.setting') }}
                 </a>

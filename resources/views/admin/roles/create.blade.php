@@ -19,6 +19,26 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.role.fields.title_helper') }}</span>
             </div>
+            @if(auth()->user()->isMainAdmin)
+            <div class="form-group">
+                <label class="" for="can_shareable">{{ trans('cruds.role.fields.can_shareable') }}</label>
+                <div class="form-check">
+                    <input class="form-check-input {{ $errors->has('can_shareable') ? 'is-invalid' : '' }}" type="radio" name="can_shareable" id="can_shareable" value="{{ old('can_shareable', '1') }}"> 
+                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input {{ $errors->has('can_shareable') ? 'is-invalid' : '' }}" type="radio" name="can_shareable" id="can_shareable" value="{{ old('can_shareable', '0') }}" checked> 
+                    <label class="form-check-label" for="inlineRadio2">No</label>
+                </div>
+                @if($errors->has('can_shareable'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('can_shareable') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.role.fields.title_helper') }}</span>
+            </div>
+            @endif
+            
             <div class="form-group">
                 <label class="required" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
                 <div style="padding-bottom: 4px">
