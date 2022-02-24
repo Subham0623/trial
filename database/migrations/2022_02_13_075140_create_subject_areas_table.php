@@ -17,7 +17,7 @@ class CreateSubjectAreasTable extends Migration
             $table->increments('id');
             $table->longText('title')->nullable();
             $table->integer('sort')->nullable();
-            $table->longText('slug')->nullable()->unique();
+            $table->string('slug')->nullable()->unique();
             $table->timestamps();
             $table->softDeletes();
         });
