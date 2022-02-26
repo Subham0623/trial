@@ -21,6 +21,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
 
 Route::get('/form','HomeApiController@form')->name('form');
 Route::post('/store','HomeApiController@store')->name('form-store');
+Route::get('/profile','HomeApiController@profile')->name('profile');
+Route::get('/test','HomeApiController@test')->name('test');
 
 
     // Route::get('/wishlist','WishlistApiController@index')->name('wishlist');

@@ -120,7 +120,7 @@
             </li>
             @endcan
 
-            @can('province_create')
+            @can('province_access')
             <li class="nav-item">
                 <a href="{{ route('admin.provinces.index') }}"
                     class="nav-link {{ request()->is('admin/provinces') || request()->is('admin/provinces/*') ? 'active' : '' }}">
@@ -130,7 +130,7 @@
             </li>
             @endcan
 
-            @can('organization_create')
+            @can('organization_access')
             <li class="nav-item">
                 <a href="{{ route('admin.organizations.index') }}"
                     class="nav-link {{ request()->is('admin/organizations') || request()->is('admin/organizations/*') ? 'active' : '' }}">
@@ -140,7 +140,7 @@
             </li>
             @endcan
             
-            @can('subject_area_create')
+            @can('subject_area_access')
             <li class="nav-item">
                 <a href="{{ route('admin.subject-areas.index') }}"
                     class="nav-link {{ request()->is('admin/subject-areas') || request()->is('admin/subject-areas/*') ? 'active' : '' }}">
@@ -150,7 +150,7 @@
             </li>
             @endcan
 
-            @can('parameter_create')
+            @can('parameter_access')
             <li class="nav-item">
                 <a href="{{ route('admin.parameters.index') }}"
                     class="nav-link {{ request()->is('admin/parameters') || request()->is('admin/parameters/*') ? 'active' : '' }}">
