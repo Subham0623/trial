@@ -13,6 +13,7 @@ use Laravel\Passport\HasApiTokens;
 use \DateTimeInterface;
 use App\Models\Authorization\Role;
 use App\Form;
+use App\Organization;
 
 class User extends Authenticatable implements MustVerifyEmail
 {

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use \DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
+use App\Models\Authorization\User\User;
+
 
 class Organization extends Model
 {
