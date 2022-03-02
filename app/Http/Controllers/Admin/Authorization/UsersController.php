@@ -21,8 +21,8 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::with('user_detail')->latest()->paginate(100);
-        // dd($users);
+        $users = User::ofUser()->with('user_detail')->latest()->paginate(100);
+        
         return view('admin.users.index', compact('users'));
     }
 
@@ -30,7 +30,7 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $roles = Role::all()->pluck('title', 'id');
+        $roles = Role::ofAllowedRoles()->pluck('title', 'id');
 
         return view('admin.users.create', compact('roles'));
     }
@@ -42,6 +42,7 @@ class UsersController extends Controller
             'email' => $request->email,
             'email_verified_at' => Carbon::now(),
             'password' => $request->password,
+            'created_by' => auth()->user()->id,
             ];
             
         $user = User::create($data);
@@ -55,7 +56,7 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $roles = Role::all()->pluck('title', 'id');
+        $roles = Role::ofAllowedRoles()->pluck('title', 'id');
 
         $user->load('roles');
 
@@ -64,7 +65,11 @@ class UsersController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update($request->all());
+        $data = [
+            'title' =>$request->title,
+            'updated_by' => auth()->user()->id,
+            ];
+        $user->update($data);
         $user->roles()->sync($request->input('roles', []));
 
         return redirect()->route('admin.users.index');
@@ -84,7 +89,10 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $user->delete();
+        if($user->delete()) { // If softdeleted
+            
+            $user->update(array('deleted_by' => auth()->user()->id));
+        }
 
         return back();
 

@@ -17,7 +17,7 @@ class CreateParametersTable extends Migration
             $table->increments('id');
             $table->longText('title')->nullable();
             $table->integer('sort')->nullable();
-            $table->longText('slug')->nullable()->unique();
+            $table->string('slug')->nullable()->unique();
             $table->longText('description')->nullable();
             $table->unsignedInteger('subject_area_id')->nullable();
             $table->foreign('subject_area_id')->references('id')->on('subject_areas')->onDelete('cascade');
