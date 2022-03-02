@@ -20,7 +20,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
 Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'middleware' => ['auth:api']], function () {
 
 Route::get('/form','HomeApiController@form')->name('form');
-Route::post('/store','HomeApiController@store')->name('form-store');
+Route::post('/form','HomeApiController@store')->name('form-store');
 Route::get('/profile','HomeApiController@profile')->name('profile');
 Route::get('/test','HomeApiController@test')->name('test');
 

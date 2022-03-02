@@ -29,7 +29,7 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         $form = Form::findOrFail($request->id)->with('user')->first();
         dd($form);
         if(isset($form)){
