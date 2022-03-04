@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormOptionTable extends Migration
+class CreateFormSubjectAreaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateFormOptionTable extends Migration
      */
     public function up()
     {
-        Schema::create('form_option', function (Blueprint $table) {
+        Schema::create('form_subject_area', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('form_id');
+            $table->unsignedInteger('form_id')->nullable();
             $table->foreign('form_id')->references('id')->on('forms')->onDelete('cascade');
-            $table->unsignedInteger('option_id');
-            $table->foreign('option_id')->references('id')->on('options')->onDelete('cascade');
+            $table->unsignedInteger('subject_area_id')->nullable();
+            $table->foreign('subject_area_id')->references('id')->on('subject_areas')->onDelete('cascade');
+            $table->decimal('marks',8,2)->nullable();
         });
     }
 
@@ -29,7 +30,7 @@ class CreateFormOptionTable extends Migration
      */
     public function down()
     {
-        Schema::table('form_option', function (Blueprint $table) {
+        Schema::table('form_subject_area', function (Blueprint $table) {
             //
         });
     }

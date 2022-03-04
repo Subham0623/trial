@@ -7,7 +7,7 @@ use \DateTimeInterface;
 
 class FormDetail extends Model
 {
-    public $table = 'form_option';
+    public $table = 'form_subject_area_option';
 
     protected $dates = [
         'created_at',
@@ -16,8 +16,10 @@ class FormDetail extends Model
     ];
 
     protected $fillable = [
-        'form_id',
+        'form_subject_area_id',
         'option_id',
+        'remarks',
+        'marks',
         'created_at',
         'updated_at',
     ];
@@ -26,5 +28,10 @@ class FormDetail extends Model
     {
         return $date->format('Y-m-d H:i:s');
 
+    }
+
+    public function formSubjectAreas()
+    {
+        return $this->belongsToMany(FormSubjectArea::class)->withPivot('marks','remarks');
     }
 }
