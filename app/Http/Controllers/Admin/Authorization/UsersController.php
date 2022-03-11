@@ -32,7 +32,7 @@ class UsersController extends Controller
         abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $roles = Role::ofAllowedRoles()->pluck('title', 'id');
-        $organizations = Organization::pluck('name','id');
+        $organizations = Organization::ofUsers()->pluck('name','id');
 
         return view('admin.users.create', compact('roles','organizations'));
     }
@@ -62,7 +62,7 @@ class UsersController extends Controller
 
         $roles = Role::ofAllowedRoles()->pluck('title', 'id');
 
-        $organizations = Organization::pluck('name','id');
+        $organizations = Organization::ofUsers()->pluck('name','id');
 
         $user->load('roles','organizations');
 

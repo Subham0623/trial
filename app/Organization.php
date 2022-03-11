@@ -62,4 +62,15 @@ class Organization extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    public function scopeOfUsers($query)
+    {
+        $user = User::find(auth()->user()->id);
+        
+        if (!$user->isMainAdmin) {
+            // return $query->users();
+            return $user->organizations;
+        }
+        return $query;
+    }
 }
