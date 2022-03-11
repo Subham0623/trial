@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Mail\CanReadBook;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Organization;
 
 class UsersController extends Controller
 {
@@ -31,12 +32,14 @@ class UsersController extends Controller
         abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $roles = Role::ofAllowedRoles()->pluck('title', 'id');
+        $organizations = Organization::pluck('name','id');
 
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('roles','organizations'));
     }
 
     public function store(StoreUserRequest $request)
     {
+        
         $data = [
             'name' =>$request->name,
             'email' => $request->email,
@@ -44,10 +47,11 @@ class UsersController extends Controller
             'password' => $request->password,
             'created_by' => auth()->user()->id,
             ];
+           
             
         $user = User::create($data);
         $user->roles()->sync($request->input('roles', []));
-
+        $user->organizations()->sync($request->input('organizations', []));
         return redirect()->route('admin.users.index');
 
     }
@@ -58,19 +62,24 @@ class UsersController extends Controller
 
         $roles = Role::ofAllowedRoles()->pluck('title', 'id');
 
-        $user->load('roles');
+        $organizations = Organization::pluck('name','id');
 
-        return view('admin.users.edit', compact('roles', 'user'));
+        $user->load('roles','organizations');
+
+        return view('admin.users.edit', compact('roles', 'user','organizations'));
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
+        
         $data = [
             'title' =>$request->title,
             'updated_by' => auth()->user()->id,
             ];
+            
         $user->update($data);
         $user->roles()->sync($request->input('roles', []));
+        $user->organizations()->sync($request->input('organizations', []));
 
         return redirect()->route('admin.users.index');
 
@@ -80,7 +89,7 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $user->load('roles');
+        $user->load('roles','organizations');
         // dd($user->user_detail);
         return view('admin.users.show', compact('user'));
     }

@@ -60,6 +60,8 @@ return [
             'password_helper'          => 'Leave the field empty, if you do not want to change it.',
             'roles'                    => 'Roles',
             'roles_helper'             => '',
+            'organization'            => 'Organizations',
+            'organization_helper'      => '',
             'remember_token'           => 'Remember Token',
             'remember_token_helper'    => '',
             'created_at'               => 'Created at',

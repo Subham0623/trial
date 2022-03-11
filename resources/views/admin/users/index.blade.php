@@ -38,6 +38,9 @@
                             {{ trans('cruds.user.fields.roles') }}
                         </th>
                         <th>
+                            {{ trans('cruds.user.fields.organization') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -63,6 +66,11 @@
                             <td>
                                 @foreach($user->roles as $key => $item)
                                     <span class="badge badge-info">{{ $item->title }}</span>
+                                @endforeach
+                            </td>
+                            <<td>
+                                @foreach($user->organizations as $key => $item)
+                                    <span class="badge badge-info">{{ $item->name }}</span>
                                 @endforeach
                             </td>
                             <td>
@@ -151,7 +159,7 @@
         $($.fn.dataTable.tables(true)).DataTable()
             .columns.adjust();
     });
-})
+});
 
 </script>
 @endsection
