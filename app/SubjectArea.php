@@ -48,4 +48,9 @@ class SubjectArea extends Model
     {
         return $this->hasMany(Parameter::class);
     }
+
+    public function forms()
+    {
+        return $this->belongsToMany(Forms::class)->withPivot('marks');
+    }
 }

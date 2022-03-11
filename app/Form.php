@@ -69,8 +69,13 @@ class Form extends Model
         return $this->belongsTo(User::class,'final_verified_by');
     }
 
-    public function options()
+    // public function options()
+    // {
+    //     return $this->belongsToMany(Option::class);
+    // }
+
+    public function subjectAreas()
     {
-        return $this->belongsToMany(Option::class);
+        return $this->belongsToMany(SubjectArea::class)->withPivot('marks');
     }
 }
