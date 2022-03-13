@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FormSubjectArea extends Model
 {
-    public $table = 'form_subject_area'; 
+    protected $table = 'form_subject_area'; 
 
     protected $dates = [
         'created_at',
@@ -21,8 +21,8 @@ class FormSubjectArea extends Model
         'updated_at',
     ];
 
-    public function formDetails()
+    public function options()
     {
-        return $this->belongsToMany(FormDetail::class)->withPivot('marks','remarks');
+        return $this->belongsToMany(Option::class)->withPivot('marks','remarks');
     }
 }

@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 use Auth;
+use App\Organization;
+use App\Province;
+use App\District;
 
 class HomeController
 {
     public function index()
     {
+        // dd('hello');
+        $province_id = 1;
+        $district_id = 1;
+        $provinces = Province::all();
+        $districts = District::where('province_id',$province_id);
+        $organizations = Organization::where('province_id',$province_id)->get();
+        $org = Organization::where('district_id',$district_id)->get();
         return view('home');
     }
 

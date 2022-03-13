@@ -7,11 +7,16 @@ use App\Models\Product\ProductCategory;
 use App\Models\CMS\Slider;
 use App\Models\CMS\Popup;
 use Illuminate\Http\Request;
+use Auth;
+use App\FormDetail;
+
 
 class HomeController extends Controller
 {
     public function index()
     {        
+        // dd(Auth::user()->feedbacks()->get());
+        // dd(FormDetail::all()->load('feedbacks'));
         $sliders = Slider::where('status',0)->latest()->get();
 
         $popups = Popup::where('status',0)->latest()->get();

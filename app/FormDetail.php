@@ -3,35 +3,25 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use \DateTimeInterface;
 
 class FormDetail extends Model
 {
-    public $table = 'form_subject_area_option';
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        
-    ];
-
+    public $timestamps = false;
+    protected $table = 'form_subject_area_option';
+    
     protected $fillable = [
         'form_subject_area_id',
         'option_id',
         'remarks',
-        'marks',
-        'created_at',
-        'updated_at',
+        'marks'
     ];
 
-    protected function serializeDate(DateTimeInterface $date)
+    public function feedbacks()
     {
-        return $date->format('Y-m-d H:i:s');
-
+        return $this->hasMany(Feedback::class);
     }
 
-    public function formSubjectAreas()
-    {
-        return $this->belongsToMany(FormSubjectArea::class)->withPivot('marks','remarks');
-    }
+    
+
+    
 }
