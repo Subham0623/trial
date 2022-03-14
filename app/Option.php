@@ -45,8 +45,5 @@ class Option extends Model
         return $this->belongsToMany(Form::class);
     }
 
-    public function formSubjectAreas()
-    {
-        return $this->belongsToMany(FormSubjectArea::class)->withPivot('marks','remarks');
-    }
+    
 }
