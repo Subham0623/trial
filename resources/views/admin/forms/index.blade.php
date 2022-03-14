@@ -74,11 +74,11 @@
                                 {{ $form->finalVerifiedBy ? $form->finalVerifiedBy->name : '' }}
                             </td>
                             <td>
-                            
+                            @can('form_edit')
                                     <a class="btn btn-xs btn-info" href="{{ url('/api/v1/form', $form->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                
+                             @endcan   
                             </td>
 
                         </tr>
