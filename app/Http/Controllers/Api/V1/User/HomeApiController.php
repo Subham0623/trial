@@ -78,6 +78,10 @@ class HomeApiController extends Controller
             'marks'=> $total
         ]);
 
+        $total_marks = $form->subjectAreas->sum('pivot.marks');
+        $form->total_marks = $total_marks;
+        $form->save();
+
         // $form = Form::findOrFail($request->id)->with('user')->first();
         
         // if(isset($form)){
@@ -106,7 +110,10 @@ class HomeApiController extends Controller
         // $data = [
         //     'form_id' => $form->id,
         // ];
-        return response(['message'=>'Form saved successfully']);
+        return response([
+            'message'=>'Form saved successfully',
+            'form_id'=>$form->id
+    ],200);
     }
 
     public function fileUpload(Request $request)
@@ -123,7 +130,7 @@ class HomeApiController extends Controller
         return response()->json([
             'name'          => $name,
             'original_name' => $file->getClientOriginalName(),
-        ]);
+        ],200);
     }
 
     public function test(Request $request)
@@ -169,6 +176,6 @@ class HomeApiController extends Controller
         $form->save();
         // dd($form);
         
-        return response()->json(['message'=>'Form submitted successfully']);
+        return response()->json(['message'=>'Form submitted successfully'],200);
     }
 }

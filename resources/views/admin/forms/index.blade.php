@@ -24,6 +24,9 @@
                             {{ trans('cruds.form.fields.year') }}
                         </th>
                         <th>
+                            {{ trans('cruds.form.fields.status') }}
+                        </th>
+                        <th>
                             {{ trans('cruds.form.fields.created_by') }}
                         </th>
                         <th>
@@ -37,6 +40,9 @@
                         </th>
                         <th>
                             {{ trans('cruds.form.fields.final_verified_by') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.form.fields.total_marks') }}
                         </th>
                         <th>
                             &nbsp;
@@ -59,6 +65,9 @@
                                 {{ $form->year ?? '' }}
                             </td>
                             <td>
+                                {{ $form->status ?? '' }}
+                            </td>
+                            <td>
                                 {{ $form->user ? $form->user->name : '' }}
                             </td>
                             <td>
@@ -72,6 +81,9 @@
                             </td>
                             <td>
                                 {{ $form->finalVerifiedBy ? $form->finalVerifiedBy->name : '' }}
+                            </td>
+                            <td>
+                                {{ $form->total_marks ?? '' }}
                             </td>
                             <td>
                             @can('form_edit')
