@@ -19,26 +19,23 @@ class HomeApiController extends Controller
 {
     public function form()
     {
-        dd(Option::all()->load('formSubjectAreas.feedbacks'));
-        dd($user = Auth::user()->load('forms.subjectAreas.options'));
-        $selected_options = [];
-        
-        if($user->forms()->exists()) {
-            $form = $user->forms()->latest()->first();
-            $selected_options = $form->options()->pluck('option_id');
+        // $selected_options = [];
+        // dd($user = Auth::user()->load('forms.subjectAreas.options'));
+        // if($user->forms()->exists()) {
+        //     $form = $user->forms()->latest()->first();
+        //     $selected_options = $form->options()->pluck('option_id');
             
             // $subject_areas = SubjectArea::with(['parameters.options' => function ($query) use ($selected_options) {
             //     $query->find($selected_options)->each->setAttribute('status',true);
             //     $query->whereNotIn('id', $selected_options)->get()->each->setAttribute('status',false);
             // }])
             // ->get();
-        }
+        // }
         
         $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
         
         return response([
             'subject_areas' => $subject_areas,
-            'selected_options' => $selected_options,
         ]);
     }
 
@@ -50,33 +47,8 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
 
-        $string = '
-        {
-            "parameters":
-                            [{
-                                "id":1,
-                                "remarks": "this is remarks",
-                                "option": 
-                                    {
-                                        "id": 1
-                                    }
-                            },
-                            {
-                                "id":2,
-                                "remarks": "this is another remarks",
-                                "option": 
-                                    {
-                                        "id": 3
-                                    }
-                            }
-                            ]
-        }
-        ';
-
-    $areas = json_decode($string, true);
-    // dd($areas);
-    $user = Auth::user();
         $data = [
             'user_id' => $user->id,
             'year' => $request->year,
@@ -84,43 +56,27 @@ class HomeApiController extends Controller
 
         $form = Form::create($data);
         // dd($form);
+        $form_subject_area = FormSubjectArea::create([
+            'form_id' => $form->id,
+            'subject_area_id' => $request->subject_area,
+        ]);
 
-        foreach($areas as $area )
-        {
-            // dd($areas);
-            $form_subject_area = FormSubjectArea::create([
-                'form_id' => $form->id,
-                'subject_area_id' => $request->subjectarea,
-            ]);
-            
-            foreach($area as $parameter)
-            {
-                $opt = Option::find($parameter['option']['id']);
-                $form_detail = FormDetail::create([
-                    'form_subject_area_id' => $form_subject_area->id,
-                    'parameter_id' => $parameter['id'],
-                    'remarks' => $parameter['remarks'],
-                    'option_id' => $opt->id,
-                    'marks' => $opt->points,
-                ]);  
-            }
-            
-            // dd($area['parameters']);
-            
-           $total = $form_subject_area->parameters->sum('pivot.marks');
-           $form_subject_area->update([
-               'marks'=> $total
-           ]);
+        foreach($request->parameters as $parameter )
+        {   
+            $opt = Option::find($parameter['option']['id']);
+            $form_detail = FormDetail::create([
+                'form_subject_area_id' => $form_subject_area->id,
+                'parameter_id' => $parameter['id'],
+                'remarks' => $parameter['remarks'],
+                'option_id' => $opt->id,
+                'marks' => $opt->points,
+            ]);  
         }
 
-
-
-
-            
-            
-
-
-        
+        $total = $form_subject_area->parameters->sum('pivot.marks');
+        $form_subject_area->update([
+            'marks'=> $total
+        ]);
 
         // $form = Form::findOrFail($request->id)->with('user')->first();
         

@@ -123,9 +123,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Form::class);
     }
 
-    public function organization()
+    public function organizations()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsToMany(Organization::class);
     }
     
     public function getIsMainAdminAttribute()
