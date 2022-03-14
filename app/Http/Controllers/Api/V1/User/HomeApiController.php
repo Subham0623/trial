@@ -19,26 +19,23 @@ class HomeApiController extends Controller
 {
     public function form()
     {
-        dd(Option::all()->load('formSubjectAreas.feedbacks'));
+        // $selected_options = [];
         dd($user = Auth::user()->load('forms.subjectAreas.options'));
-        $selected_options = [];
-        
-        if($user->forms()->exists()) {
-            $form = $user->forms()->latest()->first();
-            $selected_options = $form->options()->pluck('option_id');
+        // if($user->forms()->exists()) {
+        //     $form = $user->forms()->latest()->first();
+        //     $selected_options = $form->options()->pluck('option_id');
             
             // $subject_areas = SubjectArea::with(['parameters.options' => function ($query) use ($selected_options) {
             //     $query->find($selected_options)->each->setAttribute('status',true);
             //     $query->whereNotIn('id', $selected_options)->get()->each->setAttribute('status',false);
             // }])
             // ->get();
-        }
+        // }
         
         $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
         
         return response([
             'subject_areas' => $subject_areas,
-            'selected_options' => $selected_options,
         ]);
     }
 
@@ -51,105 +48,41 @@ class HomeApiController extends Controller
     public function store(Request $request)
     {
         dd($request->all());
-// dd(json_encode($a,true));
-return response()->json($a);
-// $result = $request->all();
-// $ans = '
-//         "sujectareas" : 
-        
-//             {
-//                 "id":"3",
-//                 "parameters":
-//                 [{
-//                     "3" : 
-//                     {
-//                         "option" : "3"
-//                     },
+        // dd($request->mode);
+        $string = '
 
-//                     "4":
-//                     {
-//                         "option" : "7"
-//                     }
-//                 }]
-
-//             }
-        
-// ';
-
-// subjectareas[0]['parameters]['6']
-
-// $ans = '
-//     "subjectarea" : 
-//     {
-//         "id": "3"
-//     }
-// ';
-// $subjectarea = json_decode($ans,true);
-// dd($subjectarea);
-
-$string = '
-
-{
-    "subjectarea": 
         {
-            "id": 1,
-            "parameters":
-            [{
-                "id":1,
-                "remarks": "this is remarks",
-                "option": 
+            "subjectarea": 
+                {
+                    "id": 1,
+                    "parameters":
+                    [{
+                        "id":1,
+                        "remarks": "this is remarks",
+                        "option": 
+                            {
+                                "id": 1
+            
+                            }
+                        
+                    },
                     {
-                        "id": 1
-    
+                        "id":2,
+                        "remarks": "this is another remarks",
+                        "option": 
+                            {
+                                "id": 3
+            
+                            }
+                        
                     }
-                
-            },
-            {
-                "id":2,
-                "remarks": "this is another remarks",
-                "option": 
-                    {
-                        "id": 3
-    
-                    }
-                
-            }
-            ]
+                    ]
+                }
+            
         }
-    
-}
 
-';
+        ';
 
-
-// dd($result);
-// foreach($result as $r)
-// {
-    
-//     dd($r);
-// }
-// $result = '
-// {
-//     "3": {
-//         "option": 3,
-//         "documents": {
-//             "4": "File",
-//             "5": "File"
-//         }
-//     },
-//     "4": {
-//         "option": "",
-//         "documents": {}
-//     },
-//     "5": {
-//         "option": "",
-//         "documents": {}
-//     }
-// }
-// ';
-
-// $areas = json_decode($result, true);
-//     dd($area);
     $subjectarea = json_decode($string, true);
     dd($subjectarea);
     $user = Auth::user();
