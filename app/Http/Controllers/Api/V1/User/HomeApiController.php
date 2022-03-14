@@ -50,108 +50,32 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
-// dd(json_encode($a,true));
-return response()->json($a);
-// $result = $request->all();
-// $ans = '
-//         "sujectareas" : 
-        
-//             {
-//                 "id":"3",
-//                 "parameters":
-//                 [{
-//                     "3" : 
-//                     {
-//                         "option" : "3"
-//                     },
 
-//                     "4":
-//                     {
-//                         "option" : "7"
-//                     }
-//                 }]
-
-//             }
-        
-// ';
-
-// subjectareas[0]['parameters]['6']
-
-// $ans = '
-//     "subjectarea" : 
-//     {
-//         "id": "3"
-//     }
-// ';
-// $subjectarea = json_decode($ans,true);
-// dd($subjectarea);
-
-$string = '
-
-{
-    "subjectarea": 
+        $string = '
         {
-            "id": 1,
             "parameters":
-            [{
-                "id":1,
-                "remarks": "this is remarks",
-                "option": 
-                    {
-                        "id": 1
-    
-                    }
-                
-            },
-            {
-                "id":2,
-                "remarks": "this is another remarks",
-                "option": 
-                    {
-                        "id": 3
-    
-                    }
-                
-            }
-            ]
+                            [{
+                                "id":1,
+                                "remarks": "this is remarks",
+                                "option": 
+                                    {
+                                        "id": 1
+                                    }
+                            },
+                            {
+                                "id":2,
+                                "remarks": "this is another remarks",
+                                "option": 
+                                    {
+                                        "id": 3
+                                    }
+                            }
+                            ]
         }
-    
-}
+        ';
 
-';
-
-
-// dd($result);
-// foreach($result as $r)
-// {
-    
-//     dd($r);
-// }
-// $result = '
-// {
-//     "3": {
-//         "option": 3,
-//         "documents": {
-//             "4": "File",
-//             "5": "File"
-//         }
-//     },
-//     "4": {
-//         "option": "",
-//         "documents": {}
-//     },
-//     "5": {
-//         "option": "",
-//         "documents": {}
-//     }
-// }
-// ';
-
-// $areas = json_decode($result, true);
-//     dd($area);
-    $subjectarea = json_decode($string, true);
-    dd($subjectarea);
+    $areas = json_decode($string, true);
+    // dd($areas);
     $user = Auth::user();
         $data = [
             'user_id' => $user->id,
@@ -163,34 +87,27 @@ $string = '
 
         foreach($areas as $area )
         {
-            dd($area);
+            // dd($area);
             $form_subject_area = FormSubjectArea::create([
                 'form_id' => $form->id,
-                'subject_area_id' => $area['id'],
+                'subject_area_id' => $request->subjectarea,
             ]);
             
-            ;
-
-            foreach($area['parameters'] as $parameters)
+            foreach($area as $parameter)
             {
-                // dd($parameters['remarks']);
-                foreach($parameters['option'] as $option)
-                {
-                    $opt = Option::find($option)->first();
-                    $option = FormDetail::create([
-                        'form_subject_area_id' => $form_subject_area->id,
-                        'option_id' => $option,
-                        'remarks' => $parameters['remarks'],
-                        'marks' => $opt->points,
-                    ]);
-
-                    
-                    
-                }
+                $opt = Option::find($parameter['option']['id']);
+                $form_detail = FormDetail::create([
+                    'form_subject_area_id' => $form_subject_area->id,
+                    'parameter_id' => $parameter['id'],
+                    'remarks' => $parameter['remarks'],
+                    'option_id' => $opt->id,
+                    'marks' => $opt->points,
+                ]);  
             }
+            
             // dd($area['parameters']);
             
-           $total = $form_subject_area->options->sum('pivot.marks');
+           $total = $form_subject_area->parameters->sum('pivot.marks');
            $form_subject_area->update([
                'marks'=> $total
            ]);

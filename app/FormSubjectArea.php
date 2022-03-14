@@ -21,8 +21,8 @@ class FormSubjectArea extends Model
         'updated_at',
     ];
 
-    public function options()
+    public function parameters()
     {
-        return $this->belongsToMany(Option::class)->withPivot('marks','remarks');
+        return $this->belongsToMany(Parameter::class)->withPivot('marks','remarks','option_id');
     }
 }

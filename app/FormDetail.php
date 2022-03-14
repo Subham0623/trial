@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class FormDetail extends Model
 {
     public $timestamps = false;
-    protected $table = 'form_subject_area_option';
+    protected $table = 'form_subject_area_parameter';
     
     protected $fillable = [
         'form_subject_area_id',
-        'option_id',
+        'parameter_id',
         'remarks',
-        'marks'
+        'marks',
+        'option_id'
     ];
 
     public function feedbacks()
@@ -21,6 +22,7 @@ class FormDetail extends Model
         return $this->hasMany(Feedback::class);
     }
 
+    
     
 
     

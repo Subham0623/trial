@@ -60,5 +60,8 @@ class Parameter extends Model
         return $this->hasMany(Document::class);
     }
 
-    
+    public function formSubjectAreas()
+    {
+        return $this->belongsToMany(FormSubjectArea::class)->withPivot('marks','remarks','option_id');
+    }
 }
