@@ -14,6 +14,7 @@ use \DateTimeInterface;
 use App\Models\Authorization\Role;
 use App\Form;
 use App\Organization;
+use App\Feedback;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -141,6 +142,11 @@ class User extends Authenticatable implements MustVerifyEmail
             return $query->where('created_by', $user->id);
         }
         return $query;
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
     }
 
 }

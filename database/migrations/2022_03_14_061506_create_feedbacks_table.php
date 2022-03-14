@@ -20,7 +20,7 @@ class CreateFeedbacksTable extends Migration
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('form_detail_id')->nullable();
-            $table->foreign('form_detail_id')->references('id')->on('form_subject_area_option')->onDelete('cascade');
+            $table->foreign('form_detail_id')->references('id')->on('form_subject_area_parameter')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +32,8 @@ class CreateFeedbacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('feedbacks');
+        Schema::table('feedbacks', function (Blueprint $table) {
+            //
+        });
     }
 }

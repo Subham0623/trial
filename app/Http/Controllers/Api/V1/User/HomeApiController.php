@@ -87,7 +87,7 @@ class HomeApiController extends Controller
 
         foreach($areas as $area )
         {
-            // dd($area);
+            // dd($areas);
             $form_subject_area = FormSubjectArea::create([
                 'form_id' => $form->id,
                 'subject_area_id' => $request->subjectarea,
@@ -200,5 +200,10 @@ class HomeApiController extends Controller
 
         
         return response(['parameters' => $parameters]);
+    }
+
+    public function edit(Form $form)
+    {
+        dd('here');
     }
 }

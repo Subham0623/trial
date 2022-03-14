@@ -21,13 +21,22 @@
                             {{ trans('cruds.form.fields.organization') }}
                         </th>
                         <th>
-                            {{ trans('cruds.form.fields.created_by') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.form.fields.year') }}
                         </th>
                         <th>
-                            {{ trans('cruds.form.fields.status') }}
+                            {{ trans('cruds.form.fields.created_by') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.form.fields.updated_by') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.form.fields.verified_by') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.form.fields.audited_by') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.form.fields.final_verified_by') }}
                         </th>
                         <th>
                             &nbsp;
@@ -46,14 +55,31 @@
                             <td>
                                 {{ $form->organization ? $form->organization->name : '' }}
                             </td>
-                            
                             <td>
                                 {{ $form->year ?? '' }}
                             </td>
                             <td>
-                                {{ $form->id ?? '' }}
+                                {{ $form->user ? $form->user->name : '' }}
                             </td>
+                            <td>
+                                {{ $form->updatedBy ? $form->updatedBy->name : '' }}
+                            </td>
+                            <td>
+                                {{ $form->verifiedBy ? $form->verifiedBy->name : '' }}
+                            </td>
+                            <td>
+                                {{ $form->auditedBy ? $form->auditedBy->name : '' }}
+                            </td>
+                            <td>
+                                {{ $form->finalVerifiedBy ? $form->finalVerifiedBy->name : '' }}
+                            </td>
+                            <td>
                             
+                                    <a class="btn btn-xs btn-info" href="{{ url('/api/v1/form', $form->id) }}">
+                                        {{ trans('global.edit') }}
+                                    </a>
+                                
+                            </td>
 
                         </tr>
                     @endforeach
