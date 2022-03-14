@@ -296,6 +296,10 @@ return [
             'final_verified_by_helper'  => '',
             'year'                      => 'Year',
             'year_helper'               => '',
+            'status'                    => 'Status',
+            'status_helper'             => '',
+            'total_marks'               => 'Total Marks',
+            'total_marks_helper'        => ''
             
         ],
     ],
