@@ -19,26 +19,23 @@ class HomeApiController extends Controller
 {
     public function form()
     {
-        dd(Option::all()->load('formSubjectAreas.feedbacks'));
+        // $selected_options = [];
         dd($user = Auth::user()->load('forms.subjectAreas.options'));
-        $selected_options = [];
-        
-        if($user->forms()->exists()) {
-            $form = $user->forms()->latest()->first();
-            $selected_options = $form->options()->pluck('option_id');
+        // if($user->forms()->exists()) {
+        //     $form = $user->forms()->latest()->first();
+        //     $selected_options = $form->options()->pluck('option_id');
             
             // $subject_areas = SubjectArea::with(['parameters.options' => function ($query) use ($selected_options) {
             //     $query->find($selected_options)->each->setAttribute('status',true);
             //     $query->whereNotIn('id', $selected_options)->get()->each->setAttribute('status',false);
             // }])
             // ->get();
-        }
+        // }
         
         $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
         
         return response([
             'subject_areas' => $subject_areas,
-            'selected_options' => $selected_options,
         ]);
     }
 

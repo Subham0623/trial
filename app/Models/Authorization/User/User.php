@@ -14,6 +14,7 @@ use \DateTimeInterface;
 use App\Models\Authorization\Role;
 use App\Form;
 use App\Organization;
+use App\Feedback;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -122,9 +123,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Form::class);
     }
 
-    public function organization()
+    public function organizations()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsToMany(Organization::class);
     }
     
     public function getIsMainAdminAttribute()
@@ -141,6 +142,11 @@ class User extends Authenticatable implements MustVerifyEmail
             return $query->where('created_by', $user->id);
         }
         return $query;
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
     }
 
 }
