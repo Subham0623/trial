@@ -276,4 +276,28 @@ return [
         ],
     ],
 
+    'form'           => [
+        'title'          => 'Forms',
+        'title_singular' => 'Form',
+        'fields'         => [
+            'id'                 => 'ID',
+            'id_helper'          => '',
+            'organization'              => 'Organization',
+            'organization_helper'       => '',
+            'created_by'                => 'Created By',
+            'created_by_helper'         => '',
+            'updated_by'                => 'Updated By',
+            'updated_by_helper'         => '',
+            'audited_by'                => 'Audited By',
+            'audited_by_helper'         => '',
+            'verified_by'               => 'Verified By',
+            'verified_by_helper'        => '',
+            'final_verified_by'         => 'Final Verified By',
+            'final_verified_by_helper'  => '',
+            'year'                      => 'Year',
+            'year_helper'               => '',
+            
+        ],
+    ],
+
 ];

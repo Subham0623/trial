@@ -19,7 +19,7 @@ class FormController extends Controller
     {
         abort_if(Gate::denies('form_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        dd($forms = Form::with('organization','user')->get());
+        $forms = Form::with('user')->get();
         
 
         return view('admin.forms.index',compact('forms'));

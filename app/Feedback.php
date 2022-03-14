@@ -19,14 +19,14 @@ class Feedback extends Model
         'feedback',
         'user_id',
         'status',
-        'form_option_id',
+        'form_detail_id',
         'created_at',
         'updated_at',
     ];
 
-    public function formOption()
+    public function formDetail()
     {
-        return $this->belongsTo(FormDetail::class,'form_option_id');
+        return $this->belongsTo(FormDetail::class);
     }
 
     public function user()
