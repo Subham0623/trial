@@ -81,10 +81,10 @@
                                 {{ $organization->name ?? '' }}
                             </td>
                             <td>
-                                {{ $organization->province->name }}
+                                {{ $organization->province ? $organization->province->name : '' }}
                             </td>
                             <td>
-                                {{ $organization->district->name }}
+                                {{ $organization->district ? $organization->district->name : '' }}
                             </td>
                             <td>
                                 {{ $organization->address ?? '' }}

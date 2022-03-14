@@ -26,7 +26,7 @@
                     <div class="invalid-feedback">
                         {{ $errors->first('email') }}
                     </div>
-                @endif
+            @endif
                 <span class="help-block">{{ trans('cruds.user.fields.email_helper') }}</span>
             </div>
             <div class="form-group">

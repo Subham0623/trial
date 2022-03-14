@@ -73,4 +73,9 @@ class Organization extends Model
         }
         return $query;
     }
+
+    public function forms()
+    {
+        return $this->hasMany(Form::class);
+    }
 }

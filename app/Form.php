@@ -78,4 +78,9 @@ class Form extends Model
     {
         return $this->belongsToMany(SubjectArea::class)->withPivot('marks');
     }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
 }

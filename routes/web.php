@@ -62,7 +62,10 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::delete('provinces/destroy', 'ProvinceController@massDestroy')->name('provinces.massDestroy');
             Route::get('provinces/check-slug', 'ProvinceController@checkSlug')->name('provinces.checkSlug');
             Route::resource('provinces','ProvinceController');
-            
+
+            //Forms
+            Route::get('forms','FormController@index')->name('form');    
+        
             //Organizations
             Route::get('organizations/download-format',function(){
                 return Illuminate\Support\Facades\Storage::download('organizations.xlsx');

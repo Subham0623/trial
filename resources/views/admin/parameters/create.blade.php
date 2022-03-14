@@ -53,16 +53,7 @@
                 <span class="help-block">{{ trans('cruds.parameter.fields.subject_area_helper') }}</span>
             </div>
 
-            <div class="form-group">
-                <label class="required" for="slug">{{ trans('cruds.parameter.fields.slug') }}</label>
-                <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', '') }}" required>
-                @if($errors->has('slug'))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('slug') }}
-                    </div>
-                @endif
-                <span class="help-block">{{ trans('cruds.parameter.fields.slug_helper') }}</span>
-            </div>
+            
 
             <!-- <div class="form-group">
                 <label class="required" for="sort">{{ trans('cruds.parameter.fields.sort') }}</label>
@@ -90,9 +81,10 @@
                 
                 <td><textarea name="addmore[0][title]" placeholder="Enter title" class="input form-control">{{ old('title','') }}</textarea></td>
                 <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" value="{{old('points','')}}"/></td>
-                <td><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>  
+                
             </tr>  
         </table>
+            <button type="button" name="add" id="add" class="btn btn-success mb-3">Add More</button><br>
 
         <label class="required" for="document">{{ trans('cruds.parameter.fields.document') }}</label>
             <table class="table table-bordered" id="dynamicTable1">  
@@ -105,12 +97,21 @@
                 <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" /></td>   -->
                 
                 <td><textarea name="addmore1[0][title]" placeholder="Enter title" class="input form-control">{{ old('title','') }}</textarea></td>
-                <td><button type="button" name="add" id="add1" class="btn btn-success">Add More</button></td>  
             </tr>  
         </table>
+            <button type="button" name="add" id="add1" class="btn btn-success mb-3">Add More</button>
 
             
-
+            <div class="form-group" style="display: none;">
+                <label class="required" for="slug">{{ trans('cruds.parameter.fields.slug') }}</label>
+                <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', '') }}" required>
+                @if($errors->has('slug'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('slug') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.parameter.fields.slug_helper') }}</span>
+            </div>
             
 
 
