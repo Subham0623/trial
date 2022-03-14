@@ -162,4 +162,13 @@ class HomeApiController extends Controller
     {
         dd('here');
     }
+
+    public function submit(Form $form)
+    {
+        $form->status = 1;
+        $form->save();
+        // dd($form);
+        
+        return response()->json(['message'=>'Form submitted successfully']);
+    }
 }

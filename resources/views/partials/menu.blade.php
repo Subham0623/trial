@@ -160,6 +160,16 @@
             </li>
             @endcan
 
+            @can('form_access')
+            <li class="nav-item">
+                <a href="{{ route('admin.forms') }}"
+                    class="nav-link {{ request()->is('admin/forms') || request()->is('admin/forms/*') ? 'active' : '' }}">
+                    <i class=" nav-icon fa fa-gear"></i>
+                    {{ trans('cruds.form.title') }}
+                </a>
+            </li>
+            @endcan
+
             @can('setting_create')
             <li class="nav-item">
                 <a href="{{ route('admin.settings.create') }}"
