@@ -63,14 +63,17 @@ class HomeApiController extends Controller
 
         foreach($request->parameters as $parameter )
         {   
-            $opt = Option::find($parameter['option']['id']);
-            $form_detail = FormDetail::create([
-                'form_subject_area_id' => $form_subject_area->id,
-                'parameter_id' => $parameter['id'],
-                'remarks' => $parameter['remarks'],
-                'option_id' => $opt->id,
-                'marks' => $opt->points,
-            ]);  
+            if(isset($parameter['option']['id']))
+            {
+                $opt = Option::find($parameter['option']['id']);
+                $form_detail = FormDetail::create([
+                    'form_subject_area_id' => $form_subject_area->id,
+                    'parameter_id' => $parameter['id'],
+                    'remarks' => $parameter['remarks'],
+                    'option_id' => $opt->id,
+                    'marks' => $opt->points,
+                ]);  
+            }
         }
 
         $total = $form_subject_area->parameters->sum('pivot.marks');

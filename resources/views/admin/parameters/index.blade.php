@@ -23,7 +23,7 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.parameter.fields.id') }}
+                            {{ trans('cruds.parameter.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.parameter.fields.title') }}
@@ -33,9 +33,6 @@
                         </th>
                         <th>
                             {{ trans('cruds.parameter.fields.sort') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.parameter.fields.slug') }}
                         </th>
                         <th>
                             {{ trans('cruds.parameter.fields.option') }}
@@ -55,7 +52,7 @@
 
                             </td>
                             <td>
-                                {{ $parameter->id ?? '' }}
+                                {{ $loop->index+1 ?? '' }}
                             </td>
                             <td>
                                 {{ $parameter->title ?? '' }}
@@ -65,9 +62,6 @@
                             </td>
                             <td>
                                 {{ $parameter->sort ?? '' }}
-                            </td>
-                            <td>
-                                {{ $parameter->slug ?? '' }}
                             </td>
                             <td>
                                 @foreach($parameter->options as $key => $item)
@@ -149,7 +143,7 @@
 @endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
-    order: [[ 1, 'desc' ]],
+    order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
   $('.datatable-parameter:not(.ajaxTable)').DataTable({ buttons: dtButtons })

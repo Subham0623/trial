@@ -15,7 +15,7 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.form.fields.id') }}
+                            {{ trans('cruds.form.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.form.fields.organization') }}
@@ -28,9 +28,6 @@
                         </th>
                         <th>
                             {{ trans('cruds.form.fields.created_by') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.form.fields.updated_by') }}
                         </th>
                         <th>
                             {{ trans('cruds.form.fields.verified_by') }}
@@ -56,7 +53,7 @@
 
                             </td>
                             <td>
-                                {{ $form->id ?? '' }}
+                                {{ $key+1 }}
                             </td>
                             <td>
                                 {{ $form->organization ? $form->organization->name : '' }}
@@ -65,13 +62,14 @@
                                 {{ $form->year ?? '' }}
                             </td>
                             <td>
-                                {{ $form->status ?? '' }}
+                                @if($form->status == 0)
+                                    <span class="badge badge-info">Draft</span>
+                                @else
+                                    <span class="badge badge-info">Submitted</span>
+                                @endif
                             </td>
                             <td>
                                 {{ $form->user ? $form->user->name : '' }}
-                            </td>
-                            <td>
-                                {{ $form->updatedBy ? $form->updatedBy->name : '' }}
                             </td>
                             <td>
                                 {{ $form->verifiedBy ? $form->verifiedBy->name : '' }}
@@ -140,7 +138,7 @@
 @endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
-    order: [[ 1, 'desc' ]],
+    order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
   $('.datatable-form:not(.ajaxTable)').DataTable({ buttons: dtButtons })

@@ -23,7 +23,7 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.popup.fields.id') }}
+                            {{ trans('cruds.popup.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.popup.fields.name') }}
@@ -46,7 +46,7 @@
 
                             </td>
                             <td>
-                                {{ $popup->id ?? '' }}
+                                {{ $loop->index+1 ?? '' }}
                             </td>
                             <td>
                                 {{ $popup->name ?? '' }}
@@ -135,7 +135,7 @@
 @endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
-    order: [[ 1, 'desc' ]],
+    order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
   $('.datatable-Popup:not(.ajaxTable)').DataTable({ buttons: dtButtons })

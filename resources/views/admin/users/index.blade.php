@@ -23,7 +23,7 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.user.fields.id') }}
+                            {{ trans('cruds.user.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.user.fields.name') }}

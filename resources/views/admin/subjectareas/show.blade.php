@@ -17,18 +17,10 @@
                 <tbody>
                     <tr>
                         <th>
-                            {{ trans('cruds.subjectarea.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $subject_area->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.subjectarea.fields.title') }}
                         </th>
                         <td>
-                            {{ $subject_area->title }}
+                            {{ $subject_area->title ?? '' }}
                         </td>
                     </tr>
                     <tr>
@@ -36,15 +28,7 @@
                             {{ trans('cruds.subjectarea.fields.sort') }}
                         </th>
                         <td>
-                            {{ $subject_area->sort }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.subjectarea.fields.slug') }}
-                        </th>
-                        <td>
-                            {{ $subject_area->slug }}
+                            {{ $subject_area->sort ?? '' }}
                         </td>
                     </tr>
                 </tbody>

@@ -17,18 +17,10 @@
                 <tbody>
                     <tr>
                         <th>
-                            {{ trans('cruds.parameter.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $parameter->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.parameter.fields.title') }}
                         </th>
                         <td>
-                            {{ $parameter->title }}
+                            {{ $parameter->title ?? '' }}
                         </td>
                     </tr>
                     <tr>
@@ -36,7 +28,7 @@
                             {{ trans('cruds.parameter.fields.description') }}
                         </th>
                         <td>
-                            {{ $parameter->description }}
+                            {{ $parameter->description ?? '' }}
                         </td>
                     </tr>
                     <tr>
@@ -44,7 +36,7 @@
                             {{ trans('cruds.parameter.fields.subject_area') }}
                         </th>
                         <td>
-                            {{ $parameter->subjectArea->title }}
+                            {{ $parameter->subjectArea ? $parameter->subjectArea->title : '' }}
                         </td>
                     </tr>
                     <tr>
@@ -52,15 +44,7 @@
                             {{ trans('cruds.parameter.fields.sort') }}
                         </th>
                         <td>
-                            {{ $parameter->sort }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.parameter.fields.slug') }}
-                        </th>
-                        <td>
-                            {{ $parameter->slug }}
+                            {{ $parameter->sort ?? '' }}
                         </td>
                     </tr>
                     <tr>
@@ -80,6 +64,7 @@
                             {{ trans('cruds.parameter.fields.document') }}
                         </th>
                         <td>
+                            
                             @foreach($parameter->documents as $document)
                             Title: {{ $document->title }}
                         <br>

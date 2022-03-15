@@ -43,7 +43,7 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.organization.fields.id') }}
+                            {{ trans('cruds.organization.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.organization.fields.name') }}
@@ -61,9 +61,6 @@
                             {{ trans('cruds.organization.fields.contact') }}
                         </th>
                         <th>
-                            {{ trans('cruds.organization.fields.slug') }}
-                        </th>
-                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -75,7 +72,7 @@
 
                             </td>
                             <td>
-                                {{ $organization->id ?? '' }}
+                                {{ $loop->index+1 ?? '' }}
                             </td>
                             <td>
                                 {{ $organization->name ?? '' }}
@@ -91,9 +88,6 @@
                             </td>
                             <td>
                                 {{ $organization->contact ?? '' }}
-                            </td>
-                            <td>
-                                {{ $organization->slug ?? '' }}
                             </td>
                             <td>
                                 @can('organization_show')
@@ -165,7 +159,7 @@
 @endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
-    order: [[ 1, 'desc' ]],
+    order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
   $('.datatable-Organization:not(.ajaxTable)').DataTable({ buttons: dtButtons })
