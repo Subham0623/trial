@@ -82,44 +82,6 @@
             </li>
             @endcan
 
-            @can('cms_access')
-            <li class="nav-item nav-dropdown {{ request()->is('admins/permissions/*') || request()->is('admins/roles/*') || request()->is('admins/users/*') ? 'open' : '' }}">
-                <a class="nav-link  nav-dropdown-toggle" href="#">
-                    <i class="fa-fw fas fa-users nav-icon">
-
-                    </i>
-                    {{ trans('cruds.cms.title') }}
-                </a>
-                <ul class="nav-dropdown-items">
-                    @can('slider_access')
-                    <li class="nav-item nav-dropdown">
-                        <li class="nav-item">
-                            <a href="{{ route("admin.sliders.index") }}" class="nav-link {{ request()->is('admins/sliders') || request()->is('admins/sliders/*') ? 'active' : '' }}">
-                                <i class="fa-fw fas fa-plus nav-icon">
-
-                                </i>
-                                {{ trans('cruds.slider.title') }}
-                            </a>
-                        </li>
-                    </li>
-                    @endcan
-
-                    @can('popup_access')
-                    <li class="nav-item nav-dropdown">
-                        <li class="nav-item">
-                            <a href="{{ route("admin.popups.index") }}" class="nav-link {{ request()->is('admins/popups') || request()->is('admins/popups/*') ? 'active' : '' }}">
-                                <i class="fa-fw fas fa-plus nav-icon">
-
-                                </i>
-                                {{ trans('cruds.popup.title') }}
-                            </a>
-                        </li>
-                    </li>
-                    @endcan
-                </ul>
-            </li>
-            @endcan
-
             @can('province_access')
             <li class="nav-item">
                 <a href="{{ route('admin.provinces.index') }}"
@@ -167,6 +129,59 @@
                     <i class=" nav-icon fa fa-gear"></i>
                     {{ trans('cruds.form.title') }}
                 </a>
+            </li>
+            @endcan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            @can('cms_access')
+            <li class="nav-item nav-dropdown {{ request()->is('admins/permissions/*') || request()->is('admins/roles/*') || request()->is('admins/users/*') ? 'open' : '' }}">
+                <a class="nav-link  nav-dropdown-toggle" href="#">
+                    <i class="fa-fw fas fa-users nav-icon">
+
+                    </i>
+                    {{ trans('cruds.cms.title') }}
+                </a>
+                <ul class="nav-dropdown-items">
+                    @can('slider_access')
+                    <li class="nav-item nav-dropdown">
+                        <li class="nav-item">
+                            <a href="{{ route("admin.sliders.index") }}" class="nav-link {{ request()->is('admins/sliders') || request()->is('admins/sliders/*') ? 'active' : '' }}">
+                                <i class="fa-fw fas fa-plus nav-icon">
+
+                                </i>
+                                {{ trans('cruds.slider.title') }}
+                            </a>
+                        </li>
+                    </li>
+                    @endcan
+
+                    @can('popup_access')
+                    <li class="nav-item nav-dropdown">
+                        <li class="nav-item">
+                            <a href="{{ route("admin.popups.index") }}" class="nav-link {{ request()->is('admins/popups') || request()->is('admins/popups/*') ? 'active' : '' }}">
+                                <i class="fa-fw fas fa-plus nav-icon">
+
+                                </i>
+                                {{ trans('cruds.popup.title') }}
+                            </a>
+                        </li>
+                    </li>
+                    @endcan
+                </ul>
             </li>
             @endcan
 

@@ -22,6 +22,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
 Route::get('/form','HomeApiController@form')->name('form');
 Route::post('/form','HomeApiController@store')->name('form-store');
 Route::get('/form/{form}','HomeApiController@edit')->name('form-edit');
+Route::patch('/form/{form}','HomeApiController@update')->name('form-update');
 Route::patch('/form/submit/{form}','HomeApiController@submit')->name('submit');
 Route::get('/profile','HomeApiController@profile')->name('profile');
 Route::post('/upload','HomeApiController@fileUpload')->name('upload');
