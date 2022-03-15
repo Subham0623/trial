@@ -133,8 +133,14 @@ class HomeApiController extends Controller
         $selected_options = [];
         // dd($user = Auth::user()->load('forms.subjectAreas.options'));
         if($form) {
-            $selected_subjectareas = $form->subjectAreas()->pluck('form_id');
-            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas)->with('feedbacks')->get();
+            $selected_subjectareas = $form->subjectAreas()->get();
+            $selected_subjectareas_id = [];
+            foreach($selected_subjectareas as $selected_subjectarea) {
+                array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+
+            }
+            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks')->get();
+            // dd($selected_options);
     
         }
         
