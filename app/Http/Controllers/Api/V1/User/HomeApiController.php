@@ -70,38 +70,10 @@ class HomeApiController extends Controller
         $form->total_marks = $total_marks;
         $form->save();
 
-        // $form = Form::findOrFail($request->id)->with('user')->first();
-        
-        // if(isset($form)){
-        //     foreach($options as $option)
-        //     {
-        //         $data = [
-        //             $form_id = $form->id,
-        //             $option_id = $option->id,
-        //         ];
-                 
-        //         $form_option = FormDetail::create($data);
-            
-
-        //     }
-        // }
-
-        // $data = [
-        //     'user_id' => Auth::user()->id,
-        //     // 'organization_id' => Auth::user()->organization()->id,
-        //     'year' => $request->year,
-
-        // ];
-
-        // $form = Form::create($data);
-
-        // $data = [
-        //     'form_id' => $form->id,
-        // ];
         return response([
             'message'=>'Form saved successfully',
             'form_id'=>$form->id
-        ],200);
+        ],201);
     }
 
     public function fileUpload(Request $request)
@@ -169,6 +141,57 @@ class HomeApiController extends Controller
             'subject_areas' => $subject_areas,
             'selected_options' => $selected_options,
         ]);
+    }
+
+    public function update(Request $request, Form $form)
+    {
+        $user = Auth::user();
+        
+        $form = Form::findOrFail($form->id);
+        
+        if(isset($form)){
+            $form_subject_area = FormSubjectArea::updateOrCreate([
+                'form_id' => $form->id,
+                'subject_area_id' => $request->subject_area,
+            ]);
+
+            foreach($request->parameters as $parameter )
+            {   
+                if(isset($parameter['option']['id'])) {
+                    $opt = Option::find($parameter['option']['id']);
+                    $form_detail = FormDetail::updateOrCreate([
+                        'form_subject_area_id' => $form_subject_area->id,
+                        'parameter_id' => $parameter['id'],
+                    ],
+                    [
+                        'remarks' => $parameter['remarks'],
+                        'option_id' => $opt->id,
+                        'marks' => $opt->points,
+                    ]);  
+                }
+            }
+
+            $total = $form_subject_area->parameters->sum('pivot.marks');
+            $form_subject_area->update([
+                'marks'=> $total
+            ]);
+
+            $total_marks = $form->subjectAreas->sum('pivot.marks');
+            $form->total_marks = $total_marks;
+            $form->save();
+
+            return response([
+                'message'=>'Form saved successfully',
+                'form_id'=>$form->id
+            ],201);
+        }
+
+        
+
+        
+        return response([
+            'message'=>'Form not found',
+        ],422);
     }
 
     public function submit(Form $form)
