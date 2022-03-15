@@ -23,7 +23,7 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.permission.fields.id') }}
+                            {{ trans('cruds.permission.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.permission.fields.title') }}
@@ -40,7 +40,7 @@
 
                             </td>
                             <td>
-                                {{ $permission->id ?? '' }}
+                                {{ $loop->index+1 ?? '' }}
                             </td>
                             <td>
                                 {{ $permission->title ?? '' }}
@@ -115,7 +115,7 @@
 @endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
-    order: [[ 1, 'desc' ]],
+    order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
   $('.datatable-Permission:not(.ajaxTable)').DataTable({ buttons: dtButtons })

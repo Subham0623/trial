@@ -23,16 +23,13 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.subjectarea.fields.id') }}
+                            {{ trans('cruds.subjectarea.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.subjectarea.fields.title') }}
                         </th>
                         <th>
                             {{ trans('cruds.subjectarea.fields.sort') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.subjectarea.fields.slug') }}
                         </th>
                         <th>
                             &nbsp;
@@ -46,16 +43,13 @@
 
                             </td>
                             <td>
-                                {{ $subject->id ?? '' }}
+                                {{ $loop->index+1 ?? '' }}
                             </td>
                             <td>
                                 {{ $subject->title ?? '' }}
                             </td>
                             <td>
                                 {{ $subject->sort ?? '' }}
-                            </td>
-                            <td>
-                                {{ $subject->slug ?? '' }}
                             </td>
                             <td>
                                 @can('subject_area_show')
@@ -127,7 +121,7 @@
 @endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
-    order: [[ 1, 'desc' ]],
+    order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
   $('.datatable-SubjectArea:not(.ajaxTable)').DataTable({ buttons: dtButtons })

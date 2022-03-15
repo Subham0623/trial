@@ -17,18 +17,10 @@
                 <tbody>
                     <tr>
                         <th>
-                            {{ trans('cruds.organization.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $organization->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.organization.fields.name') }}
                         </th>
                         <td>
-                            {{ $organization->name }}
+                            {{ $organization->name ?? '' }}
                         </td>
                     </tr>
                     <tr>
@@ -36,7 +28,7 @@
                             {{ trans('cruds.organization.fields.province') }}
                         </th>
                         <td>
-                            {{ $organization->province->name }}
+                            {{ $organization->province ? $organization->province->name : '' }}
                         </td>
                     </tr>
                     <tr>
@@ -44,7 +36,7 @@
                             {{ trans('cruds.organization.fields.district') }}
                         </th>
                         <td>
-                            {{ $organization->district->name }}
+                            {{ $organization->district ? $organization->district->name : '' }}
                         </td>
                     </tr>
                     <tr>
@@ -52,7 +44,7 @@
                             {{ trans('cruds.organization.fields.address') }}
                         </th>
                         <td>
-                            {{ $organization->address }}
+                            {{ $organization->address ?? '' }}
                         </td>
                     </tr>
                     <tr>
@@ -60,15 +52,7 @@
                             {{ trans('cruds.organization.fields.contact') }}
                         </th>
                         <td>
-                            {{ $organization->contact }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.organization.fields.slug') }}
-                        </th>
-                        <td>
-                            {{ $organization->slug }}
+                            {{ $organization->contact ?? '' }}
                         </td>
                     </tr>
                 </tbody>

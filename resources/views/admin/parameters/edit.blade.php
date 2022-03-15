@@ -108,7 +108,7 @@
         <button type="button" name="add" id="add1" class="btn btn-success mb-3">Add More</button>
 
 
-            <div class="form-group">
+            <div class="form-group" style="display: none;">
                 <label class="required" for="slug">{{ trans('cruds.parameter.fields.slug') }}</label>
                 <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', $parameter->slug) }}" required>
                 @if($errors->has('slug'))

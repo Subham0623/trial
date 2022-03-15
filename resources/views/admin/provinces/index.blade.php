@@ -23,7 +23,7 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.province.fields.id') }}
+                            {{ trans('cruds.province.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.province.fields.name') }}
@@ -43,7 +43,7 @@
 
                             </td>
                             <td>
-                                {{ $province->id ?? '' }}
+                                {{ $loop->index+1 ?? '' }}
                             </td>
                             <td>
                                 {{ $province->name ?? '' }}
@@ -123,7 +123,7 @@
 @endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
-    order: [[ 1, 'desc' ]],
+    order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
   $('.datatable-province:not(.ajaxTable)').DataTable({ buttons: dtButtons })

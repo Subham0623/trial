@@ -17,14 +17,6 @@
                 <tbody>
                     <tr>
                         <th>
-                            {{ trans('cruds.popup.fields.id') }}
-                        </th>
-                        <td>
-                            {{ $popup->id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.popup.fields.name') }}
                         </th>
                         <td>

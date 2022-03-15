@@ -78,7 +78,7 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.contact_helper') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="display: none;">
                 <label class="required" for="slug">{{ trans('cruds.organization.fields.slug') }}</label>
                 <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', '') }}" required>
                 @if($errors->has('slug'))

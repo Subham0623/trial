@@ -23,7 +23,7 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.role.fields.id') }}
+                            {{ trans('cruds.role.fields.sn') }}
                         </th>
                         <th>
                             {{ trans('cruds.role.fields.title') }}
@@ -43,7 +43,7 @@
 
                             </td>
                             <td>
-                                {{ $role->id ?? '' }}
+                                {{ $loop->index+1 ?? '' }}
                             </td>
                             <td>
                                 {{ $role->title ?? '' }}
@@ -123,7 +123,7 @@
 @endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
-    order: [[ 1, 'desc' ]],
+    order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
   $('.datatable-Role:not(.ajaxTable)').DataTable({ buttons: dtButtons })
