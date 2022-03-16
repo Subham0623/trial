@@ -46,9 +46,7 @@
                         <table class=" table table-bordered table-striped table-hover datatable datatable-Organization">
                             <thead>
                                 <tr>
-                                    <th width="10">
-
-                                    </th>
+                                    
                                     <th>
                                         {{ trans('cruds.organization.fields.sn') }}
                                     </th>
@@ -67,17 +65,56 @@
                                     <th>
                                         {{ trans('cruds.organization.fields.contact') }}
                                     </th>
-                                    <th>
-                                        &nbsp;
-                                    </th>
+                                    
                                 </tr>
                             </thead>
+                            <tbody></tbody>
                         </table>
 
                             
                         
                     </div>
                 </div>
+                <div id="container" style="width:100%; height:400px;" class="mt-5">
+                    <select name="district" id="district">
+                        <option value = "">Select district</option>
+                            @foreach($districts as $district)
+                            <option class = "districts" value="{{ $district->id }}" {{ old('district') == $district->id ? 'selected' : '' }}>{{ $district->name }}</option>
+                            @endforeach
+                    </select>
+                <div id="list2">
+                <div class="table-responsive">
+                        <table class=" table table-bordered table-striped table-hover datatable datatable-Organization">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>
+                                        {{ trans('cruds.organization.fields.sn') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.organization.fields.name') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.organization.fields.province') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.organization.fields.district') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.organization.fields.address') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.organization.fields.contact') }}
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                            
+                        
+                    </div>
             </div>
         </div>
     </div>
@@ -118,20 +155,35 @@
 
                                     
 
-                                   var html = `
-                                   <tr>
-                                        <th>
-                                        
-                                        </th>
-                                    </tr>`;
-                                    $('#list table tbody').append(html2);
-                                    $('#list table tbody').append(html1);
-                
-                                    }
+                                //    var html = `
+                                //    <tr>
+                                //         <th>
+                                //         hello
+                                //         </th>
+                                //     </tr>`;
+                                //     $('#list table tbody').append(html2);
+                                //     $('#list table tbody').append(html);
                                     
-                                    
-                                });
-                        }
+                                $("#list table tbody").empty();
+                                    let newData = '<tbody>';
+                                    $.each(data, function(key, value) {
+                                        newData += `
+                                        <tr>
+                                        <td>${key+1}</td>
+                                        <td>${value.name}</td>
+                                        <td>${value.province_id}</td>
+                                        <td>${value.district_id}</td>
+                                        <td>${value.address}</td>
+                                        <td>${value.contact}</td>
+                                        </tr>`;
+                                    });
+                                    newData += '</tbody>';
+                                    $("#list table ").append(newData);
+                                                        }
+                                                        
+                                                        
+                                                    });
+                                            }
                                     
                         
                         
@@ -141,4 +193,73 @@
                     });
                     });
     </script>
+
+<script>
+    $(document).ready(function(){
+                $('#district').change(function(){
+                    // e.preventDefault();
+                    
+                    console.log('here');    
+                    
+                    var district = $(this).val();
+                    console.log(district);
+                
+                    if(district.length > 0)
+                    {
+                        $.ajax({
+                            url:"admins/district/organizations",
+                            
+                            type:'GET',
+                            data: {
+                                district: district,
+                                },
+                                success: function(data){
+                                // window.location=res.url;
+                                console.log(data);
+                                // $("#list").empty();
+                                // var resulttag = "";
+                                // resulttag += "<tr><td>result</td></tr>";
+                                // $("#table tbody").append(resulttag);
+
+                                
+
+                            //    var html = `
+                            //    <tr>
+                            //         <th>
+                            //         hello
+                            //         </th>
+                            //     </tr>`;
+                            //     $('#list table tbody').append(html2);
+                            //     $('#list table tbody').append(html);
+                                
+                            $("#list2 table tbody").empty();
+                                let newData = '<tbody>';
+                                $.each(data, function(key, value) {
+                                    newData += `
+                                    <tr>
+                                    <td>${key+1}</td>
+                                    <td>${value.name}</td>
+                                    <td>${value.province_id}</td>
+                                    <td>${value.district_id}</td>
+                                    <td>${value.address}</td>
+                                    <td>${value.contact}</td>
+                                    </tr>`;
+                                });
+                                newData += '</tbody>';
+                                $("#list2 table ").append(newData);
+                                                    }
+                                                    
+                                                    
+                                                });
+                                        }
+                                
+                    
+                    
+
+                    
+                    
+                });
+                });
+</script>
 @endsection
+

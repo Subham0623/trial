@@ -16,10 +16,11 @@ class HomeController
         $province_id = 1;
         $district_id = 1;
         $provinces = Province::all();
-        $districts = District::where('province_id',$province_id);
+        $districts = District::all();
+        // $districts = District::where('province_id',$province_id);
         $organizations = Organization::all()->count();
         $org = Organization::where('district_id',$district_id)->get();
-        return view('home',compact('organizations','provinces'));
+        return view('home',compact('organizations','provinces','districts'));
     }
 
     public function get_notifications(){
@@ -47,6 +48,16 @@ class HomeController
         $province = Province::findOrFail($request->province);
         
         $organizations = Organization::where('province_id',$request->province)->with('province','district')->get();
+        
+        return $organizations;
+        
+    }
+
+    public function district(Request $request)
+    {
+        $district = District::findOrFail($request->district);
+        
+        $organizations = Organization::where('district_id',$request->district)->with('district','province')->get();
         
         return $organizations;
         

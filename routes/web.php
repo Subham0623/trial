@@ -67,6 +67,8 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('forms','FormController@index')->name('forms');   
             
             Route::get('/province/organizations','HomeController@list')->name('list');
+            Route::get('/district/organizations','HomeController@district');
+
         
             //Organizations
             Route::get('organizations/download-format',function(){
