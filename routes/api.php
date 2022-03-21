@@ -21,6 +21,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
 
 Route::get('/form','HomeApiController@form')->name('form');
 Route::post('/form','HomeApiController@store')->name('form-store');
+Route::get('/forms','HomeApiController@show')->name('forms-show');
 Route::get('/form/{form}','HomeApiController@edit')->name('form-edit');
 Route::patch('/form/{form}','HomeApiController@update')->name('form-update');
 Route::patch('/form/submit/{form}','HomeApiController@submit')->name('submit');
@@ -28,7 +29,9 @@ Route::get('/profile','HomeApiController@profile')->name('profile');
 Route::post('/upload','HomeApiController@fileUpload')->name('upload');
 Route::get('/test','HomeApiController@test')->name('test');
 
-
+Route::patch('/form/{form}/reassign','HomeApiController@reassign')->name('form-reassign');
+Route::post('/feedback','HomeApiController@feedback')->name('feedback-store');
+Route::patch('/feedback/{feedback}','HomeApiController@feedbackStatus')->name('feedback-status-update');
     // Route::get('/wishlist','WishlistApiController@index')->name('wishlist');
     // Route::post('/add-to-wishlist','WishlistApiController@store');
     // Route::delete('/remove-from-wishlist','WishlistApiController@remove');
