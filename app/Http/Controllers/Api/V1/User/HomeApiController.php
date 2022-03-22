@@ -231,8 +231,13 @@ class HomeApiController extends Controller
             {
                 if($form->status == 1 && $form->is_verified == 1 && $form->is_audited == 1)
                 {
-                    $form->final_verified = 1;
-                    $form->save();
+                    $form->update([
+                        
+                        'final_verified' => 1,
+                        'final_verified_by' => $user
+
+                    ]);
+
                     return response(['message'=>'Form verified successfully'],200);
                 }
                 else
@@ -242,10 +247,15 @@ class HomeApiController extends Controller
             }
             elseif($roles->contains(4))
             {
-                if($form->status == 1 && $form->is_verified)
+                if($form->status == 1 && $form->is_verified == 1)
                 {
-                    $form->is_audited = 1;
-                    $form->save();
+                    $form->update([
+
+                        'is_audited' => 1,
+                        'audited_by' => $user
+
+                    ]);
+
                     return response(['message'=>'Form audited successfully'],200);
                 }
                 else
@@ -257,8 +267,12 @@ class HomeApiController extends Controller
             {
                 if($form->status == 1)
                 {
-                    $form->is_verified = 1;
-                    $form->save();
+                    $form->update([
+
+                        'is_verified' => 1,
+                        'verified_by' => $user
+                    ]);
+
                     return response(['message'=>'Form verified successfully'],200);
                 }
                 else
@@ -266,11 +280,19 @@ class HomeApiController extends Controller
                     return response(['message'=>'You are not allowed to verify this form']);
                 }
             }
+            elseif($roles->contains(2))
+            {
+                $form->update([
+
+                    'status' => 1,
+                    'user_id' => $user
+                ]);
+                
+                return response(['message'=>'Form submitted successfully'],200);
+            }
             else
             {
-                $form->status = 1;
-                $form->save();
-                return response(['message'=>'Form submitted successfully'],200);
+                return response(['message'=>'You are not allowed to verify this form']);
             }
         }
         else
@@ -303,7 +325,7 @@ class HomeApiController extends Controller
                     'feedback' => $feedback['feedback'],
                     'user_id' => Auth::user()->id,
                     'form_detail_id' => $form_detail->id,
-                    'status' => 0
+                    'status' => 1
                 ]);
 
             }
@@ -319,23 +341,17 @@ class HomeApiController extends Controller
         }
     }
 
-    public function feedbackStatus(Feedback $feedback)
+    public function feedbackStatus(Request $request, Feedback $feedback)
     {
-        // dd($feedback);
+        // dd($request->all());
         $feedback = Feedback::findOrFail($feedback->id);
         if(isset($feedback))
         {
             if($feedback->user_id == Auth::user()->id)
             {
-                if($feedback->status == 0){
-
-                    $feedback->status = 1;
-                    $feedback->save();
-                }
-                else{
-                    $feedback->status = 0;
-                    $feedback->save();
-                }
+                $feedback->update([
+                    'status'=>$request->status
+                ]);
 
     
                 return response(
@@ -371,24 +387,33 @@ class HomeApiController extends Controller
         {
             if($roles->contains(6))
             {
-                $form->is_audited = 0;
-                $form->save();
+                $form->update([
+                    'is_audited' => 0,
+                    'final_verified_by' => $user
+                ]);
+                
                 return response([
                     'message' => "Form reassigned successfully"
                 ]);
             }
             elseif($roles->contains(5))
             {
-                $form->status = 0;
-                $form->save();
+                $form->update([
+
+                    'status' => 1,
+                    'verified_by' => $user
+                ]);
                 return response([
                     'message' => "Form reassigned successfully"
                 ]);
             }
             elseif($roles->contains(4))
             {
-                $form->is_verified = 0;
-                $form->save();
+                $form->update([
+
+                    'is_verified' => 1,
+                    'audited_by' => $user
+                ]);
                 return response([
                     'message' => "Form reassigned successfully"
                 ]);
