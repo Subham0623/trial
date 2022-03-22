@@ -25,4 +25,9 @@ class FormSubjectArea extends Model
     {
         return $this->belongsToMany(Parameter::class)->withPivot('marks','remarks','option_id');
     }
+
+    public function selected_subjectareas()
+    {
+        return $this->hasMany(FormDetail::class, 'form_subject_area_id');
+    }
 }

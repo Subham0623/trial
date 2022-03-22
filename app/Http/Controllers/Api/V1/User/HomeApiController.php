@@ -30,7 +30,8 @@ class HomeApiController extends Controller
 
     public function profile()
     {
-        $user = Auth::user()->with('roles.permissions','organization')->get();
+        $user = Auth::user()->load(['roles.permissions','organizations']);
+        
         return response(['user'=>$user]);
     }
 
@@ -132,7 +133,7 @@ class HomeApiController extends Controller
     public function edit(Form $form)
     {
         $selected_options = [];
-        // dd($user = Auth::user()->load('forms.subjectAreas.options'));
+        
         if($form) {
             $selected_subjectareas = $form->subjectAreas()->get();
             $selected_subjectareas_id = [];
@@ -140,11 +141,17 @@ class HomeApiController extends Controller
                 array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
 
             }
-            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks')->get();
+            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
             // dd($selected_options);
     
+            // $subject_areas = SubjectArea::with(['parameters.options' => function ($query) use ($selected_subjectareas_id) {
+            //     dd($selected_subjectareas_id);
+            //         $query->find($selected_subjectareas_id)->each->setAttribute('status',true);
+            //         // $query->whereNotIn('id', $selected_options)->get()->each->setAttribute('status',false);
+            //     }])
+            //     ->get();
+            //     dd($subject_areas);
         }
-        
         $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
         
         return response([
