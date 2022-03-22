@@ -22,7 +22,10 @@ class FormDetail extends Model
         return $this->hasMany(Feedback::class);
     }
 
-    
+    public function selected_subjectarea()
+    {
+        return $this->belongsTo(FormSubjectArea::class, 'form_subject_area_id');
+    }
     
 
     
