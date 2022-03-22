@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Gate;
 use App\Form;
 use Symfony\Component\HttpFoundation\Response;
+use Auth;
 
 class FormController extends Controller
 {
@@ -19,10 +20,44 @@ class FormController extends Controller
     {
         abort_if(Gate::denies('form_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $forms = Form::with('user')->get();
-        
+        $roles = Auth::user()->roles()->pluck('id');
+        $orgs = Auth::user()->organizations()->pluck('id');
 
-        return view('admin.forms.index',compact('forms'));
+        
+        if($roles->contains(5))
+        {
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)->get();
+            dd($forms);
+            
+            $verified_forms = Auth::user()->verifiedForms()->get();
+        }
+        elseif($roles->contains(4))
+        {
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',1)->get();
+            dd($forms);
+    
+            $verified_forms = Auth::user()->auditedForms()->get();
+        }
+        elseif($roles->contains(6))
+        {
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',1)
+            ->where('is_audited',1)
+            ->get();
+    
+            $verified_forms = Auth::user()->finalVerifiedForms()->get();
+        }
+        else
+        {
+            $forms = Form::all();
+            $verified_forms=0;
+        }
+
+        return view('admin.forms.index',compact('forms','verified_forms'));
     }
 
     /**
