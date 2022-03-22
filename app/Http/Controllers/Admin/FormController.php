@@ -19,37 +19,51 @@ class FormController extends Controller
     public function index()
     {
         abort_if(Gate::denies('form_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+// dd(Auth::user());
         $roles = Auth::user()->roles()->pluck('id');
         $orgs = Auth::user()->organizations()->pluck('id');
 
         
         if($roles->contains(5))
         {
-            $forms = Form::whereIn('organization_id',$orgs)
-            ->where('status',1)->get();
-            dd($forms);
-            
             $verified_forms = Auth::user()->verifiedForms()->get();
+
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',0)->get();
+
+            $forms = $forms->merge($verified_forms)->all();
+
+            // dd($forms);
+            
         }
         elseif($roles->contains(4))
         {
+            $audited_forms = Auth::user()->auditedForms()->get();
+            
             $forms = Form::whereIn('organization_id',$orgs)
             ->where('status',1)
-            ->where('is_verified',1)->get();
-            dd($forms);
+            ->where('is_verified',1)
+            ->where('is_audited',0)->get();
+
+            $forms = $forms->merge($audited_forms)->all();
+            // dd($forms);
     
-            $verified_forms = Auth::user()->auditedForms()->get();
         }
         elseif($roles->contains(6))
         {
+            $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
+            
             $forms = Form::whereIn('organization_id',$orgs)
             ->where('status',1)
             ->where('is_verified',1)
             ->where('is_audited',1)
+            ->where('final_verified',0)
             ->get();
+
+            $forms = $forms->merge($final_verified_forms)->all();
+            // dd($forms);
     
-            $verified_forms = Auth::user()->finalVerifiedForms()->get();
         }
         else
         {
@@ -57,7 +71,7 @@ class FormController extends Controller
             $verified_forms=0;
         }
 
-        return view('admin.forms.index',compact('forms','verified_forms'));
+        return view('admin.forms.index',compact('forms'));
     }
 
     /**

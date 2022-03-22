@@ -110,17 +110,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function verifiedForms()
     {
-        return $this->hasMany(Form::class);
+        return $this->hasMany(Form::class,'verified_by');
     }
 
     public function auditedForms()
     {
-        return $this->hasMany(Form::class);
+        return $this->hasMany(Form::class,'audited_by');
     }
 
     public function finalVerifiedForms()
     {
-        return $this->hasMany(Form::class);
+        return $this->hasMany(Form::class,'final_verified_by');
     }
 
     public function organizations()

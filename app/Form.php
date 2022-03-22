@@ -36,6 +36,10 @@ class Form extends Model
         'audited_by',
         'verified_by',
         'final_verified_by',
+        'status',
+        'is_verified',
+        'is_audited',
+        'final_verified',
         'deleted_at',
     ];
 
