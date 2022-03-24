@@ -5,6 +5,7 @@ use Auth;
 use App\Organization;
 use App\Province;
 use App\District;
+use App\Models\Authorization\User\User;
 use Illuminate\Http\Request;
 
 
@@ -19,8 +20,17 @@ class HomeController
         $districts = District::all();
         // $districts = District::where('province_id',$province_id);
         $organizations = Organization::all()->count();
+
+        $auditors = User::wherehas('roles',function($query){
+            $query->where('title','Auditor');
+        })->count();
+
+        $finalVerifiers = User::wherehas('roles',function($query){
+            $query->where('title','Final Verifier');
+        })->count();
+
         $org = Organization::where('district_id',$district_id)->get();
-        return view('home',compact('organizations','provinces','districts'));
+        return view('home',compact('organizations','provinces','districts','auditors','finalVerifiers'));
     }
 
     public function get_notifications(){
@@ -61,5 +71,35 @@ class HomeController
         
         return $organizations;
         
+    }
+
+    public function provinceDistrict($id)
+    {
+        $province = Province::findOrFail($id);
+        $districts = $province->districts()->pluck('name','id');
+        return $districts;
+
+    }
+
+    public function search(Request $request)
+    {
+        // dd($request->all());
+
+        if((isset($request->province)) && (isset($request->district)))
+        {
+            $organizations = Organization::where('province_id',$request->province)->where('district_id',$request->district)->get();
+            return $organizations;
+        }
+        elseif((isset($request->province)) && $request->district == NULL)
+        {
+            $organizations = Organization::where('province_id',$request->province)->get();
+            return $organizations;
+        }
+        else
+        {
+            $organizations = Organization::where('district_id',$request->district)->get();
+            return $organizations;
+        }
+       
     }
 }

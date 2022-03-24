@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Gate;
 use App\Form;
+use App\Organization;
 use Symfony\Component\HttpFoundation\Response;
 
 class FormController extends Controller
@@ -20,9 +21,43 @@ class FormController extends Controller
         abort_if(Gate::denies('form_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $forms = Form::with('user')->get();
-        
 
-        return view('admin.forms.index',compact('forms'));
+        $organizations = Organization::all();
+
+        $years = Form::groupBy('year')->pluck('year')->filter();
+        // dd($years);
+        
+        return view('admin.forms.index',compact('forms','organizations','years'));
+    }
+
+    public function filter(Request $request)
+    {
+        // dd('here');
+        // dd($request->organization);
+        if((isset($request->organization)) && (isset($request->year)))
+        {
+            $forms = Form::where('organization_id',$request->organization)->where('year',$request->year)->get();
+        }
+        elseif((isset($request->organization)) && ($request->year == null))
+        {
+            $forms = Form::where('organization_id',$request->organization)->get();
+        }
+        else
+        {
+            $forms=Form::where('year',$request->year)->get();
+        }
+
+        $organizations = Organization::all();
+
+        $years = Form::groupBy('year')->pluck('year')->filter();
+
+        $html = view('admin.forms.index', compact('forms','organizations','years'))->render();
+        // dd($html);
+        return response()->json(array(
+            'success' => true,
+            'html' => $html,
+        ));
+        
     }
 
     /**
@@ -90,4 +125,6 @@ class FormController extends Controller
     {
         //
     }
+
+
 }
