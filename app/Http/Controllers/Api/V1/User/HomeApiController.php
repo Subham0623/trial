@@ -38,10 +38,11 @@ class HomeApiController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-
+        $user_organization = $user->organizations->first();
         $data = [
             'user_id' => $user->id,
             'year' => $request->year,
+            'organization_id' => $user_organization->id,
         ];
 
         $form = Form::create($data);
