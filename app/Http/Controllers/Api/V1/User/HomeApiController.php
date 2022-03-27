@@ -136,7 +136,6 @@ class HomeApiController extends Controller
 
     public function edit(Form $form)
     {
-
         // $selected_options = [];
         
         // if($form) {
@@ -163,6 +162,7 @@ class HomeApiController extends Controller
         return response([
             'subject_areas' => $subject_areas,
             'selected_options' => $selected_options,
+            'form_details' => $form->load('organization'),
         ]);
     }
 
@@ -235,8 +235,8 @@ class HomeApiController extends Controller
                 
 
                 return response([
-                    'message'=>'Form saved successfully',
-                    'form_id'=>$form->id,
+                    'message'=>'Form updated successfully',
+                    'form_details' => $form->load('organization'),
                     'subject_areas' => $subject_areas,
                     'selected_options' => $selected_options,
                 ],201);
@@ -369,6 +369,7 @@ class HomeApiController extends Controller
                 'message'=>'Thank you for your feedback',
                 'subject_areas' => $subject_areas,
                 'selected_options' => $selected_options,
+                'form_details' => $form->load('organization'),
             ],201);
         }
         else
@@ -401,6 +402,7 @@ class HomeApiController extends Controller
                 return response(
                     [
                         'message' => 'Feedback status updated successfully',
+                        'form_details' => $form->load('organization'),
                         'subject_areas' => $subject_areas,
                         'selected_options' => $selected_options,
                     ],200
