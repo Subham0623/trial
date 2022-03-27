@@ -41,7 +41,7 @@ class Permission extends Model
             $permissions = $user->roles->map(function($role, $key) {
                 return $role->permissions;
              });
-
+             
              $datas = [];
 
             if(isset($permissions) && !empty($permissions)){
@@ -52,9 +52,17 @@ class Permission extends Model
                 }
             }
             $datas = collect($datas);
-            // dd($datas);
+            
             return $datas;
         }
         return $this;
     }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
+
+    }
+
+    
 }

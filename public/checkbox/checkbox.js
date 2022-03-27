@@ -17,7 +17,59 @@ function checkBoxStatus(checkedStatus, el) {
   }
 }
 
+// manipulates the checkboxes states
+function checkCondition(childBoxContainer, checkboxParent, checkboxes = 0){
+
+  if(!checkboxParent){
+    // if no checkboxparent select the parent from the got element
+    // here the parent class name should be same as the selected except the chekbox tab
+    // childBoxContainer -> represents the element containing all the checkboxes
+    checkboxes = childBoxContainer.querySelectorAll(`input`);
+    checkboxParent = document.querySelector(`.check__box-container-${childBoxContainer.dataset.checkboxTab}`);
+  }
+  
+  someCheckedState = checkboxParent.querySelector(".some__checked");
+  checkedState = checkboxParent.querySelector(".checked");
+
+  let checkedCount = 0;
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) {
+      //
+      checkedCount++;
+    }
+  }
+
+  if (checkedCount === checkboxes.length) {
+    //   checkBoxStatus(true);
+
+    checkboxParent
+      .querySelectorAll(".state")
+      .forEach((el) => el.classList.remove("active-state"));
+    checkboxParent.querySelector(".checked").classList.add("active-state");
+  } else if (checkedCount < checkboxes.length && checkedCount !== 0) {
+    //   someCheckedStatus();
+
+    checkboxParent
+      .querySelectorAll(".state")
+      .forEach((el) => el.classList.remove("active-state"));
+    checkboxParent
+      .querySelector(".some__checked")
+      .classList.add("active-state");
+  } else {
+    checkedCount = 0;
+
+    checkboxParent
+      .querySelectorAll(".state")
+      .forEach((el) => el.classList.remove("active-state"));
+    //   checkboxParent.querySelector(".s").classList.add("active-state");
+  }
+}
+
 allCheckBox.forEach((el) => {
+  // check default checkbox status
+  console.log(el)
+  checkCondition(el)
+
   el.addEventListener("click", function (e) {
     const element = e.target.closest(".child__box-container");
     const checkboxes = element.querySelectorAll(`input`);
@@ -25,42 +77,9 @@ allCheckBox.forEach((el) => {
     const checkboxParent = document.querySelector(
       `.check__box-container-${element.dataset.checkboxTab}`
     );
+
     // uncheckedState = ;
-    someCheckedState = checkboxParent.querySelector(".some__checked");
-    checkedState = checkboxParent.querySelector(".checked");
-
-    let checkedCount = 0;
-    for (let i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i].checked) {
-        //
-        checkedCount++;
-      }
-    }
-
-    if (checkedCount === checkboxes.length) {
-      //   checkBoxStatus(true);
-
-      checkboxParent
-        .querySelectorAll(".state")
-        .forEach((el) => el.classList.remove("active-state"));
-      checkboxParent.querySelector(".checked").classList.add("active-state");
-    } else if (checkedCount < checkboxes.length && checkedCount !== 0) {
-      //   someCheckedStatus();
-
-      checkboxParent
-        .querySelectorAll(".state")
-        .forEach((el) => el.classList.remove("active-state"));
-      checkboxParent
-        .querySelector(".some__checked")
-        .classList.add("active-state");
-    } else {
-      checkedCount = 0;
-
-      checkboxParent
-        .querySelectorAll(".state")
-        .forEach((el) => el.classList.remove("active-state"));
-      //   checkboxParent.querySelector(".s").classList.add("active-state");
-    }
+    checkCondition(_, checkboxParent, checkboxes)
   });
 });
 
