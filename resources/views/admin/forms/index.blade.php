@@ -189,7 +189,7 @@
             else{
 
                 $.ajax({
-                        url: 'forms/organization/',
+                        url: "{{route('admin.form-filter')}}",
                         type: "GET",
                         dataType: "json",
                         data:{

@@ -83,6 +83,9 @@
                     </div>
                 </div>
 
+                <div id = "pie-chart" class = "mt-5">
+                </div>
+
                 <div class="row pt-5">
                     
                         <div class="col-2">
@@ -399,7 +402,7 @@
                                         <td>${value.district_id}</td>
                                         <td>${value.address}</td>
                                         <td>${value.contact}</td>
-                                        <td><button class="view">View Forms</button></td>
+                                        <td><button onclick="return viewForms()" data-value="${value.id}" class="btn btn-info view">View Forms</button></td>
                                         </tr>`;
                                     });
                                     newData += '</tbody>';
@@ -412,11 +415,82 @@
                     
                 
         });
+
+        function viewForms() {
+
+            $(document).on('click', '.view', function(){
+                var org = $(this).data('value');
+                // alert(button_value);
+                $.ajax({
+                        url: "{{route('admin.form-filter')}}",
+                        type: "GET",
+                        dataType: "json",
+                        data:{
+                            'organization': org,  
+                        },
+                        success:function(data) {
+                            console.log(data);
+                            $('body').html(data.html);
+                            
+                                                        }
+                                                    });
+
+
+    });
+        
+        }
+
 </script>
 <script>
-    $('.view').click(function(){
-        alert('hello');
-    });
+    Highcharts.chart('pie-chart', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Forms'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        name: 'Brands',
+        colorByPoint: true,
+        data: [ {
+            name: 'Draft',
+            y: {{$draft}}
+        }, {
+            name: 'Submitted',
+            y: {{$submitted}}
+        }, {
+            name: 'Verified',
+            y: {{$verified}}
+        }, {
+            name: 'Audited',
+            y: {{$audited}}
+        }, {
+            name: 'Final Verified',
+            y: {{$final_verified}}
+        }]
+    }]
+});
 </script>
 @endsection
 

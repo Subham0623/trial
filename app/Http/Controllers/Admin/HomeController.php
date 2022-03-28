@@ -7,6 +7,7 @@ use App\Province;
 use App\District;
 use App\Models\Authorization\User\User;
 use Illuminate\Http\Request;
+use App\Form;
 
 
 class HomeController
@@ -29,8 +30,16 @@ class HomeController
             $query->where('title','Final Verifier');
         })->count();
 
+        $draft = Form::where('status',0)->count();
+        $submitted = Form::where('status',1)->count();
+        $verified = Form::where('is_verified',1)->count();
+        $audited = Form::where('is_audited',1)->count();
+        $final_verified = Form::where('final_verified',1)->count();
+
+        
+
         $org = Organization::where('district_id',$district_id)->get();
-        return view('home',compact('organizations','provinces','districts','auditors','finalVerifiers'));
+        return view('home',compact('organizations','provinces','districts','auditors','finalVerifiers','draft','submitted','verified','final_verified','audited'));
     }
 
     public function get_notifications(){
