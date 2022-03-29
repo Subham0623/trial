@@ -63,6 +63,11 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('provinces/check-slug', 'ProvinceController@checkSlug')->name('provinces.checkSlug');
             Route::resource('provinces','ProvinceController');
 
+            //Types
+            Route::delete('types/destroy', 'TypeController@massDestroy')->name('types.massDestroy');
+            Route::get('types/check-slug', 'TypeController@checkSlug')->name('types.checkSlug');
+            Route::resource('types','TypeController');
+
             //Forms
             Route::get('forms','FormController@index')->name('forms');    
         

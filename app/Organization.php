@@ -27,6 +27,8 @@ class Organization extends Model
         'address',
         'province_id',
         'district_id',
+        'type_id',
+        'audit_type',
         'contact',
         'created_at',
         'updated_at',
@@ -77,5 +79,10 @@ class Organization extends Model
     public function forms()
     {
         return $this->hasMany(Form::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
     }
 }
