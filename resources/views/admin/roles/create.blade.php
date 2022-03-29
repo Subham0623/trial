@@ -65,9 +65,15 @@
             <div class="form-group">
                 <div class="check__box-heading">
                 <label class="">Grant Permissions</label>
+                @if($errors->has('permissions'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('permissions') }}
+                        </div>
+                    @endif
                 <div class="check__box-design">
                     <div class="check__box-container">
                         @foreach($groups as $key => $group)
+                            @if($group->group_permission->count())
                             <div class="check__box-container-{{$key}}">
                                 <div class="check__all-design">
                                     <label for="checkAll-{{$key}}">{{$group->title}}</label>
@@ -132,6 +138,7 @@
                                     @endforeach
                                 </div>
                             </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>

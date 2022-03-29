@@ -29,7 +29,7 @@ class RolesController extends Controller
         abort_if(Gate::denies('role_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         // $permissions = Permission::ofAllowedPermissions()->pluck('title', 'id');
-        $groups = Group::all();
+        $groups = Group::with('permissions')->get();
         // dd($groups);
         return view('admin.roles.create', compact('groups'));
     }
