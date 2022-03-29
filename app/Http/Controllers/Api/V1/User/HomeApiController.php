@@ -344,7 +344,6 @@ class HomeApiController extends Controller
     {
         // dd($request->feedbacks);
         $form = Form::findOrFail($request->form_id);
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
 
         if(isset($form))
         {
@@ -364,6 +363,7 @@ class HomeApiController extends Controller
 
             }
 
+            $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
             $selected_options = $this->selectedOptions($form);
 
             return response([
