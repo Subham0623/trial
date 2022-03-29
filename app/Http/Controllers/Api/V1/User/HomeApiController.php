@@ -11,6 +11,7 @@ use App\Option;
 use App\Organization;
 use App\Models\Authorization\User\User;
 use App\FormDetail;
+use App\Feedback;
 use App\FormSubjectArea;
 use Illuminate\Http\Request;
 use DB;
@@ -29,17 +30,19 @@ class HomeApiController extends Controller
 
     public function profile()
     {
-        $user = Auth::user()->with('roles.permissions','organization')->get();
+        $user = Auth::user()->load(['roles.permissions','organizations']);
+        
         return response(['user'=>$user]);
     }
 
     public function store(Request $request)
     {
         $user = Auth::user();
-
+        $user_organization = $user->organizations->first();
         $data = [
             'user_id' => $user->id,
             'year' => $request->year,
+            'organization_id' => $user_organization->id,
         ];
 
         $form = Form::create($data);
@@ -61,6 +64,10 @@ class HomeApiController extends Controller
                     'option_id' => $opt->id,
                     'marks' => $opt->points,
                 ]);  
+
+                // foreach ($request->input('resource', []) as $file) {
+                //     $form_detail->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('resource');
+                // }3
             }
         }
 
@@ -130,79 +137,366 @@ class HomeApiController extends Controller
 
     public function edit(Form $form)
     {
-        $selected_options = [];
-        // dd($user = Auth::user()->load('forms.subjectAreas.options'));
-        if($form) {
-            $selected_subjectareas = $form->subjectAreas()->pluck('form_id');
-            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas)->with('feedbacks')->get();
+        // $selected_options = [];
+        
+        // if($form) {
+        //     $selected_subjectareas = $form->subjectAreas()->get();
+        //     $selected_subjectareas_id = [];
+        //     foreach($selected_subjectareas as $selected_subjectarea) {
+        //         array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+
+        //     }
+        //     $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
+        //     // dd($selected_options);
     
-        }
-        
+        //     // $subject_areas = SubjectArea::with(['parameters.options' => function ($query) use ($selected_subjectareas_id) {
+        //     //     dd($selected_subjectareas_id);
+        //     //         $query->find($selected_subjectareas_id)->each->setAttribute('status',true);
+        //     //         // $query->whereNotIn('id', $selected_options)->get()->each->setAttribute('status',false);
+        //     //     }])
+        //     //     ->get();
+        //     //     dd($subject_areas);
+        // }
         $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
-        
+        $selected_options = $this->selectedOptions($form);
+        // dd($selected_options);
         return response([
             'subject_areas' => $subject_areas,
             'selected_options' => $selected_options,
+            'form_details' => $form->load('organization'),
         ]);
     }
 
     public function update(Request $request, Form $form)
     {
+        // dd($form);
+        
         $user = Auth::user();
+        $roles = $user->roles->pluck('id');
+        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+        
         
         $form = Form::findOrFail($form->id);
-        
+        // dd('here');
         if(isset($form)){
-            $form_subject_area = FormSubjectArea::updateOrCreate([
-                'form_id' => $form->id,
-                'subject_area_id' => $request->subject_area,
-            ]);
+               
+                $form_subject_area = FormSubjectArea::updateOrCreate([
+                    'form_id' => $form->id,
+                    'subject_area_id' => $request->subject_area,
+                ]);
+    
+                foreach($request->parameters as $parameter )
+                {   
+                    if(isset($parameter['option']['id'])) {
+                        $opt = Option::find($parameter['option']['id']);
+                        $form_detail = FormDetail::updateOrCreate([
+                            'form_subject_area_id' => $form_subject_area->id,
+                            'parameter_id' => $parameter['id'],
+                        ],
+                        [
+                            'remarks' => $parameter['remarks'],
+                            'option_id' => $opt->id,
+                            'marks' => $opt->points,
+                        ]); 
+                        
+                        
+                    }
 
-            foreach($request->parameters as $parameter )
-            {   
-                if(isset($parameter['option']['id'])) {
-                    $opt = Option::find($parameter['option']['id']);
-                    $form_detail = FormDetail::updateOrCreate([
-                        'form_subject_area_id' => $form_subject_area->id,
-                        'parameter_id' => $parameter['id'],
-                    ],
-                    [
-                        'remarks' => $parameter['remarks'],
-                        'option_id' => $opt->id,
-                        'marks' => $opt->points,
-                    ]);  
+
                 }
+    
+                $total = $form_subject_area->parameters->sum('pivot.marks');
+                $form_subject_area->update([
+                    'marks'=> $total
+                ]);
+    
+                $total_marks = $form->subjectAreas->sum('pivot.marks');
+                $form->total_marks = $total_marks; 
+
+                if($roles->contains(6))
+                {
+                    $form->final_verified_by = $user->id;
+                }
+                elseif($roles->contains(4))
+                {
+                    $form->audited_by = $user->id;
+                }
+                elseif($roles->contains(5))
+                {
+                    $form->verified_by = $user->id;
+                }
+                else
+                {
+                    $form->user_id = $user->id;
+                }
+// dd($form);
+                $form->save();
+
+                $selected_options = $this->selectedOptions($form);
+                
+
+                return response([
+                    'message'=>'Form updated successfully',
+                    'form_details' => $form->load('organization'),
+                    'subject_areas' => $subject_areas,
+                    'selected_options' => $selected_options,
+                ],201);
+                
             }
-
-            $total = $form_subject_area->parameters->sum('pivot.marks');
-            $form_subject_area->update([
-                'marks'=> $total
-            ]);
-
-            $total_marks = $form->subjectAreas->sum('pivot.marks');
-            $form->total_marks = $total_marks;
-            $form->save();
-
-            return response([
-                'message'=>'Form saved successfully',
-                'form_id'=>$form->id
-            ],201);
-        }
-
+            else
+            {
+                return response([
+                    'message'=>'Form not found',
+                ],422);
+            }
         
-
-        
-        return response([
-            'message'=>'Form not found',
-        ],422);
     }
 
     public function submit(Form $form)
     {
-        $form->status = 1;
-        $form->save();
-        // dd($form);
+        $user = Auth::user()->id;
+        $roles = Auth::user()->roles->pluck('id');
+
+        if(isset($form))
+        {
+            if($roles->contains(6))
+            {
+                if($form->status == 1 && $form->is_verified == 1 && $form->is_audited == 1)
+                {
+                    $form->update([
+                        
+                        'final_verified' => 1,
+                        'final_verified_by' => $user
+
+                    ]);
+
+                    return response(['message'=>'Form verified successfully'],200);
+                }
+                else
+                {
+                    return response(['message'=>'You are not allowed to verify this form']);
+                }
+            }
+            elseif($roles->contains(4))
+            {
+                if($form->status == 1 && $form->is_verified == 1)
+                {
+                    $form->update([
+
+                        'is_audited' => 1,
+                        'audited_by' => $user
+
+                    ]);
+
+                    return response(['message'=>'Form audited successfully'],200);
+                }
+                else
+                {
+                    return response(['message'=>'You are not allowed to audit this form']);
+                }
+            }
+            elseif($roles->contains(5))
+            {
+                if($form->status == 1)
+                {
+                    $form->update([
+
+                        'is_verified' => 1,
+                        'verified_by' => $user
+                    ]);
+
+                    return response(['message'=>'Form verified successfully'],200);
+                }
+                else
+                {
+                    return response(['message'=>'You are not allowed to verify this form']);
+                }
+            }
+            elseif($roles->contains(2))
+            {
+                $form->update([
+
+                    'status' => 1,
+                    'user_id' => $user
+                ]);
+                
+                return response(['message'=>'Form submitted successfully'],200);
+            }
+            else
+            {
+                return response(['message'=>'You are not allowed to verify this form']);
+            }
+        }
+        else
+        {
+
+            return response(['message'=>'Form not found'],422);
+        }    
+    }
+
+    public function show()
+    {
+        $forms = Auth::user()->forms()->get();
+        return response()->json(['forms'=> $forms]);
+    }
+
+    public function feedback(Request $request)
+    {
+        // dd($request->feedbacks);
+        $form = Form::findOrFail($request->form_id);
+
+        if(isset($form))
+        {
+            $form_subject_area = FormSubjectArea::where('form_id',$request->form_id)->where('subject_area_id',$request->subject_area)->first();
+            // dd($request->parameter['id']);
+            $form_detail = FormDetail::where('form_subject_area_id',$form_subject_area->id)->where('parameter_id',$request->id)->first();
+            // dd($form_detail);
+            foreach($request->feedbacks as $feedback)
+            {
+                // dd($feedback);
+                $feedback = Feedback::create([
+                    'feedback' => $feedback['feedback'],
+                    'user_id' => Auth::user()->id,
+                    'form_detail_id' => $form_detail->id,
+                    'status' => 1
+                ]);
+
+            }
+
+            $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+            $selected_options = $this->selectedOptions($form);
+
+            return response([
+                'message'=>'Thank you for your feedback',
+                'subject_areas' => $subject_areas,
+                'selected_options' => $selected_options,
+                'form_details' => $form->load('organization'),
+            ],201);
+        }
+        else
+        {
+            return response([
+                'message'=>'Form not found',
+            ],422);
+        }
+    }
+
+    public function feedbackStatus(Request $request, Feedback $feedback)
+    {
+        // dd($request->all());
+        $form = Form::findOrFail($request->form_id);
+        $feedback = Feedback::findOrFail($feedback->id);
+        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+
         
-        return response()->json(['message'=>'Form submitted successfully'],200);
+        if(isset($feedback))
+        {
+            if($feedback->user_id == Auth::user()->id)
+            {
+                $feedback->update([
+                    'status'=>$request->status
+                ]);
+
+                $selected_options = $this->selectedOptions($form);
+                
+
+                return response(
+                    [
+                        'message' => 'Feedback status updated successfully',
+                        'form_details' => $form->load('organization'),
+                        'subject_areas' => $subject_areas,
+                        'selected_options' => $selected_options,
+                    ],200
+                    );
+            }
+            else
+            {
+                return response([
+                    'message' => "you are not allowed to change the status of this feedback"
+                ]);
+            }
+        }
+        else
+        {
+            return response([
+                'message'=>'Feedback not found',
+            ],422);
+        }
+
+    }
+
+    public function reassign(Request $request, Form $form)
+    {
+        // dd($form);
+        $user = Auth::user()->id;
+        $roles = Auth::user()->roles->pluck('id');
+        $form = Form::findOrFail($form->id);
+
+        if(isset($form))
+        {
+            if($roles->contains(6))
+            {
+                $form->update([
+                    'is_audited' => 0,
+                    'final_verified_by' => $user
+                ]);
+                
+                return response([
+                    'message' => "Form reassigned successfully"
+                ]);
+            }
+            elseif($roles->contains(5))
+            {
+                $form->update([
+
+                    'status' => 1,
+                    'verified_by' => $user
+                ]);
+                return response([
+                    'message' => "Form reassigned successfully"
+                ]);
+            }
+            elseif($roles->contains(4))
+            {
+                $form->update([
+
+                    'is_verified' => 1,
+                    'audited_by' => $user
+                ]);
+                return response([
+                    'message' => "Form reassigned successfully"
+                ]);
+            }
+            else{
+                return response([
+                    'message' => "You are not allowed to reassign the form"
+                ]);
+            }
+        }
+        else
+        {
+            return response([
+                'message' => "Form not found"
+            ],422);
+        }
+    }
+
+    function selectedOptions($form)
+    {
+        // dd('here');
+        $selected_options = [];
+        
+        if($form) {
+            $selected_subjectareas = $form->subjectAreas()->get();
+            $selected_subjectareas_id = [];
+            foreach($selected_subjectareas as $selected_subjectarea) {
+                array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+
+            }
+            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
+            
+        }
+// dd($selected_options);
+        return $selected_options;
     }
 }
