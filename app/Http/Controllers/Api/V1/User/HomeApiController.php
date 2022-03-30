@@ -53,16 +53,29 @@ class HomeApiController extends Controller
 
         foreach($request->parameters as $parameter )
         {   
-            if(isset($parameter['option']['id']))
+            if($parameter['is_applicable'] == 0)
             {
-                $opt = Option::find($parameter['option']['id']);
+                if(isset($parameter['option']['id']))
+                {
+                    $opt = Option::find($parameter['option']['id']);
+                    $form_detail = FormDetail::create([
+                        'form_subject_area_id' => $form_subject_area->id,
+                        'parameter_id' => $parameter['id'],
+                        'remarks' => $parameter['remarks'],
+                        'option_id' => $opt->id,
+                        'marks' => $opt->points,
+                        'is_applicable' => $parameter['is_applicable'],
+                    ]);  
+                }
+            }
+            else
+            {
                 $form_detail = FormDetail::create([
                     'form_subject_area_id' => $form_subject_area->id,
                     'parameter_id' => $parameter['id'],
                     'remarks' => $parameter['remarks'],
-                    'option_id' => $opt->id,
-                    'marks' => $opt->points,
-                ]);  
+                    'is_applicable' => $parameter['is_applicable'],
+                ]);
             }
         }
 
@@ -132,78 +145,254 @@ class HomeApiController extends Controller
 
     public function edit(Form $form)
     {
+        $organizations = Organization::whereHas('users',function($query){
+            $query->where('id',Auth::user()->id);
+        })->pluck('id');
+
+        
         $selected_options = [];
         
-        if($form) {
-            $selected_subjectareas = $form->subjectAreas()->get();
-            $selected_subjectareas_id = [];
-            foreach($selected_subjectareas as $selected_subjectarea) {
-                array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+        if($form) 
+        {
+            if($organizations->contains($form->organization_id))
+            {
 
-            }
-            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
-            // dd($selected_options);
-    
-            // $subject_areas = SubjectArea::with(['parameters.options' => function ($query) use ($selected_subjectareas_id) {
-            //     dd($selected_subjectareas_id);
-            //         $query->find($selected_subjectareas_id)->each->setAttribute('status',true);
-            //         // $query->whereNotIn('id', $selected_options)->get()->each->setAttribute('status',false);
-            //     }])
-            //     ->get();
-            //     dd($subject_areas);
-        }
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+                $selected_subjectareas = $form->subjectAreas()->get();
+                $selected_subjectareas_id = [];
+                foreach($selected_subjectareas as $selected_subjectarea) {
+                    array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+
+                }
+                $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
+                // dd($selected_options);
         
-        return response([
-            'subject_areas' => $subject_areas,
-            'selected_options' => $selected_options,
-        ]);
+                // $subject_areas = SubjectArea::with(['parameters.options' => function ($query) use ($selected_subjectareas_id) {
+                //     dd($selected_subjectareas_id);
+                //         $query->find($selected_subjectareas_id)->each->setAttribute('status',true);
+                //         // $query->whereNotIn('id', $selected_options)->get()->each->setAttribute('status',false);
+                //     }])
+                //     ->get();
+                //     dd($subject_areas);
+                    $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+                    
+                    return response([
+                        'subject_areas' => $subject_areas,
+                        'selected_options' => $selected_options,
+                    ]);
+            }
+            else
+            {
+                return response([
+                    'message'=>'Access denied',
+                ],403);
+            }
+        }
+        else
+        {
+            return response([
+                'message'=>'Form not found',
+            ],422);
+        }
+        
+
     }
 
     public function update(Request $request, Form $form)
-    {
-        // dd($form);
-        
+    {//0 means applicable and 1 means not applicable
+        // dd(Auth::user()->id);
+        // dd($request->parameters);
         $user = Auth::user();
-        
+        $roles = $user->roles->pluck('id');
         
         $form = Form::findOrFail($form->id);
+        
         // dd('here');
         if(isset($form)){
-               
-                $form_subject_area = FormSubjectArea::updateOrCreate([
-                    'form_id' => $form->id,
-                    'subject_area_id' => $request->subject_area,
-                ]);
-    
+
+            $form_subject_area = FormSubjectArea::updateOrCreate([
+                'form_id' => $form->id,
+                'subject_area_id' => $request->subject_area,
+            ]);
+            
                 foreach($request->parameters as $parameter )
                 {   
-                    if(isset($parameter['option']['id'])) {
-                        $opt = Option::find($parameter['option']['id']);
-                        $form_detail = FormDetail::updateOrCreate([
-                            'form_subject_area_id' => $form_subject_area->id,
-                            'parameter_id' => $parameter['id'],
-                        ],
-                        [
-                            'remarks' => $parameter['remarks'],
-                            'option_id' => $opt->id,
-                            'marks' => $opt->points,
-                        ]); 
-                        
-                        
+                    $form_detail = FormDetail::where('form_subject_area_id',$form_subject_area->id)->where('parameter_id',$parameter['id'])->first();
+                    if($form_detail->is_applicable == $parameter['is_applicable'])
+                    {
+
+                        if($parameter['is_applicable'] == 0)
+                        {
+    
+                            if(isset($parameter['option']['id'])) {
+                                $opt = Option::find($parameter['option']['id']);
+                                if($roles->contains(2) && ($user->id == $form->user_id))
+                                {
+                                    
+                                    $form_detail = FormDetail::updateOrCreate([
+                                        'form_subject_area_id' => $form_subject_area->id,
+                                        'parameter_id' => $parameter['id'],
+                                    ],
+                                    [
+                                        'remarks' => $parameter['remarks'],
+                                        'is_applicable' => $parameter['is_applicable'],
+                                        'option_id' => $opt->id,
+                                        'marks' => $opt->points,
+                                    ]); 
+
+                                    $form->update([
+                                        'updated_by'=>$user->id
+                                    ]);
+                                }
+                                elseif($roles->contains(5))
+                                {
+                                    
+                                    $form_detail = FormDetail::updateOrCreate([
+                                        'form_subject_area_id' => $form_subject_area->id,
+                                        'parameter_id' => $parameter['id'],
+                                    ],
+                                    [
+                                        'remarks' => $parameter['remarks'],
+                                        'is_applicable' => $parameter['is_applicable'],
+                                        'option_id' => $opt->id,
+                                        'marksByVerifier' => $opt->points,
+                                    ]); 
+                                    $form->update([
+                                        'verified_by'=>$user->id
+                                    ]);
+                                }
+                                elseif($roles->contains(4))
+                                {
+                                    
+                                    $form_detail = FormDetail::updateOrCreate([
+                                        'form_subject_area_id' => $form_subject_area->id,
+                                        'parameter_id' => $parameter['id'],
+                                    ],
+                                    [
+                                        'remarks' => $parameter['remarks'],
+                                        'is_applicable' => $parameter['is_applicable'],
+                                        'option_id' => $opt->id,
+                                        'marksByAuditor' => $opt->points,
+                                        'audited_by' => $user->id,
+                                    ]); 
+                                    $form->update([
+                                        'audited_by'=>$user->id
+                                    ]);
+                                }
+                                elseif($roles->contains(6))
+                                {
+                                    $final_verified_by = $user->id;
+                                    $form_detail = FormDetail::updateOrCreate([
+                                        'form_subject_area_id' => $form_subject_area->id,
+                                        'parameter_id' => $parameter['id'],
+                                    ],
+                                    [
+                                        'remarks' => $parameter['remarks'],
+                                        'is_applicable' => $parameter['is_applicable'],
+                                        'option_id' => $opt->id,
+                                        'marksByFinalVerifier' => $opt->points,
+                                        'final_verified_by' => $user->id,
+                                    ]); 
+                                    $form->update([
+                                        'final_verified_by'=>$user->id
+                                    ]);
+                                }
+                                else
+                                {
+                                    return response(['message'=>'access denied'],403);
+                                }
+                                
+                                
+                            }
+                        }
+                        else
+                        {
+                            if($form->user_id == $user->id)
+                            {
+                                $form_detail = FormDetail::updateOrCreate([
+                                    'form_subject_area_id' => $form_subject_area->id,
+                                    'parameter_id' => $parameter['id'],
+                                ],
+                                [
+                                    'remarks' => $parameter['remarks'],
+                                    'option_id' => null,
+                                    'marks' => null,
+                                    'is_applicable' => $parameter['is_applicable'],
+                                ]); 
+                            }
+                        }
                     }
+                    else
+                    {
+                        if($form->user_id == $user->id)
+                        {
+                            $updated_by = $user->id;
+                            if($parameter['is_applicable'] == 0)
+                            {
+                                if(isset($parameter['option']['id']))
+                                {
+                                    $opt = Option::find($parameter['option']['id']);
+
+                                    $form_detail = FormDetail::updateOrCreate([
+                                        'form_subject_area_id' => $form_subject_area->id,
+                                        'parameter_id' => $parameter['id'],
+                                    ],
+                                    [
+                                        'remarks' => $parameter['remarks'],
+                                        'is_applicable' => $parameter['is_applicable'],
+                                        'option_id' => $opt->id,
+                                        'marks' => $opt->points,
+                                    ]);
+                                }
+                            }
+                            else
+                            {
+                                $form_detail = FormDetail::updateOrCreate([
+                                    'form_subject_area_id' => $form_subject_area->id,
+                                    'parameter_id' => $parameter['id'],
+                                ],
+                                [
+                                    'remarks' => $parameter['remarks'],
+                                    'option_id' => null,
+                                    'marks' => null,
+                                    'is_applicable' => $parameter['is_applicable'],
+                                ]);
+                            }
+                        }
+                        else
+                        {
+                            return response(['message'=>'access denied'],403);
+                        }
+                    }
+                    
 
 
                 }
+            
     
                 $total = $form_subject_area->parameters->sum('pivot.marks');
+                $totalByVerifier = $form_subject_area->parameters->sum('pivot.marksByVerifier');
+                $totalByAuditor = $form_subject_area->parameters->sum('pivot.marksByAuditor');
+                $totalByFinalVerifier = $form_subject_area->parameters->sum('pivot.marksByFinalVerifier');
+
                 $form_subject_area->update([
-                    'marks'=> $total
+                    'marks'=> $total,
+                    'marksByVerifier'=> $totalByVerifier,
+                    'marksByAuditor'=> $totalByAuditor,
+                    'marksbyFinalVerifier'=> $totalByFinalVerifier,
                 ]);
     
                 $total_marks = $form->subjectAreas->sum('pivot.marks');
-                $form->total_marks = $total_marks;
-                $form->save();
+                $total_marks_verifier = $form->subjectAreas->sum('pivot.marksByVerifier');
+                $total_marks_auditor = $form->subjectAreas->sum('pivot.marksByAuditor');
+                $total_marks_finalVerifier = $form->subjectAreas->sum('pivot.marksByFinalVerifier');
+
+                $form->update([
+                    'total_marks' => $total_marks,
+                    'total_marks_verifier' => $total_marks_verifier,
+                    'total_marks_auditor' => $total_marks_auditor,
+                    'total_marks_finalVerifier' => $total_marks_finalVerifier,
+                ]);
+
     
                 return response([
                     'message'=>'Form saved successfully',
@@ -400,7 +589,7 @@ class HomeApiController extends Controller
             {
                 $form->update([
 
-                    'status' => 1,
+                    'status' => 0,
                     'verified_by' => $user
                 ]);
                 return response([
@@ -411,7 +600,7 @@ class HomeApiController extends Controller
             {
                 $form->update([
 
-                    'is_verified' => 1,
+                    'is_verified' => 0,
                     'audited_by' => $user
                 ]);
                 return response([

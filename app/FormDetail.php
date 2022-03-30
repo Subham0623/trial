@@ -13,7 +13,11 @@ class FormDetail extends Model
         'form_subject_area_id',
         'parameter_id',
         'remarks',
+        'is_applicable',
         'marks',
+        'marksByVerifier',
+        'marksByAuditor',
+        'marksByFinalVerifier',
         'option_id'
     ];
 
