@@ -24,6 +24,7 @@ class SubjectArea extends Model
         'title',
         'sort',
         'slug',
+        'status',
         'created_at',
         'updated_at',
         'deleted_at',

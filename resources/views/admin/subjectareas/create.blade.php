@@ -12,7 +12,7 @@
             <div class="form-group">
                 <label class="required" for="title">{{ trans('cruds.subjectarea.fields.title') }}</label>
                 <!-- <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', '') }}" required> -->
-                <textarea name="title" placeholder="Enter title" class="input form-control" id="title">{{ old('title','') }}</textarea>
+                <textarea name="title" placeholder="Enter title" class="input form-control" id="title" required>{{ old('title','') }}</textarea>
                 
                 @if($errors->has('title'))
                     <div class="invalid-feedback">
@@ -22,22 +22,23 @@
                 <span class="help-block">{{ trans('cruds.subjectarea.fields.title_helper') }}</span>
             </div>
 
-            <!-- <div class="form-group">
-                <label class="required" for="sort">{{ trans('cruds.subjectarea.fields.sort') }}</label>
-                <input class="form-control {{ $errors->has('sort') ? 'is-invalid' : '' }}" type="text" name="sort" id="sort" value="{{ old('sort', '') }}" required>
-                @if($errors->has('sort'))
+            <div class="form-group">
+                <label class="" for="status">{{ trans('cruds.subjectarea.fields.status') }}</label><br>
+                <input type="radio" name="status" value="1" checked> Active<br>
+                <input type="radio" name="status" value="0" > Inactive<br>
+                @if($errors->has('status'))
                     <div class="invalid-feedback">
-                        {{ $errors->first('sort') }}
+                        {{ $errors->first('status') }}
                     </div>
                 @endif
-                <span class="help-block">{{ trans('cruds.subjectarea.fields.sort_helper') }}</span>
-            </div> -->
+                <span class="help-block">{{ trans('cruds.subjectarea.fields.status_helper') }}</span>
+            </div>
 
             <input type="hidden" name="sort" value="{{$sort}}" >
 
             <div class="form-group" style="display: none;">
                 <label class="required" for="slug">{{ trans('cruds.subjectarea.fields.slug') }}</label>
-                <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', '') }}" required>
+                <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', '') }}">
                 @if($errors->has('slug'))
                     <div class="invalid-feedback">
                         {{ $errors->first('slug') }}

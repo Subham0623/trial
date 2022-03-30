@@ -237,6 +237,8 @@ return [
             'sort_helper'      => '',
             'slug'             => 'Slug',
             'slug_helper'      => '',
+            'status'           => 'Status',
+            'status_helper'    => '',
         ],
     ],
 
@@ -260,6 +262,8 @@ return [
             'slug_helper'           => '',
             'option'                => 'Options',
             'document'              => 'Documents',
+            'status'                => 'Status',
+            'status_helper'         => '',
         ],
     ],
 

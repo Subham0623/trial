@@ -24,6 +24,18 @@
             </div>
 
             <div class="form-group">
+                <label class="" for="status">{{ trans('cruds.subjectarea.fields.status') }}</label><br>
+                <input type="radio" name="status" value="1" {{ $subjectArea->status == '1' ? 'checked' : ''}}> Active<br>
+                <input type="radio" name="status" value="0" {{ $subjectArea->status == '0' ? 'checked' : ''}}> Inactive<br>
+                @if($errors->has('status'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('status') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.subjectarea.fields.status_helper') }}</span>
+            </div>
+
+            <div class="form-group">
                 <label class="required" for="sort">{{ trans('cruds.subjectarea.fields.sort') }}</label>
                 <input class="form-control {{ $errors->has('sort') ? 'is-invalid' : '' }}" type="text" name="sort" id="sort" value="{{ old('sort', $subjectArea->sort) }}" required>
                 @if($errors->has('sort'))

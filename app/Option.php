@@ -22,6 +22,7 @@ class Option extends Model
     protected $fillable = [
         'title',
         'sort',
+        'status',
         'parameter_id',
         'points',
         'created_at',

@@ -12,7 +12,7 @@
             <div class="form-group">
                 <label class="required" for="title">{{ trans('cruds.parameter.fields.title') }}</label>
                 <!-- <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', '') }}" required> -->
-                <textarea name="title" id="title" placeholder="Enter title" class="input form-control">{{ old('title','') }}</textarea>
+                <textarea name="title" id="title" placeholder="Enter title" class="input form-control" required>{{ old('title','') }}</textarea>
                 
                 @if($errors->has('title'))
                     <div class="invalid-feedback">
@@ -20,6 +20,18 @@
                     </div>
                 @endif
                 <span class="help-block">{{ trans('cruds.parameter.fields.title_helper') }}</span>
+            </div>
+
+            <div class="form-group">
+                <label class="" for="status">{{ trans('cruds.parameter.fields.status') }}</label><br>
+                <input type="radio" name="status" value="1" checked> Active<br>
+                <input type="radio" name="status" value="0" > Inactive<br>
+                @if($errors->has('status'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('status') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.parameter.fields.status_helper') }}</span>
             </div>
 
             <div class="form-group">
@@ -73,14 +85,20 @@
             <tr>
                 <th>Title</th>
                 <th>Points</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
             <tr>  
                 <!-- <td><input type="text" name="addmore[0][title]" placeholder="Enter title" class="form-control" /></td>  
                 <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" /></td>   -->
                 
-                <td><textarea name="addmore[0][title]" placeholder="Enter title" class="input form-control">{{ old('title','') }}</textarea></td>
+                <td><textarea name="addmore[0][title]" placeholder="Enter title" class="input form-control"></textarea></td>
                 <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" value="{{old('points','')}}"/></td>
+                <td>
+                    <input type="radio" name="addmore[0][status]" value="1" checked> Active<br>
+                    <input type="radio" name="addmore[0][status]" value="0" > Inactive<br>
+                </td>
+            
                 
             </tr>  
         </table>
@@ -90,13 +108,18 @@
             <table class="table table-bordered" id="dynamicTable1">  
             <tr>
                 <th>Title</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
             <tr>  
                 <!-- <td><input type="text" name="addmore[0][title]" placeholder="Enter title" class="form-control" /></td>  
                 <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" /></td>   -->
                 
-                <td><textarea name="addmore1[0][title]" placeholder="Enter title" class="input form-control">{{ old('title','') }}</textarea></td>
+                <td><textarea name="addmore1[0][title]" placeholder="Enter title" class="input form-control"></textarea></td>
+                <td>
+                    <input type="radio" name="addmore1[0][status]" value="1" checked> Active<br>
+                    <input type="radio" name="addmore1[0][status]" value="0" > Inactive<br>
+                </td>
             </tr>  
         </table>
             <button type="button" name="add" id="add1" class="btn btn-success mb-3">Add More</button>
@@ -104,7 +127,7 @@
             
             <div class="form-group" style="display: none;">
                 <label class="required" for="slug">{{ trans('cruds.parameter.fields.slug') }}</label>
-                <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', '') }}" required>
+                <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', '') }}" >
                 @if($errors->has('slug'))
                     <div class="invalid-feedback">
                         {{ $errors->first('slug') }}
@@ -150,10 +173,14 @@ $('#title').change(function(e) {
    
         $("#dynamicTable").append(`<tr>
         <td>
-        <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
         </td>
         <td>
-        <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" />
+            <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" />
+        </td>
+        <td>
+            <input type="radio" name="addmore[${i}][status]" value="1" checked> Active<br>
+            <input type="radio" name="addmore[${i}][status]" value="0" > Inactive<br>
         </td>
         <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td>
         </tr>`);
@@ -175,7 +202,11 @@ $('#title').change(function(e) {
    
         $("#dynamicTable1").append(`<tr>
         <td>
-        <textarea name="addmore1[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore1[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+        </td>
+        <td>
+            <input type="radio" name="addmore1[${i}][status]" value="1" checked> Active<br>
+            <input type="radio" name="addmore[${i}][status]" value="0" > Inactive<br>
         </td>
         <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td>
         </tr>`);

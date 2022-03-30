@@ -23,6 +23,7 @@ class Parameter extends Model
         'title',
         'sort',
         'slug',
+        'status',
         'description',
         'subject_area_id',
         'created_at',
