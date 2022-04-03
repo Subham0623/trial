@@ -41,6 +41,26 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.user.fields.token') }}
+                        </th>
+                        <td>
+                            {{ $user->token }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.status') }}
+                        </th>
+                        <td>
+                            @if($user->status == 1)
+                                <span class="label label-info"> Active </span>
+                            @else
+                                <span class="label label-info">Inactive</span>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.user.fields.roles') }}
                         </th>
                         <td>
