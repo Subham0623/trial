@@ -14,6 +14,9 @@ class ForgetPasswordApiController extends Controller
 {
     public function forget(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
         $email = $request->email;
         if(User::where('email',$email)->doesntExist())
         {
