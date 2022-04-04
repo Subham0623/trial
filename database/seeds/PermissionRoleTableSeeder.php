@@ -8,6 +8,8 @@ class PermissionRoleTableSeeder extends Seeder
 {
     public function run()
     {
+        \DB::table('permission_role')->delete();
+
         $admin_permissions = Permission::all();
         Role::findOrFail(1)->permissions()->sync($admin_permissions->pluck('id'));
         $user_permissions = $admin_permissions->filter(function ($permission) {
