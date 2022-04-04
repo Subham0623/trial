@@ -25,6 +25,18 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.parameter.fields.status') }}
+                        </th>
+                        <td>
+                            @if($parameter->status == 1)
+                                Active
+                            @else
+                                Inactive
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.parameter.fields.description') }}
                         </th>
                         <td>
@@ -53,7 +65,9 @@
                         </th>
                         <td>
                             @foreach($parameter->options as $option)
-                            Title: {{ $option->title }}
+                            Title: {{ $option->title }} 
+                        <br>
+                            Status: {{ $option->status == 1 ? 'Active' : 'Inactive'  }}
                         <br>
                             Points: {{ $option->points }}<br>
                             @endforeach
@@ -68,6 +82,7 @@
                             @foreach($parameter->documents as $document)
                             Title: {{ $document->title }}
                         <br>
+                            Status: {{ $document->status == 1 ? 'Active' : 'Inactive' }}
                             
                             @endforeach
                         </td>

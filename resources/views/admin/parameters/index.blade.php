@@ -35,6 +35,9 @@
                             {{ trans('cruds.parameter.fields.sort') }}
                         </th>
                         <th>
+                            {{ trans('cruds.parameter.fields.status') }}
+                        </th>
+                        <th>
                             {{ trans('cruds.parameter.fields.option') }}
                         </th>
                         <th>
@@ -62,6 +65,13 @@
                             </td>
                             <td>
                                 {{ $parameter->sort ?? '' }}
+                            </td>
+                            <td>
+                                @if($parameter->status == 1)
+                                    <span class="badge badge-info">Active</span>
+                                @else
+                                    <span class="badge badge-info">Inactive</span>
+                                @endif
                             </td>
                             <td>
                                 @foreach($parameter->options as $key => $item)

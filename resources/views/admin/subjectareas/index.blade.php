@@ -29,6 +29,9 @@
                             {{ trans('cruds.subjectarea.fields.title') }}
                         </th>
                         <th>
+                            {{ trans('cruds.subjectarea.fields.status') }}
+                        </th>
+                        <th>
                             {{ trans('cruds.subjectarea.fields.sort') }}
                         </th>
                         <th>
@@ -47,6 +50,13 @@
                             </td>
                             <td>
                                 {{ $subject->title ?? '' }}
+                            </td>
+                            <td>
+                                @if($subject->status == 1)
+                                    <span class="badge badge-info">Active</span>
+                                @else
+                                    <span class="badge badge-info">Inactive</span>
+                                @endif
                             </td>
                             <td>
                                 {{ $subject->sort ?? '' }}
