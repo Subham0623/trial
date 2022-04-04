@@ -17,13 +17,16 @@ class FormSubjectArea extends Model
         'form_id',
         'subject_area_id',
         'marks',
+        'marksByVerifier',
+        'marksByAuditor',
+        'marksByFinalVerifier',
         'created_at',
         'updated_at',
     ];
 
     public function parameters()
     {
-        return $this->belongsToMany(Parameter::class)->withPivot('marks','remarks','option_id');
+        return $this->belongsToMany(Parameter::class)->withPivot('marks','remarks','option_id','marksByVerifier','marksByAuditor','marksByFinalVerifier','is_applicable');
     }
 
     public function selected_subjectareas()
