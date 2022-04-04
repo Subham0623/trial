@@ -68,7 +68,7 @@ class FormController extends Controller
         else
         {
             $forms = Form::all();
-            $verified_forms=0;
+            $verified_forms=0; //what is this..?
         }
 
         return view('admin.forms.index',compact('forms'));

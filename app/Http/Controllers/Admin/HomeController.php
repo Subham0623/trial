@@ -5,6 +5,8 @@ use Auth;
 use App\Organization;
 use App\Province;
 use App\District;
+use Illuminate\Http\Request;
+
 
 class HomeController
 {
@@ -15,9 +17,9 @@ class HomeController
         $district_id = 1;
         $provinces = Province::all();
         $districts = District::where('province_id',$province_id);
-        $organizations = Organization::where('province_id',$province_id)->get();
+        $organizations = Organization::all()->count();
         $org = Organization::where('district_id',$district_id)->get();
-        return view('home');
+        return view('home',compact('organizations','provinces'));
     }
 
     public function get_notifications(){
@@ -38,5 +40,15 @@ class HomeController
             $n->markAsRead();
         });
         return back();
+    }
+
+    public function list(Request $request)
+    {
+        $province = Province::findOrFail($request->province);
+        
+        $organizations = Organization::where('province_id',$request->province)->with('province','district')->get();
+        
+        return $organizations;
+        
     }
 }

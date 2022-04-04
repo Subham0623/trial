@@ -85,7 +85,7 @@
                             </td>
                             <td>
                             @can('form_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ url('/api/v1/form', $form->id) }}">
+                                    <a class="btn btn-xs btn-info" href="http://mangosoftsolution.com:3930/form/{{$form->id}}">
                                         {{ trans('global.audit') }}
                                     </a>
                              @endcan   

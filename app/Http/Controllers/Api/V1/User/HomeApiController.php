@@ -39,10 +39,11 @@ class HomeApiController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-
+        $user_organization = $user->organizations->first();
         $data = [
             'user_id' => $user->id,
             'year' => $request->year,
+            'organization_id' => $user_organization->id,
         ];
 
         $form = Form::create($data);
@@ -157,29 +158,15 @@ class HomeApiController extends Controller
         {
             if($organizations->contains($form->organization_id))
             {
-
-                $selected_subjectareas = $form->subjectAreas()->get();
-                $selected_subjectareas_id = [];
-                foreach($selected_subjectareas as $selected_subjectarea) {
-                    array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
-
-                }
-                $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
-                // dd($selected_options);
-        
-                // $subject_areas = SubjectArea::with(['parameters.options' => function ($query) use ($selected_subjectareas_id) {
-                //     dd($selected_subjectareas_id);
-                //         $query->find($selected_subjectareas_id)->each->setAttribute('status',true);
-                //         // $query->whereNotIn('id', $selected_options)->get()->each->setAttribute('status',false);
-                //     }])
-                //     ->get();
-                //     dd($subject_areas);
-                    $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
-                    
-                    return response([
-                        'subject_areas' => $subject_areas,
-                        'selected_options' => $selected_options,
-                    ]);
+                $selected_options = $this->selectedOptions($form);
+                
+                $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+                
+                return response([
+                    'subject_areas' => $subject_areas,
+                    'selected_options' => $selected_options,
+                    'form_details' => $form->load('organization'),
+                ]);
             }
             else
             {
@@ -199,11 +186,11 @@ class HomeApiController extends Controller
     }
 
     public function update(Request $request, Form $form)
-    {//0 means applicable and 1 means not applicable
-        // dd(Auth::user());
-        // dd($request->parameters);
+    {        
         $user = Auth::user();
         $roles = $user->roles->pluck('id');
+        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+        
         
         $form = Form::findOrFail($form->id);
         
@@ -228,7 +215,7 @@ class HomeApiController extends Controller
                         if($form_detail->is_applicable == $parameter['is_applicable'])
                         {
         
-                            if($parameter['is_applicable'] == 0)
+                            if($parameter['is_applicable'] == 0) //0 means applicable and 1 means not applicable
                             {
         
                                 if(isset($parameter['option']['id'])) {
@@ -399,11 +386,7 @@ class HomeApiController extends Controller
                             return response(['message'=>'access denied']);
                         }
                     }
-                    
-    
-    
                 }
-            
     
                 $total = $form_subject_area->parameters->sum('pivot.marks');
                 $totalByVerifier = $form_subject_area->parameters->sum('pivot.marksByVerifier');
@@ -429,10 +412,13 @@ class HomeApiController extends Controller
                     'total_marks_finalVerifier' => $total_marks_finalVerifier,
                 ]);
     
-    
+                $selected_options = $this->selectedOptions($form);
+
                 return response([
-                    'message'=>'Form saved successfully',
-                    'form_id'=>$form->id
+                    'message'=>'Form updated successfully',
+                    'form_details' => $form->load('organization'),
+                    'subject_areas' => $subject_areas,
+                    'selected_options' => $selected_options,
                 ],201);
                 
             }
@@ -441,13 +427,13 @@ class HomeApiController extends Controller
                     'message'=>'parameters not found'
                 ],422);
             }
-            }
-            else
-            {
-                return response([
-                    'message'=>'Form not found',
-                ],422);
-            }
+        }
+        else
+        {
+            return response([
+                'message'=>'Form not found',
+            ],422);
+        }
         
     }
 
@@ -546,6 +532,7 @@ class HomeApiController extends Controller
     {
         // dd($request->feedbacks);
         $form = Form::findOrFail($request->form_id);
+
         if(isset($form))
         {
             $form_subject_area = FormSubjectArea::where('form_id',$request->form_id)->where('subject_area_id',$request->subject_area)->first();
@@ -563,8 +550,15 @@ class HomeApiController extends Controller
                 ]);
 
             }
+
+            $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+            $selected_options = $this->selectedOptions($form);
+
             return response([
-                'message'=>'Thank you for your feedback'
+                'message'=>'Thank you for your feedback',
+                'subject_areas' => $subject_areas,
+                'selected_options' => $selected_options,
+                'form_details' => $form->load('organization'),
             ],201);
         }
         else
@@ -578,7 +572,11 @@ class HomeApiController extends Controller
     public function feedbackStatus(Request $request, Feedback $feedback)
     {
         // dd($request->all());
+        $form = Form::findOrFail($request->form_id);
         $feedback = Feedback::findOrFail($feedback->id);
+        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+
+        
         if(isset($feedback))
         {
             if($feedback->user_id == Auth::user()->id)
@@ -587,11 +585,16 @@ class HomeApiController extends Controller
                     'status'=>$request->status
                 ]);
 
-    
+                $selected_options = $this->selectedOptions($form);
+                
+
                 return response(
                     [
-                        'message' => 'Feedback status updated successfully'
-                    ]
+                        'message' => 'Feedback status updated successfully',
+                        'form_details' => $form->load('organization'),
+                        'subject_areas' => $subject_areas,
+                        'selected_options' => $selected_options,
+                    ],200
                     );
             }
             else
@@ -664,5 +667,18 @@ class HomeApiController extends Controller
                 'message' => "Form not found"
             ],422);
         }
+    }
+
+    function selectedOptions($form)
+    {
+        $selected_subjectareas = $form->subjectAreas()->get();
+        $selected_subjectareas_id = [];
+        foreach($selected_subjectareas as $selected_subjectarea) {
+            array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+
+        }
+        $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
+                
+        return $selected_options;
     }
 }
