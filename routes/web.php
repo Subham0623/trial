@@ -19,6 +19,8 @@ Route::post('store/step4','InstallerController@storeStep4')->name('store.step4')
 Route::get('get/step5','InstallerController@getstep5')->name('get.step5');
 Route::post('store/step5','InstallerController@storeStep5')->name('store.step5');
 
+Route::get('/checkToken', 'CheckAuthenticationController@checkToken')->middleware('auth:api');
+
 Route::middleware(['IsInstalled'])->group(function () {
 
     includeRouteFiles(__DIR__ . '/Site/');
@@ -64,7 +66,9 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::resource('provinces','ProvinceController');
 
             //Forms
-            Route::get('forms','FormController@index')->name('forms');    
+            Route::get('forms','FormController@index')->name('forms');   
+            
+            Route::get('/province/organizations','HomeController@list')->name('list');
         
             //Organizations
             Route::get('organizations/download-format',function(){
