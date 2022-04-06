@@ -24,6 +24,7 @@ class SubjectArea extends Model
         'title',
         'sort',
         'slug',
+        'status',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -51,6 +52,6 @@ class SubjectArea extends Model
 
     public function forms()
     {
-        return $this->belongsToMany(Forms::class)->withPivot('marks');
+        return $this->belongsToMany(Forms::class)->withPivot('marks','id');
     }
 }

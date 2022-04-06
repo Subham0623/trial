@@ -58,8 +58,9 @@ class SubjectAreaController extends Controller
             'title' => $request->title,
             'sort' => $request->sort,
             'slug' => $request->slug,
+            'status' => $request->status,
         ];
-        // dd($data);
+        
         $subject_area = SubjectArea::create($data);
         
         return redirect()->route('admin.subject-areas.index')->with('message','New Subject Area added successfully!');
@@ -106,6 +107,7 @@ class SubjectAreaController extends Controller
             'title' => $request->title,
             'sort' => $request->sort,
             'slug' => $request->slug,
+            'status' => $request->status,
         ];
 
         $subject_area->update($data);

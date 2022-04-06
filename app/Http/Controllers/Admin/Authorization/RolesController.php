@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Admin\Authorization;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Authorization\Role\MassDestroyRoleRequest;
-use App\Http\Requests\Authorization\Role\StoreRoleRequest;
-use App\Http\Requests\Authorization\Role\UpdateRoleRequest;
-use App\Models\Authorization\Permission;
-use App\Models\Authorization\Role;
 use Gate;
 use Illuminate\Http\Request;
+use App\Models\Authorization\Role;
+use App\Models\Authorization\Group;
+use App\Http\Controllers\Controller;
+use App\Models\Authorization\Permission;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\Authorization\Role\StoreRoleRequest;
+use App\Http\Requests\Authorization\Role\UpdateRoleRequest;
+use App\Http\Requests\Authorization\Role\MassDestroyRoleRequest;
 
 class RolesController extends Controller
 {
@@ -27,9 +28,10 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $permissions = Permission::ofAllowedPermissions()->pluck('title', 'id');
-        // dd($permissions);
-        return view('admin.roles.create', compact('permissions'));
+        // $permissions = Permission::ofAllowedPermissions()->pluck('title', 'id');
+        $groups = Group::with('permissions')->get();
+        // dd($groups);
+        return view('admin.roles.create', compact('groups'));
     }
 
     public function store(StoreRoleRequest $request)
@@ -53,8 +55,8 @@ class RolesController extends Controller
         $permissions = Permission::ofAllowedPermissions()->pluck('title', 'id');
 
         $role->load('permissions');
-
-        return view('admin.roles.edit', compact('permissions', 'role'));
+        $groups = Group::all();
+        return view('admin.roles.edit', compact('permissions', 'role', 'groups'));
     }
 
     public function update(UpdateRoleRequest $request, Role $role)

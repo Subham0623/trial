@@ -13,7 +13,11 @@ class FormDetail extends Model
         'form_subject_area_id',
         'parameter_id',
         'remarks',
+        'is_applicable',
         'marks',
+        'marksByVerifier',
+        'marksByAuditor',
+        'marksByFinalVerifier',
         'option_id'
     ];
 
@@ -22,7 +26,10 @@ class FormDetail extends Model
         return $this->hasMany(Feedback::class);
     }
 
-    
+    public function selected_subjectarea()
+    {
+        return $this->belongsTo(FormSubjectArea::class, 'form_subject_area_id');
+    }
     
 
     

@@ -51,7 +51,7 @@ class HomeController
 
         
 
-        $org = Organization::where('district_id',$district_id)->get();
+        // $org = Organization::where('district_id',$district_id)->get();
         return view('home',compact('organizations','provinces','districts','auditors','finalVerifiers','draft','submitted','verified','final_verified','audited'));
     }
 

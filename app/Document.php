@@ -20,6 +20,7 @@ class Document extends Model
 
     protected $fillable = [
         'title',
+        'status',
         'parameter_id',
         'created_at',
         'updated_at',

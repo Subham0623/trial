@@ -25,6 +25,18 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.subjectarea.fields.status') }}
+                        </th>
+                        <td>
+                            @if($subject_area->status == 1)
+                                Active
+                            @else
+                                Inactive
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.subjectarea.fields.sort') }}
                         </th>
                         <td>

@@ -27,6 +27,10 @@ class Form extends Model
         'user_id',
         'organization_id',
         'year',
+        'total_marks',
+        'total_marks_verifier',
+        'total_marks_auditor',
+        'total_marks_finalVerifier',
         'created_at',
         'updated_at',
         'verified_at',
@@ -36,6 +40,10 @@ class Form extends Model
         'audited_by',
         'verified_by',
         'final_verified_by',
+        'status',
+        'is_verified',
+        'is_audited',
+        'final_verified',
         'deleted_at',
     ];
 
@@ -76,7 +84,7 @@ class Form extends Model
 
     public function subjectAreas()
     {
-        return $this->belongsToMany(SubjectArea::class)->withPivot('marks');
+        return $this->belongsToMany(SubjectArea::class)->withPivot('marks','id','marksByVerifier','marksByAuditor','marksByFinalVerifier');
     }
 
     public function organization()

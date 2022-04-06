@@ -90,6 +90,13 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ### API Endpoints
 ##### Form
+* Feedback
+    * Add feedback POST `/api/v1/feedback`
+    * Update status of feedback PATCH `/api/v1/feedback/{feedback}`
+
+* Form
+    * Form reassign PATCH `/api/v1/form/{form}/reassign`
+
 * Wishlist
     * View form GET `/api/v1/form`
     * Profile GET `/api/profile`

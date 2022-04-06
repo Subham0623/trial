@@ -19,6 +19,8 @@ Route::post('store/step4','InstallerController@storeStep4')->name('store.step4')
 Route::get('get/step5','InstallerController@getstep5')->name('get.step5');
 Route::post('store/step5','InstallerController@storeStep5')->name('store.step5');
 
+Route::get('/checkToken', 'CheckAuthenticationController@checkToken');
+
 Route::middleware(['IsInstalled'])->group(function () {
 
     includeRouteFiles(__DIR__ . '/Site/');
