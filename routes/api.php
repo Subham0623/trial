@@ -45,7 +45,8 @@ Route::get('/test','HomeApiController@test')->name('test');
 
 
 
-Route::get('/', 'Api\V1\HomeApiController@index')->name('index');
+Route::get('/index', 'Api\V1\HomeApiController@index')->name('index');
+Route::get('organization/{organization}','Api\V1\HomeApiController@organizationDetail')->name('organization-details');
 Route::get('/province','Api\V1\HomeApiController@province')->name('province');
 
 // Route::get('/{product}/{productSlug}/{category}', 'HomeApiController@product')->name('product');

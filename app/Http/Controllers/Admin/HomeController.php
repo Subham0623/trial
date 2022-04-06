@@ -14,12 +14,8 @@ class HomeController
 {
     public function index()
     {
-        // dd('hello');
-        $province_id = 1;
-        $district_id = 1;
         $provinces = Province::all();
         $districts = District::all();
-        // $districts = District::where('province_id',$province_id);
         $organizations = Organization::all()->count();
 
         $auditors = User::wherehas('roles',function($query){
@@ -35,6 +31,23 @@ class HomeController
         $verified = Form::where('is_verified',1)->count();
         $audited = Form::where('is_audited',1)->count();
         $final_verified = Form::where('final_verified',1)->count();
+
+        $highest_score = Form::where('final_verified',1)->max('total_marks_finalVerifier');
+        $lowest_score = Form::where('final_verified',1)->min('total_marks_finalVerifier');
+        $average_score = Form::where('final_verified',1)->avg('total_marks_finalVerifier');
+
+        $highestScoreOrgs = Organization::whereHas('forms',function($query) use($highest_score){
+            $query->where('final_verified',1)
+            ->where('total_marks_finalVerifier',$highest_score);
+        })->get();
+
+        $lowestScoreOrgs = Organization::whereHas('forms',function($query) use($lowest_score){
+            $query->where('final_verified',1)
+            ->where('total_marks_finalVerifier',$lowest_score);
+        })->get();
+
+        
+
 
         
 
