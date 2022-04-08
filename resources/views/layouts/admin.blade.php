@@ -92,6 +92,63 @@
             @endif
 
         </ul>
+
+        <ul class="navbar-nav ml-auto notification-nav">
+          <!-- Notifications Dropdown Menu -->
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+              <img src="{{asset('bell.png')}}" style="width: 1.6rem;"><span class="badge badge-danger navbar-badge notification-count"></span>
+            </a>
+            <div class="dropdown-menu notification-menu dropdown-menu-lg dropdown-menu-right">
+              {{-- <span class="dropdown-item dropdown-header">15 Notifications</span>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item">
+                <i class="fas fa-envelope mr-2"></i> 4 new messages
+                <span class="float-right text-muted text-sm">3 mins</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item">
+                <i class="fas fa-users mr-2"></i> 8 friend requests
+                <span class="float-right text-muted text-sm">12 hours</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item">
+                <i class="fas fa-file mr-2"></i> 3 new reports
+                <span class="float-right text-muted text-sm">2 days</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a> --}}
+            </div>
+          </li>
+        </ul>
+        <div class="dropdown d-flex">
+          <div class="align">
+            <span class="admin-name">Hi, {{Auth::user()->name}}</span>
+            <a href="javascript:void(0)" class="chip ml-3" data-toggle="dropdown" aria-expanded="false">
+              <span class="avatar" style="
+                    background-image: url({{asset('User.png')}});
+                    background-size: cover;
+                  "></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" x-placement="bottom-end" style="
+                  position: absolute;
+                  transform: translate3d(0px, 50px, 0px);
+                  top: 0px;
+                  left: 0px;
+                  will-change: transform;
+                ">
+              {{-- <a class="dropdown-item" href="page-profile.html"><i class="dropdown-icon fe fe-user"></i> Profile</a>
+              <a class="dropdown-item" href="app-setting.html"><i class="dropdown-icon fe fe-settings"></i> Settings</a>
+              <a class="dropdown-item" href="app-email.html"><span class="float-right"><span
+                    class="badge badge-primary">6</span></span><i class="dropdown-icon fe fe-mail"></i> Inbox</a>
+              <a class="dropdown-item" href="javascript:void(0)"><i class="dropdown-icon fe fe-send"></i> Message</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="javascript:void(0)"><i class="dropdown-icon fe fe-help-circle"></i> Need
+                help?</a> --}}
+              <a class="dropdown-item" href="{{route('logout')}}"><i class="dropdown-icon fe fe-log-out"></i> Sign out</a>
+            </div>
+          </div>
+        </div>
     </header>
 
     <div class="app-body">
@@ -151,111 +208,142 @@
     <script src="{{ asset('js/main.js') }}"></script>
     <script>
         $(function() {
-  let copyButtonTrans = '{{ trans('global.datatables.copy') }}'
-  let csvButtonTrans = '{{ trans('global.datatables.csv') }}'
-  let excelButtonTrans = '{{ trans('global.datatables.excel') }}'
-  let pdfButtonTrans = '{{ trans('global.datatables.pdf') }}'
-  let printButtonTrans = '{{ trans('global.datatables.print') }}'
-  let colvisButtonTrans = '{{ trans('global.datatables.colvis') }}'
-  let selectAllButtonTrans = '{{ trans('global.select_all') }}'
-  let selectNoneButtonTrans = '{{ trans('global.deselect_all') }}'
+          let copyButtonTrans = '{{ trans('global.datatables.copy') }}'
+          let csvButtonTrans = '{{ trans('global.datatables.csv') }}'
+          let excelButtonTrans = '{{ trans('global.datatables.excel') }}'
+          let pdfButtonTrans = '{{ trans('global.datatables.pdf') }}'
+          let printButtonTrans = '{{ trans('global.datatables.print') }}'
+          let colvisButtonTrans = '{{ trans('global.datatables.colvis') }}'
+          let selectAllButtonTrans = '{{ trans('global.select_all') }}'
+          let selectNoneButtonTrans = '{{ trans('global.deselect_all') }}'
 
-  let languages = {
-    'en': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/English.json'
-  };
+          let languages = {
+            'en': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/English.json'
+          };
 
-  $.extend(true, $.fn.dataTable.Buttons.defaults.dom.button, { className: 'btn' })
-  $.extend(true, $.fn.dataTable.defaults, {
-    language: {
-      url: languages['{{ app()->getLocale() }}']
-    },
-    columnDefs: [{
-        orderable: false,
-        className: 'select-checkbox',
-        targets: 0
-    }, {
-        orderable: false,
-        searchable: false,
-        targets: -1
-    }],
-    select: {
-      style:    'multi+shift',
-      selector: 'td:first-child'
-    },
-    order: [],
-    scrollX: true,
-    pageLength: 100,
-    dom: 'lBfrtip<"actions">',
-    buttons: [
-      {
-        extend: 'selectAll',
-        className: 'btn-primary',
-        text: selectAllButtonTrans,
-        exportOptions: {
-          columns: ':visible'
-        }
-      },
-      {
-        extend: 'selectNone',
-        className: 'btn-primary',
-        text: selectNoneButtonTrans,
-        exportOptions: {
-          columns: ':visible'
-        }
-      },
-      {
-        extend: 'copy',
-        className: 'btn-default',
-        text: copyButtonTrans,
-        exportOptions: {
-          columns: ':visible'
-        }
-      },
-      {
-        extend: 'csv',
-        className: 'btn-default',
-        text: csvButtonTrans,
-        exportOptions: {
-          columns: ':visible'
-        }
-      },
-      {
-        extend: 'excel',
-        className: 'btn-default',
-        text: excelButtonTrans,
-        exportOptions: {
-          columns: ':visible'
-        }
-      },
-      {
-        extend: 'pdf',
-        className: 'btn-default',
-        text: pdfButtonTrans,
-        exportOptions: {
-          columns: ':visible'
-        }
-      },
-      {
-        extend: 'print',
-        className: 'btn-default',
-        text: printButtonTrans,
-        exportOptions: {
-          columns: ':visible'
-        }
-      },
-      {
-        extend: 'colvis',
-        className: 'btn-default',
-        text: colvisButtonTrans,
-        exportOptions: {
-          columns: ':visible'
-        }
-      }
-    ]
-  });
+          $.extend(true, $.fn.dataTable.Buttons.defaults.dom.button, { className: 'btn' })
+          $.extend(true, $.fn.dataTable.defaults, {
+            language: {
+              url: languages['{{ app()->getLocale() }}']
+            },
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }, {
+                orderable: false,
+                searchable: false,
+                targets: -1
+            }],
+            select: {
+              style:    'multi+shift',
+              selector: 'td:first-child'
+            },
+            order: [],
+            scrollX: true,
+            pageLength: 100,
+            dom: 'lBfrtip<"actions">',
+            buttons: [
+              {
+                extend: 'selectAll',
+                className: 'btn-primary',
+                text: selectAllButtonTrans,
+                exportOptions: {
+                  columns: ':visible'
+                }
+              },
+              {
+                extend: 'selectNone',
+                className: 'btn-primary',
+                text: selectNoneButtonTrans,
+                exportOptions: {
+                  columns: ':visible'
+                }
+              },
+              {
+                extend: 'copy',
+                className: 'btn-default',
+                text: copyButtonTrans,
+                exportOptions: {
+                  columns: ':visible'
+                }
+              },
+              {
+                extend: 'csv',
+                className: 'btn-default',
+                text: csvButtonTrans,
+                exportOptions: {
+                  columns: ':visible'
+                }
+              },
+              {
+                extend: 'excel',
+                className: 'btn-default',
+                text: excelButtonTrans,
+                exportOptions: {
+                  columns: ':visible'
+                }
+              },
+              {
+                extend: 'pdf',
+                className: 'btn-default',
+                text: pdfButtonTrans,
+                exportOptions: {
+                  columns: ':visible'
+                }
+              },
+              {
+                extend: 'print',
+                className: 'btn-default',
+                text: printButtonTrans,
+                exportOptions: {
+                  columns: ':visible'
+                }
+              },
+              {
+                extend: 'colvis',
+                className: 'btn-default',
+                text: colvisButtonTrans,
+                exportOptions: {
+                  columns: ':visible'
+                }
+              }
+            ]
+          });
 
-  $.fn.dataTable.ext.classes.sPageButton = '';
-});
+          $.fn.dataTable.ext.classes.sPageButton = '';
+
+
+          // for notification
+          function get_notification() {
+              $.ajax({
+              type: 'GET'
+              , url: "{{ route('admin.get_notifications') }}"
+              ,success: function(data) {
+                if(data.length == 0){
+                  $('.notification-menu').html(`
+                      <span class="dropdown-item dropdown-header">No Notification</span>
+                  `);
+                } else {
+                  $('.notification-menu').html('');
+                  $('.notification-count').text(data.length);
+                  $.each(data,function(i,ele){
+                      $('.notification-menu').append(`
+                              <a href="${"{{ route('admin.show_notifications','temp_id') }}".replace('temp_id',ele.id)}" class="dropdown-item notification">
+                                  <p><i class="fas fa-trophy mr-2"></i>${ele.data.message}</p>
+                                  <span class="float-right text-muted text-sm">${moment(ele.created_at).fromNow()}</span>
+                              </a>
+                          <div class="dropdown-divider"></div>
+                      `);
+                  });
+                  $('.notification-menu').append('<div class="dropdown-divider"></div><a href="{{ route("admin.read_all_notifications") }}" class="dropdown-item read-notification dropdown-footer">Mark as Read</a>');
+                }
+              }
+            });
+          }
+          get_notification();
+          setInterval(get_notification, 300000);
+        });
 
     </script>
     @yield('scripts')

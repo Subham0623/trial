@@ -19,10 +19,11 @@ class FormController extends Controller
     public function index()
     {
         abort_if(Gate::denies('form_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-// dd(Auth::user());
+
+        $form = Form::latest()->first();
+
         $roles = Auth::user()->roles()->pluck('id');
         $orgs = Auth::user()->organizations()->pluck('id');
-
         
         if($roles->contains(5))
         {

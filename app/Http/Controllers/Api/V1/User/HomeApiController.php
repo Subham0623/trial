@@ -16,6 +16,7 @@ use App\FormSubjectArea;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use App\Jobs\SendFormCreatedJob;
 
 class HomeApiController extends Controller
 {
@@ -89,6 +90,8 @@ class HomeApiController extends Controller
         $total_marks = $form->subjectAreas->sum('pivot.marks');
         $form->total_marks = $total_marks;
         $form->save();
+
+        dispatch(new SendFormCreatedJob($form));
 
         return response([
             'message'=>'Form saved successfully',
