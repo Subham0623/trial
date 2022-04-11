@@ -15,6 +15,7 @@ class LoginApiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function login(Request $request){
+        // dd('here');
         $login = $request->validate([
             'username' => 'required|string',
             'password'  => 'required|string',
@@ -22,31 +23,38 @@ class LoginApiController extends Controller
         
         $user = User::where('email',$request->username)->orwhere('token',$request->username)->first();
         // dd($user);
-
-        if($user->status == 1)
+        if(isset($user))
         {
-            if(filter_var($request->username, FILTER_VALIDATE_EMAIL))    
+
+            if($user->status == 1)
             {
-                if(!Auth::attempt(['email' => $request->username, 'password'=>$request->password])){
-                    return response(['message'=>'invalid login credentials']);
+                if(filter_var($request->username, FILTER_VALIDATE_EMAIL))    
+                {
+                    if(!Auth::attempt(['email' => $request->username, 'password'=>$request->password])){
+                        return response(['message'=>'invalid login credentials']);
+                    }
+                    else
+                    {
+                        $accessToken = Auth::user()->createToken('authToken')->accessToken;
+                        return response(['user' => Auth::user(), 'access_token' => $accessToken]);
+                    } 
+                   
                 }
                 else
                 {
-                    $accessToken = Auth::user()->createToken('authToken')->accessToken;
-                    return response(['user' => Auth::user(), 'access_token' => $accessToken]);
-                } 
-               
+                    if(!Auth::attempt(['token' => $request->username, 'password'=>$request->password])){
+                        return response(['message'=>'invalid login credentials']);
+                    }
+                    else
+                    {
+                        $accessToken = Auth::user()->createToken('authToken')->accessToken;
+                        return response(['user' => Auth::user(), 'access_token' => $accessToken]);
+                    }
+                }
             }
             else
             {
-                if(!Auth::attempt(['token' => $request->username, 'password'=>$request->password])){
-                    return response(['message'=>'invalid login credentials']);
-                }
-                else
-                {
-                    $accessToken = Auth::user()->createToken('authToken')->accessToken;
-                    return response(['user' => Auth::user(), 'access_token' => $accessToken]);
-                }
+                return response(['message'=> 'invalid login credentials']);
             }
         }
         else
@@ -54,35 +62,6 @@ class LoginApiController extends Controller
             return response(['message'=> 'invalid login credentials']);
         }
     }
-
-
-    public function logina(Request $request){
-        $login = $request->validate([
-            'email' => 'required|string',
-            'password'  => 'required|string',
-        ]);
-
-        $user = User::where('email',$request->email)->first();
-
-        if($user->status == 1)
-        {         
-            // dd('hello');
-            if(!Auth::attempt($login)){
-                return response(['message'=>'invalid login credentials']);
-            }
-            else
-            {
-// dd('here');
-                $accessToken = Auth::user()->createToken('authToken')->accessToken;
-                return response(['user' => Auth::user(), 'access_token' => $accessToken]);
-            }
-        }
-        else
-        {
-            return response(['message' =>'Invalid login credentials']);
-        }
-    }
-    
     
     public function logout (Request $request) {
         $token = $request->user()->token();
