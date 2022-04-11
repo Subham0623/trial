@@ -87,8 +87,6 @@ class HomeApiController extends Controller
             'highest_score' => $highest_score,
             'lowest_score' => $lowest_score,
             'average_score' => $average_score,
-            'highestScoreOrgs' => $highestScoreOrgs,
-            'lowestScoreOrgs' => $lowestScoreOrgs,
             'topOrgs' => $topOrgs,
             'lowOrgs' => $lowOrgs,
             'years' => $years,
@@ -102,6 +100,7 @@ class HomeApiController extends Controller
     {
 
         $form = $organization->forms()->finalVerified()->where('year',$request->fiscal_year)->first();
+        $years = Form::finalVerified()->distinct()->pluck('year');
 
         $selected_subjectareas = $form->subjectAreas()->get();
         $selected_subjectareas_id = [];
@@ -114,6 +113,8 @@ class HomeApiController extends Controller
         return response([
             'form' => $form,
             'selected_options' => $selected_options,
+            'years' => $years,
+            'organization' => $organization,
         ]);
     }
 
@@ -429,8 +430,6 @@ class HomeApiController extends Controller
                 'highest_score' => $highest_score,
                 'lowest_score' => $lowest_score,
                 'average_score' => $average_score,
-                'highestScoreOrgs' => $highestScoreOrgs,
-                'lowestScoreOrgs' => $lowestScoreOrgs,
                 'topOrgs' => $topOrgs,
                 'lowOrgs' => $lowOrgs,
                 'years' => $years,
@@ -439,6 +438,38 @@ class HomeApiController extends Controller
                 ]);
     
         
+    }
+
+    public function filterOrg(Request $request)
+    {
+        $organization = Organization::where('id',$request->organization)->first();
+
+        $years = Form::finalVerified()->distinct()->pluck('year');
+
+        $fiscal_year = $request->fiscal_year;
+        $form_subject_area = [];
+
+        $form = $organization->forms()->finalVerified()->where('year',$fiscal_year)->first();
+        
+        $selected_subjectareas = $form->subjectAreas()->get();
+
+        $selected_subjectareas_id = [];
+
+        foreach($selected_subjectareas as $selected_subjectarea) {
+            array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+
+        }
+        $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
+
+
+        return response([
+            'organization' => $organization,
+            'years' => $years,
+            'form' => $form,
+            'selected_options' => $selected_options,
+
+
+        ]);
     }
 
     
