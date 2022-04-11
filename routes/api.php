@@ -39,6 +39,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
 
 
 Route::get('/index', 'Api\V1\HomeApiController@index')->name('index');
+Route::get('/filter','Api\V1\HomeApiController@filter')->name('filter');
 Route::get('organization/{organization}','Api\V1\HomeApiController@organizationDetail')->name('organization-details');
 Route::get('/province','Api\V1\HomeApiController@province')->name('province');
 

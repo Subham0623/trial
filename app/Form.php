@@ -91,4 +91,9 @@ class Form extends Model
     {
         return $this->belongsTo(Organization::class);
     }
+
+    public function scopeFinalVerified($query)
+    {
+        return $query->where('final_verified',1);
+    }
 }
