@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Gate;
 use App\Form;
+use App\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Auth;
 
@@ -23,7 +24,6 @@ class FormController extends Controller
         $roles = Auth::user()->roles()->pluck('id');
         $orgs = Auth::user()->organizations()->pluck('id');
 
-        
         if($roles->contains(5))
         {
             $verified_forms = Auth::user()->verifiedForms()->get();
@@ -48,7 +48,7 @@ class FormController extends Controller
 
             $forms = $forms->merge($audited_forms)->all();
             // dd($forms);
-    
+
         }
         elseif($roles->contains(6))
         {
@@ -63,15 +63,46 @@ class FormController extends Controller
 
             $forms = $forms->merge($final_verified_forms)->all();
             // dd($forms);
-    
+
         }
         else
         {
             $forms = Form::all();
             $verified_forms=0; //what is this..?
+            
+        }
+        return view('admin.forms.index',compact('forms'));
         }
 
-        return view('admin.forms.index',compact('forms'));
+   
+public function filter(Request $request)
+{
+    // dd('here');
+    // dd($request->organization);
+    if((isset($request->organization)) && (isset($request->year)))
+    {
+        $forms = Form::where('organization_id',$request->organization)->where('year',$request->year)->get();
+    }
+    elseif((isset($request->organization)) && ($request->year == null))
+    {
+        $forms = Form::where('organization_id',$request->organization)->get();
+    }
+    else
+    {
+        $forms=Form::where('year',$request->year)->get();
+}
+
+        $organizations = Organization::all();
+
+        $years = Form::groupBy('year')->pluck('year')->filter();
+
+        $html = view('admin.forms.index', compact('forms','organizations','years'))->render();
+        // dd($html);
+        return response()->json(array(
+            'success' => true,
+            'html' => $html,
+        ));
+        
     }
 
     /**
@@ -139,4 +170,6 @@ class FormController extends Controller
     {
         //
     }
+
+
 }

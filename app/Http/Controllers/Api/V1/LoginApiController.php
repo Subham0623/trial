@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Authorization\User\User;
 use Auth;
 
 class LoginApiController extends Controller
@@ -13,21 +14,54 @@ class LoginApiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
     public function login(Request $request){
+        // dd('here');
         $login = $request->validate([
-            'email' => 'required|string',
+            'username' => 'required|string',
             'password'  => 'required|string',
         ]);
+        
+        $user = User::where('email',$request->username)->orwhere('token',$request->username)->first();
+        // dd($user);
+        if(isset($user))
+        {
 
-        if(!Auth::attempt($login)){
-            return response(['message'=>'invalid login credentials']);
+            if($user->status == 1)
+            {
+                if(filter_var($request->username, FILTER_VALIDATE_EMAIL))    
+                {
+                    if(!Auth::attempt(['email' => $request->username, 'password'=>$request->password])){
+                        return response(['message'=>'invalid login credentials']);
+                    }
+                    else
+                    {
+                        $accessToken = Auth::user()->createToken('authToken')->accessToken;
+                        return response(['user' => Auth::user()->load('roles'), 'access_token' => $accessToken]);
+                    } 
+                   
+                }
+                else
+                {
+                    if(!Auth::attempt(['token' => $request->username, 'password'=>$request->password])){
+                        return response(['message'=>'invalid login credentials']);
+                    }
+                    else
+                    {
+                        $accessToken = Auth::user()->createToken('authToken')->accessToken;
+                        return response(['user' => Auth::user()->load('roles'), 'access_token' => $accessToken]);
+                    }
+                }
+            }
+            else
+            {
+                return response(['message'=> 'User is deactivated']);
+            }
         }
-
-        $accessToken = Auth::user()->createToken('authToken')->accessToken;
-        return response(['user' => Auth::user()->load('roles'), 'access_token' => $accessToken]);
+        else
+        {
+            return response(['message'=> 'invalid login credentials']);
+        }
     }
-    
     
     public function logout (Request $request) {
         $token = $request->user()->token();

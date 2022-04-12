@@ -115,3 +115,11 @@ table.dataTable thead .sorting_desc {
 .form-check.is-invalid ~ .invalid-feedback {
     display: block;
 }
+
+.my-custom__table thead tr th:first-child{
+    width: 30px;
+}
+
+.fam{
+    width: 100%;
+}

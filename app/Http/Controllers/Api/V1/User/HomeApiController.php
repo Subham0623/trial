@@ -39,6 +39,7 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $user = Auth::user();
         $user_organization = $user->organizations->first();
         $data = [
@@ -235,7 +236,7 @@ class HomeApiController extends Controller
         
                             if($parameter['is_applicable'] == 0) //0 means applicable and 1 means not applicable
                             {
-        
+
                                 if(isset($parameter['option']['id'])) {
                                     $opt = Option::findorFail($parameter['option']['id']);
                                     if($roles->contains(2) && ($user->id == $form->user_id) && ($form->status == 0))
@@ -329,10 +330,10 @@ class HomeApiController extends Controller
                                         'updated_by'=>$user->id
                                     ]);
                                 }
-                                else
-                                {
-                                    return response(['message'=>'access denied']);
-                                }
+                                // else
+                                // {
+                                //     return response(['message'=>'access denied']);
+                                // }
                             }
                         }
                         else

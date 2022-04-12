@@ -24,6 +24,9 @@ class StoreUserRequest extends FormRequest
             'email'    => [
                 'required',
                 'unique:users'],
+            'token'    => [
+                'required',
+                'unique:users'],
             'password' => [
                 'required'],
             'roles.*'  => [
