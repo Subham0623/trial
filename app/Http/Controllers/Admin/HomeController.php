@@ -294,7 +294,7 @@ class HomeController
                     $query->where('province_id',$province)
                     ->where('district_id',$district);
                 })->max('total_marks_finalVerifier');
-                dd($highest_score);
+                // dd($highest_score);
                 
     
                 $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($province, $district){

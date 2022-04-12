@@ -219,17 +219,33 @@
                                         @foreach($subjectAreas as $key => $subjectArea)
                                         @php
                                         $total_marks = 0;
+                                        $subjectAreaTotal = 0;
                                         $form_subject_area = App\FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
                                         
                                         foreach($form_subject_area as $item){
                                             $total_marks = $item->marksByFinalVerifier + $total_marks;
+                                        }
+
+                                        foreach($subjectArea->parameters as  $parameter)
+                                        {
+                                            $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+                                        }
+
+                                        if($published_forms !== 0)
+                                        {
+
+                                            $percentage = ($total_marks/($subjectAreaTotal*$published_forms))*100;
+                                        }
+                                        else
+                                        {
+                                            $percentage = 0;
                                         }
                                         @endphp
 
                                         <tr>
                                             <th scope="row">{{$key+1}}</th>
                                             <td style="min-width: 180px;">{{$subjectArea->title}}</td>
-                                            <td style="min-width: 180px;">{{$total_marks}}</td>
+                                            <td style="min-width: 180px;">{{$percentage}}%</td>
                                         </tr>
                                         @endforeach
                                     </tbody>

@@ -60,23 +60,9 @@ class HomeApiController extends Controller
 
         $submittedFormOrgs = $orgs->count();
 
-        $total_marks = [];
-        
         $subjectAreas = SubjectArea::all();
 
-        foreach($subjectAreas as $subjectArea)
-        {
-            $total = 0;
-
-            $form_subject_area = FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
-            
-            foreach($form_subject_area as $item){
-                $total = $item->marksByFinalVerifier + $total;
-            }
-
-            array_push($total_marks,['subject_area'=>$subjectArea,'total'=>$total]);
-        }
-        // dd($total_marks);
+        $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
 
         return response([
             'organizations'=> $organizations,
@@ -164,23 +150,10 @@ class HomeApiController extends Controller
             })->get();
     
             $submittedFormOrgs = $orgs->count();
-
-            $total_marks = [];
         
             $subjectAreas = SubjectArea::all();
 
-            foreach($subjectAreas as $subjectArea)
-            {
-                $total = 0;
-
-                $form_subject_area = FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
-                
-                foreach($form_subject_area as $item){
-                    $total = $item->marksByFinalVerifier + $total;
-                }
-
-                array_push($total_marks,['subject_area'=>$subjectArea,'total'=>$total]);
-            }
+            $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
         }
         
         if(isset($province))
@@ -247,23 +220,10 @@ class HomeApiController extends Controller
                 })->get();
         
                 $submittedFormOrgs = $orgs->count();
-    
-                $total_marks = [];
             
                 $subjectAreas = SubjectArea::all();
-    
-                foreach($subjectAreas as $subjectArea)
-                {
-                    $total = 0;
-    
-                    $form_subject_area = FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
-                    
-                    foreach($form_subject_area as $item){
-                        $total = $item->marksByFinalVerifier + $total;
-                    }
-    
-                    array_push($total_marks,['subject_area'=>$subjectArea,'total'=>$total]);
-                }
+
+                $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
             }
             else
             {
@@ -320,23 +280,10 @@ class HomeApiController extends Controller
                 })->get();
         
                 $submittedFormOrgs = $orgs->count();
-    
-                $total_marks = [];
             
                 $subjectAreas = SubjectArea::all();
-    
-                foreach($subjectAreas as $subjectArea)
-                {
-                    $total = 0;
-    
-                    $form_subject_area = FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
-                    
-                    foreach($form_subject_area as $item){
-                        $total = $item->marksByFinalVerifier + $total;
-                    }
-    
-                    array_push($total_marks,['subject_area'=>$subjectArea,'total'=>$total]);
-                }
+
+                $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
             }
 
         }
@@ -397,23 +344,10 @@ class HomeApiController extends Controller
                 })->get();
         
                 $submittedFormOrgs = $orgs->count();
-    
-                $total_marks = [];
             
                 $subjectAreas = SubjectArea::all();
-    
-                foreach($subjectAreas as $subjectArea)
-                {
-                    $total = 0;
-    
-                    $form_subject_area = FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
-                    
-                    foreach($form_subject_area as $item){
-                        $total = $item->marksByFinalVerifier + $total;
-                    }
-    
-                    array_push($total_marks,['subject_area'=>$subjectArea,'total'=>$total]);
-                }
+
+                $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
             }
             
         }
@@ -472,5 +406,41 @@ class HomeApiController extends Controller
         ]);
     }
 
+    public function totalMarks($subjectAreas,$forms,$published_forms)
+    {
+        $total_marks = [];
+
+        $subjectAreaTotal = 0;
+
+        foreach($subjectAreas as $subjectArea)
+        {
+            $total = 0;
+
+            $form_subject_area = FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
+            
+            foreach($form_subject_area as $item){
+                $total = $item->marksByFinalVerifier + $total;
+            }
+
+            foreach($subjectArea->parameters as  $parameter)
+            {
+                $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+            }
+
+            if($published_forms !== 0)
+            {
+
+                $percentage = ($total/($subjectAreaTotal*$published_forms))*100;
+            }
+            else
+            {
+                $percentage = 0;
+            }
+            
+            array_push($total_marks,['subject_area'=>$subjectArea,'percentage'=>$percentage]);
+        }
+
+        return $total_marks;
+    }
     
 }
