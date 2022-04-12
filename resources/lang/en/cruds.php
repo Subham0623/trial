@@ -95,6 +95,10 @@ return [
             'updated_at_helper'        => '',
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => '',
+            'token'                    => 'Token',
+            'token_helper'             => '',
+            'status'                   => 'Status',
+            'status_helper'            => '',
         ],
     ],
 

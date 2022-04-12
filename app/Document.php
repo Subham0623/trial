@@ -35,6 +35,6 @@ class Document extends Model
 
     public function parameter()
     {
-        return $this->belongsTo(Province::class);
+        return $this->belongsTo(Parameter::class);
     }
 }

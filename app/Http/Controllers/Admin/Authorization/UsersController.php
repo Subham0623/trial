@@ -46,6 +46,8 @@ class UsersController extends Controller
             'email_verified_at' => Carbon::now(),
             'password' => $request->password,
             'created_by' => auth()->user()->id,
+            'token' => $request->token,
+            'status' => $request->status,
             ];
            
             
@@ -75,6 +77,8 @@ class UsersController extends Controller
         $data = [
             'title' =>$request->title,
             'updated_by' => auth()->user()->id,
+            'token' => $request->token,
+            'status' => $request->status,
             ];
             
         $user->update($data);
