@@ -46,6 +46,8 @@ Route::get('organization/detail/{organization}','Api\V1\HomeApiController@organi
 Route::get('/province','Api\V1\HomeApiController@province')->name('province');
 
 Route::post('/login','Api\V1\LoginApiController@login');
+Route::post('/reset','Api\V1\ResetPasswordApiController@reset');
+Route::post('/password/forget','Api\V1\ForgetPasswordApiController@forget');
 Route::middleware('auth:api')->post('/logout','Api\V1\LoginApiController@logout');
 
 

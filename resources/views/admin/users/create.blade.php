@@ -19,6 +19,19 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.user.fields.name_helper') }}</span>
             </div>
+
+            <div class="form-group">
+                <label class="" for="status">{{ trans('cruds.user.fields.status') }}</label><br>
+                <input type="radio" name="status" value="1" > Active<br>
+                <input type="radio" name="status" value="0" checked> Inactive<br>
+                @if($errors->has('status'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('status') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.user.fields.status_helper') }}</span>
+            </div>
+
             <div class="form-group">
                 <label class="required" for="email">{{ trans('cruds.user.fields.email') }}</label>
                 <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email') }}" required>
@@ -39,6 +52,18 @@
                 @endif
                 <!-- <span class="help-block">{{ trans('cruds.user.fields.password_helper') }}</span> -->
             </div>
+
+            <div class="form-group">
+                <label class="required" for="token">{{ trans('cruds.user.fields.token') }}</label>
+                <input class="form-control {{ $errors->has('token') ? 'is-invalid' : '' }}" type="text" name="token" id="token" value="{{ old('token') }}" required>
+                @if($errors->has('token'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('token') }}
+                    </div>
+            @endif
+                <span class="help-block">{{ trans('cruds.user.fields.token_helper') }}</span>
+            </div>
+
             <div class="form-group">
                 <label class="required" for="roles">{{ trans('cruds.user.fields.roles') }}</label>
                 <div style="padding-bottom: 4px">
