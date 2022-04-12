@@ -56,6 +56,7 @@ class HomeApiController extends Controller
 
         foreach($request->parameters as $parameter )
         {   
+            $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
             if($parameter['is_applicable'] == 0)
             {
                 if(isset($parameter['option']['id']))
@@ -78,6 +79,8 @@ class HomeApiController extends Controller
                     'parameter_id' => $parameter['id'],
                     'remarks' => $parameter['remarks'],
                     'is_applicable' => $parameter['is_applicable'],
+                    'option_id' =>null,
+                    'marks' => $max_points,
                 ]);
             }
         }
@@ -221,6 +224,7 @@ class HomeApiController extends Controller
                 
                 foreach($request->parameters as $parameter )
                 {   
+                    $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
                     $form_detail = FormDetail::where('form_subject_area_id',$form_subject_area->id)->where('parameter_id',$parameter['id'])->first();
                     
                     if(isset($form_detail))
@@ -234,7 +238,7 @@ class HomeApiController extends Controller
         
                                 if(isset($parameter['option']['id'])) {
                                     $opt = Option::findorFail($parameter['option']['id']);
-                                    if($roles->contains(2) && ($user->id == $form->user_id))
+                                    if($roles->contains(2) && ($user->id == $form->user_id) && ($form->status == 0))
                                     {
                                         $form_detail->update([
                                             'remarks' => $parameter['remarks'],
@@ -249,7 +253,7 @@ class HomeApiController extends Controller
                                     }
                                     elseif($roles->contains(5))
                                     {
-                                        if($form->user_id == $user->id)
+                                        if($form->user_id == $user->id && ($form->status == 0))
                                         {
                                             $form_detail->update([
                                                 'remarks' => $parameter['remarks'],
@@ -264,17 +268,21 @@ class HomeApiController extends Controller
                                         }
                                         else
                                         {
-                                            $form_detail->update([
-                                                'option_id' => $opt->id,
-                                                'marksByVerifier' => $opt->points,
-                                            ]); 
-                                            $form->update([
-                                                'verified_by'=>$user->id
-                                            ]);
+                                            if($form->is_verified == 0)
+                                            {
+
+                                                $form_detail->update([
+                                                    'option_id' => $opt->id,
+                                                    'marksByVerifier' => $opt->points,
+                                                ]); 
+                                                $form->update([
+                                                    'verified_by'=>$user->id
+                                                ]);
+                                            }
                                         }
                                         
                                     }
-                                    elseif($roles->contains(4))
+                                    elseif($roles->contains(4) && $form->is_audited == 0)
                                     {
                                         $form_detail->update([
                                             'option_id' => $opt->id,
@@ -284,7 +292,7 @@ class HomeApiController extends Controller
                                             'audited_by'=>$user->id
                                         ]);
                                     }
-                                    elseif($roles->contains(6))
+                                    elseif($roles->contains(6) && $form->final_verified == 0)
                                     {
                                         $form_details->update([
                                             'option_id' => $opt->id,
@@ -304,8 +312,9 @@ class HomeApiController extends Controller
                             }
                             else
                             {
-                                if($form->user_id == $user->id)
+                                if($form->user_id == $user->id && ($form->status == 0))
                                 {
+                                    
                                     $form_detail = FormDetail::updateOrCreate([
                                         'form_subject_area_id' => $form_subject_area->id,
                                         'parameter_id' => $parameter['id'],
@@ -313,7 +322,7 @@ class HomeApiController extends Controller
                                     [
                                         'remarks' => $parameter['remarks'],
                                         'option_id' => null,
-                                        'marks' => null,
+                                        'marks' => $max_points,
                                         'is_applicable' => $parameter['is_applicable'],
                                     ]); 
                                     $form->update([
@@ -328,7 +337,7 @@ class HomeApiController extends Controller
                         }
                         else
                         {
-                            if($form->user_id == $user->id)
+                            if($form->user_id == $user->id && ($form->status == 0))
                             {
                                 if($parameter['is_applicable'] == 0)
                                 {
@@ -352,7 +361,7 @@ class HomeApiController extends Controller
                                     $form_detail->update([
                                         'remarks' => $parameter['remarks'],
                                         'option_id' => null,
-                                        'marks' => null,
+                                        'marks' => $max_points,
                                         'is_applicable' => $parameter['is_applicable'],
                                     ]);
                                     $form->update([
@@ -368,7 +377,7 @@ class HomeApiController extends Controller
                     }
                     else
                     {
-                        if($form->user_id == $user->id)
+                        if($form->user_id == $user->id && ($form->status == 0))
                         {
 
                             if($parameter['is_applicable'] == 0)
@@ -393,6 +402,8 @@ class HomeApiController extends Controller
                                     'parameter_id' => $parameter['id'],
                                     'remarks' => $parameter['remarks'],
                                     'is_applicable' => $parameter['is_applicable'],
+                                    'option_id' => null,
+                                    'marks' => $max_points,
                                 ]);
                             }
                         }
