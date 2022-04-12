@@ -39,6 +39,7 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $user = Auth::user();
         $user_organization = $user->organizations->first();
         $data = [

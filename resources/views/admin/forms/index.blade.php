@@ -3,8 +3,34 @@
 
 <div class="card">
     <div class="card-header">
-        {{ trans('cruds.form.title_singular') }} {{ trans('global.list') }}
+        <div class ="row">
+
+            <div class="col">
+
+                {{ trans('cruds.form.title_singular') }} {{ trans('global.list') }}
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div>
+                        <select name="organization" id="organization">
+                            <option value = "">Select Organization</option>
+                            @foreach($organizations as $organization)
+                                <option class = "organizations" value="{{ $organization->id }}" {{ old('organization') == $organization->id ? 'selected' : '' }}>{{ $organization->name }}</option>
+                            @endforeach
+                        </select>
+                        <select name="year" id="year">
+                            <option value = "">Select Year</option>
+                            @foreach($years as $year)
+                                <option class = "years" value="{{ $year }}" {{ old('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                            @endforeach
+                        </select>
+                        <a class="btn btn-primary" id="search">Search</a>
+                    </div>   
+                </div>
+            </div>
+        </div>
     </div>
+        
 
     <div class="card-body">
         <div class="table-responsive">
@@ -148,5 +174,55 @@
     });
 });
 
+</script>
+<script>
+    $("#search").click(function(){
+            var org = $('#organization').val();
+            console.log(org);
+            var year = $('#year').val();
+            console.log(year);
+
+            if(org == '' && year == '')
+            {
+                alert('select any option first');
+            }
+            else{
+
+                $.ajax({
+                        url: "{{route('admin.form-filter')}}",
+                        type: "GET",
+                        dataType: "json",
+                        data:{
+                            'organization': org,
+                            'year': year,
+                        },
+                        success:function(data) {
+                            console.log(data);
+                            // $("table tbody").empty();
+                            $('body').html(data.html);
+                            // $('tbody').html(data);
+                                    // let newData = '<tbody>';
+                                    // $.each(data, function(key, value) {
+                                    //     newData += `
+                                    //     <tr>
+                                    //     <td>${key+1}</td>
+                                    //     <td>${value.organization_id}</td>
+                                    //     <td>${value.year}</td>
+                                    //     <td>${value.status}</td>
+                                    //     <td>${value.created_by}</td>
+                                    //     <td>${value.}</td>
+                                    //     <td><a class="btn btn-xs btn-info" href="">View Forms</a></td>
+                                    //     </tr>`;
+                                    // });
+                                    // newData += '</tbody>';
+                                    // $("#list2 table ").append(newData);
+                                                        }
+                                                    });
+            }
+
+
+                    
+                
+        });
 </script>
 @endsection

@@ -10,135 +10,277 @@
 
                 <div class="card-body">
                     @if(session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
                     @endif
-
-                    You are logged in!
-
-                    
+                    <!-- you are logged in -->
                 </div>
 
-                <div class="col-lg-3 col-6">
-            <!-- small box -->
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>{{$organizations}}</h3>
+                <div class="row container">
+                    <div class="col-sm-3">
+                        <!-- <div class="home-title"><span class="">PLGSP|</span><span class=""
+                                style="font-size: 18px; font-weight: bold; color: black; margin-left: 5px;">Home</span>
+                        </div> -->
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="position-relative form-group"><select name="fiscal_year" id="fiscalYearSelect"
+                                class="form-control filter">
+                                <option value="" disabled>Select Fiscal Year</option>
+                                @foreach($years as $key => $year)
+                                <option value="{{$year}}" {{ $year == $fiscal_year ? 'selected' : '' }}>{{$year}}</option>
+                                @endforeach
+                            </select></div>
+                    </div>
+                    
+                    <div class="col-sm-3">
+                        <div class="position-relative form-group"><select placeholder="Select Province"
+                                name="province" id="provinceId" class="form-control filter">
+                                <option value="">Select Province</option>
+                                @foreach($provinces as $item)
+                                <option value="{{$item->id}}" {{ $item->id == $province ? 'selected' : '' }}>{{$item->name}}</option>
+                                @endforeach
+                            </select></div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="position-relative form-group"><select placeholder="Select District"
+                                name="district" id="districtId" class="form-control filter">
+                                <option value="" >Select District</option>
+                                @foreach($districts as $item)
+                                <option value="{{$item->id}}" {{ $item->id == $district ? 'selected' : '' }}>{{$item->name}}</option>
+                                @endforeach
+                            </select></div>
+                    </div>
+                    <!-- <div class="col-sm-2">
+                        <div class="position-relative form-group"><select placeholder="पालिका चयन गर्नुहोस"
+                                name="palikaId" id="palikaId" class="form-control">
+                                <option value="0" disabled="">पालिका चयन गर्नुहोस</option>
+                            </select></div>
+                    </div> -->
+                </div>
 
-                            <p>Total Organizations</p>
+                <div class="row container">
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Organizations</h5>
+                                <p class="card-text" style="font-size:20px;">{{$total_orgs}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
                         </div>
-                        <div class="icon">
-                            <i class="nav-icon fas fa-sitemap"></i>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Published Forms</h5>
+                                <p class="card-text" style="font-size:20px;">{{$published_forms}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
                         </div>
-                        <a href="{{route('admin.organizations.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Organizations(Submitted forms))</h5>
+                                <p class="card-text" style="font-size:20px;">{{$submittedFormOrgs}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Highest Score</h5>
+                                <p class="card-text" style="font-size:20px;">{{$highest_score}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Lowest Score</h5>
+                                <p class="card-text" style="font-size:20px;">{{$lowest_score}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Average Score</h5>
+                                <p class="card-text" style="font-size:20px;">{{$average_score}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="container" style="width:100%; height:400px;" class="mt-5">
-                    <select name="province" id="province">
-                        <option value = "">Select province</option>
-                            @foreach($provinces as $province)
-                            <option class = "provinces" value="{{ $province->id }}" {{ old('province') == $province->id ? 'selected' : '' }}>{{ $province->name }}</option>
-                            @endforeach
-                    </select>
-                <div id = "list">
-                    <div class="table-responsive">
-                        <table class=" table table-bordered table-striped table-hover datatable datatable-Organization">
-                            <thead>
-                                <tr>
-                                    <th width="10">
 
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.organization.fields.sn') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.organization.fields.name') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.organization.fields.province') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.organization.fields.district') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.organization.fields.address') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.organization.fields.contact') }}
-                                    </th>
-                                    <th>
-                                        &nbsp;
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
+                <div class="card-layout container">
+                    <div class="row">
+                        <div class="col mb-3 col-6 text-center">
+                            <div class="row table-heading">
+                                <div class="col-md-6">
+                                    <h6 class="sub-heading">10 organizations with highest score</h6>
+                                </div>
+                            </div>
+                            <div class="row container">
 
-                            
+                                <table class="table table-responsive table-bordered my-custom__table">
+                                    <thead>
+                                        <tr>
+                                            <th  class="toplevel">S.N. </th>
+                                            <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
+                                            <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
+                                                प्राप्तांक (औसत)</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       @if(count($topOrgs)>0)
+                                        @foreach($topOrgs as $key => $top)
+                                        
+                                        <tr>
+                                            <th scope="row">{{$key+1}}</th>
+                                            <td style="min-width: 180px;"><a href="{{route('admin.organization-detail',[$top->id])}}">{{$top->name}}</a></td>
+                                        </tr>
+                                        @endforeach
+                                        @else
+                                        <tr>
+                                            <th colspan = "2">No data found</th>
+                                        </tr>
+                                        
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col mb-3 col-6 text-center">
+                            <div class="row table-heading">
+                                <div class="col-md-6">
+                                    <h6 class="sub-heading">10 organizations with lowest score</h6>
+                                </div>
+                            </div>
+                            <div class="row container">
+                                <table class="table table-responsive table-bordered my-custom__table">
+                                    <thead>
+                                        <tr>
+                                            <th  class="toplevel">S.N. </th>
+                                            <th id="fam"  class="toplevel">Organizations</th>
+                                            <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
+                                                प्राप्तांक (औसत)</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(count($lowOrgs)>0)
+                                        @foreach($lowOrgs as $key => $low)
+                                        
+                                        <tr>
+                                            <td scope="row">{{$key+1}}</td>
+                                            <td><a href="{{route('admin.organization-detail',[$low->id])}}">{{$low->name}}</a></td>
+                                        </tr>
+                                        @endforeach
+                                        @else
+                                        <tr>
+                                            <th colspan = "2">No data found</th>
+                                        </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="card-layout container">
+                    <div class="row">
                         
+
+                        <div class="col mb-3 col-12 text-center">
+                            <div class="row table-heading">
+                                <div class="col-md-12">
+                                    <h6 class="sub-heading">Total Marks of all the organizations based on subject areas</h6>
+                                </div>
+                            </div>
+                            <div class="row container table-responsive">
+                                <table class="table  table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th id="fam"  class="toplevel">S.N. </th>
+                                            <th id="fam" class="toplevel">Subject Areas</th>
+                                            <th>Total Marks</th>
+                                            <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
+                                                प्राप्तांक (औसत)</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($subjectAreas as $key => $subjectArea)
+                                        @php
+                                        $total_marks = 0;
+                                        $form_subject_area = App\FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
+                                        
+                                        foreach($form_subject_area as $item){
+                                            $total_marks = $item->marksByFinalVerifier + $total_marks;
+                                        }
+                                        @endphp
+
+                                        <tr>
+                                            <th scope="row">{{$key+1}}</th>
+                                            <td style="min-width: 180px;">{{$subjectArea->title}}</td>
+                                            <td style="min-width: 180px;">{{$total_marks}}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 </div>
 @endsection
 @section('scripts')
-@parent
-
-@endsection
-
-@section('scripts')
 <script>
-        $(document).ready(function(){
-                    $('#province').change(function(){
-                        // e.preventDefault();
-                        
-                        console.log('here');    
-                        
-                        var province = $(this).val();
-                        console.log(province);
-                    
-                        if(province.length > 0)
-                        {
-                            $.ajax({
-                                url:"admins/province/organizations",
-                                
-                                type:'GET',
-                                data: {
-                                    province: province,
-                                    },
-                                    success: function(data){
-                                    // window.location=res.url;
-                                    console.log(data);
-                                    // $("#list").empty();
-                                    // var resulttag = "";
-                                    // resulttag += "<tr><td>result</td></tr>";
-                                    // $("#table tbody").append(resulttag);
+    $(document).ready(function () {
+        $('.filter').change(function () {
+            // e.preventDefault();
 
-                                    
+            console.log('here');
 
-                                   var html = `
-                                   <tr>
-                                        <th>
-                                        
-                                        </th>
-                                    </tr>`;
-                                    $('#list table tbody').append(html2);
-                                    $('#list table tbody').append(html1);
-                
-                                    }
-                                    
-                                    
-                                });
-                        }
-                                    
-                        
-                        
+            // var fiscal_year = $(this).val();
+            var fiscal_year = $('#fiscalYearSelect').find(":selected").text();
+            var province = $('#provinceId').find(':selected').val();
+            var district = $('#districtId').find(':selected').val();
+            // var organization = $('#organization').val();
+            console.log(fiscal_year);
+            console.log(province);
 
-                        
-                        
-                    });
-                    });
-    </script>
+            if (fiscal_year.length > 0) {
+                $.ajax({
+                    url:"{{ route('admin.filter-index') }}",
+
+                    type: 'GET',
+                    data: {
+                        fiscal_year: fiscal_year,
+                        province: province,
+                        district: district,
+                    },
+                    success: function (data) {
+                        $('body').html(data.html);
+                        // console.log(data.province);
+
+                    }
+                });
+            }
+       });
+    });
+
+</script>
 @endsection

@@ -34,7 +34,15 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
     Route::patch('/feedback/{feedback}','HomeApiController@feedbackStatus')->name('feedback-status-update');
 });
 
-Route::get('/', 'Api\V1\HomeApiController@index')->name('index');
+
+
+
+
+Route::get('/index', 'Api\V1\HomeApiController@index')->name('index');
+Route::get('/index/filter','Api\V1\HomeApiController@filter')->name('filter-index');
+Route::get('/filter','Api\V1\HomeApiController@filterOrg')->name('filter');
+Route::get('organization/detail/{organization}','Api\V1\HomeApiController@organizationDetail')->name('organization-details');
+
 Route::get('/province','Api\V1\HomeApiController@province')->name('province');
 
 Route::post('/login','Api\V1\LoginApiController@login');
