@@ -19,6 +19,8 @@ Route::post('store/step4','InstallerController@storeStep4')->name('store.step4')
 Route::get('get/step5','InstallerController@getstep5')->name('get.step5');
 Route::post('store/step5','InstallerController@storeStep5')->name('store.step5');
 
+Route::get('/checkToken', 'CheckAuthenticationController@checkToken');
+
 Route::middleware(['IsInstalled'])->group(function () {
 
     includeRouteFiles(__DIR__ . '/Site/');
@@ -45,6 +47,9 @@ Route::middleware(['IsInstalled'])->group(function () {
             'middleware' => ['auth', 'admin']
         ], function () {
             Route::get('/', 'HomeController@index')->name('home');
+            Route::get('/organization/detail/{organization}','HomeController@organizationDetail')->name('organization-detail');
+            Route::get('/filter','HomeController@filterOrg')->name('filter');
+            Route::get('/index/filter','HomeController@filter')->name('filter-index');
             includeRouteFiles(__DIR__ . '/AdminBackend/');
 
             
@@ -64,7 +69,15 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::resource('provinces','ProvinceController');
 
             //Forms
-            Route::get('forms','FormController@index')->name('forms');    
+            Route::get('/forms/organization','FormController@filter')->name('form-filter'); 
+            Route::get('forms','FormController@index')->name('forms');  
+            
+            Route::get('/province/organizations','HomeController@list')->name('list');
+            Route::get('/district/organizations','HomeController@district');
+
+            Route::get('/province-select/{id}','HomeController@provinceDistrict');
+            Route::get('/search-organizations','HomeController@search');
+
         
             //Organizations
             Route::get('organizations/download-format',function(){

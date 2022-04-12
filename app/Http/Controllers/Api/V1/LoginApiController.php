@@ -36,7 +36,7 @@ class LoginApiController extends Controller
                     else
                     {
                         $accessToken = Auth::user()->createToken('authToken')->accessToken;
-                        return response(['user' => Auth::user(), 'access_token' => $accessToken]);
+                        return response(['user' => Auth::user()->load('roles'), 'access_token' => $accessToken]);
                     } 
                    
                 }
@@ -48,13 +48,13 @@ class LoginApiController extends Controller
                     else
                     {
                         $accessToken = Auth::user()->createToken('authToken')->accessToken;
-                        return response(['user' => Auth::user(), 'access_token' => $accessToken]);
+                        return response(['user' => Auth::user()->load('roles'), 'access_token' => $accessToken]);
                     }
                 }
             }
             else
             {
-                return response(['message'=> 'invalid login credentials']);
+                return response(['message'=> 'User is deactivated']);
             }
         }
         else
