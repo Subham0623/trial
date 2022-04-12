@@ -16,6 +16,7 @@ use App\FormSubjectArea;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use App\Document;
 
 class HomeApiController extends Controller
 {
@@ -90,6 +91,19 @@ class HomeApiController extends Controller
         $total_marks = $form->subjectAreas->sum('pivot.marks');
         $form->total_marks = $total_marks;
         $form->save();
+
+        if($request->mode == 'documents') {
+            foreach($request->documents as $id => $document) {
+                $document_parameter_id = Document::find($id)->pluck('parameter_id');
+                $form_subject_area_parameter = $form->subjectAreas()->whereHas('selected_subjectareas', function($query) use ($document_parameter_id) {
+                        $query->where('parameter_id', $document_parameter_id);
+                    })->first();
+                
+                // dd($document->parameter);
+                $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+                $form_subject_area_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+            }
+        }
 
         return response([
             'message'=>'Form saved successfully',
@@ -218,7 +232,7 @@ class HomeApiController extends Controller
         
                             if($parameter['is_applicable'] == 0) //0 means applicable and 1 means not applicable
                             {
-        
+
                                 if(isset($parameter['option']['id'])) {
                                     $opt = Option::findorFail($parameter['option']['id']);
                                     if($roles->contains(2) && ($user->id == $form->user_id))
@@ -307,10 +321,10 @@ class HomeApiController extends Controller
                                         'updated_by'=>$user->id
                                     ]);
                                 }
-                                else
-                                {
-                                    return response(['message'=>'access denied']);
-                                }
+                                // else
+                                // {
+                                //     return response(['message'=>'access denied']);
+                                // }
                             }
                         }
                         else
