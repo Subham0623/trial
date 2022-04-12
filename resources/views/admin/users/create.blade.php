@@ -22,8 +22,8 @@
 
             <div class="form-group">
                 <label class="" for="status">{{ trans('cruds.user.fields.status') }}</label><br>
-                <input type="radio" name="status" value="1" > Active<br>
-                <input type="radio" name="status" value="0" checked> Inactive<br>
+                <input type="radio" name="status" value="1" checked> Active<br>
+                <input type="radio" name="status" value="0" > Inactive<br>
                 @if($errors->has('status'))
                     <div class="invalid-feedback">
                         {{ $errors->first('status') }}
