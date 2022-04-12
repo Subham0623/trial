@@ -225,13 +225,16 @@
                                         foreach($form_subject_area as $item){
                                             $total_marks = $item->marksByFinalVerifier + $total_marks;
                                         }
-
-                                        foreach($subjectArea->parameters as  $parameter)
+                                        if($subjectArea->parameters)
                                         {
-                                            $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+
+                                            foreach($subjectArea->parameters as  $parameter)
+                                            {
+                                                $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+                                            }
                                         }
 
-                                        if($published_forms !== 0)
+                                        if($published_forms !== 0 && $subjectAreaTotal !== 0)
                                         {
 
                                             $percentage = ($total_marks/($subjectAreaTotal*$published_forms))*100;

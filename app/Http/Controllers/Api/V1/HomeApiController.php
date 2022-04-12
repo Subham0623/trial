@@ -422,12 +422,16 @@ class HomeApiController extends Controller
                 $total = $item->marksByFinalVerifier + $total;
             }
 
-            foreach($subjectArea->parameters as  $parameter)
+            if($subjectArea->parameter)
             {
-                $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+
+                foreach($subjectArea->parameters as  $parameter)
+                {
+                    $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+                }
             }
 
-            if($published_forms !== 0)
+            if($published_forms !== 0 && $subjectAreaTotal !== 0)
             {
 
                 $percentage = ($total/($subjectAreaTotal*$published_forms))*100;
