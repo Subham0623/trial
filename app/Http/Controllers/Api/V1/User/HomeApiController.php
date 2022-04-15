@@ -22,12 +22,32 @@ class HomeApiController extends Controller
 {
     public function form()
     {
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
-        $selected_options = [];
-        return response([
-            'subject_areas' => $subject_areas,
-            'selected_options' => $selected_options,
-        ]);
+
+        $user = Auth::user()->load('organizations');
+        $org = $user->organizations->first();
+        // dd($org->id);
+        $fiscal_year = Form::latest()->pluck('year')->first();
+
+        $forms = Form::where('year',$fiscal_year)->pluck('organization_id');
+
+        
+
+            if(!$forms->contains($org->id))
+            {
+    
+                $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+                $selected_options = [];
+                return response([
+                    'subject_areas' => $subject_areas,
+                    'selected_options' => $selected_options,
+                ]);
+            }
+            else
+            {
+                return response(['message'=>'access denied']);
+            }
+        
+        
     }
 
     public function profile()
