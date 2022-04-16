@@ -91,7 +91,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Highest Score</h5>
-                                <p class="card-text" style="font-size:20px;">{{$highest_score}}</p>
+                                <p class="card-text" style="font-size:20px;">{{$highest_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Lowest Score</h5>
-                                <p class="card-text" style="font-size:20px;">{{$lowest_score}}</p>
+                                <p class="card-text" style="font-size:20px;">{{$lowest_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Average Score</h5>
-                                <p class="card-text" style="font-size:20px;">{{$average_score}}</p>
+                                <p class="card-text" style="font-size:20px;">{{$average_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                                     <thead>
                                         <tr>
                                             <th  class="toplevel">S.N. </th>
-                                            <th id="fam"  class="toplevel">Organizations</th>
+                                            <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
                                             <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
                                                 प्राप्तांक (औसत)</th> -->
                                         </tr>
