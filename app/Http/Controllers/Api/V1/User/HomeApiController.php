@@ -39,72 +39,85 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        
         $user = Auth::user();
         $user_organization = $user->organizations->first();
-        $data = [
-            'user_id' => $user->id,
-            'year' => $request->year,
-            'organization_id' => $user_organization->id,
-        ];
 
-        $form = Form::create($data);
-        // dd($form);
-        $form_subject_area = FormSubjectArea::create([
-            'form_id' => $form->id,
-            'subject_area_id' => $request->subject_area,
-        ]);
+        if($request->mode == 'options') {
+            $data = [
+                'user_id' => $user->id,
+                'year' => $request->year,
+                'organization_id' => $user_organization->id,
+            ];
 
-        foreach($request->parameters as $parameter )
-        {   
-            $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
-            if($parameter['is_applicable'] == 0)
-            {
-                if(isset($parameter['option']['id']))
+            $form = Form::create($data);
+            // dd($form);
+            $form_subject_area = FormSubjectArea::create([
+                'form_id' => $form->id,
+                'subject_area_id' => $request->subject_area,
+            ]);
+
+            foreach($request->parameters as $parameter )
+            {   
+                $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
+                if($parameter['is_applicable'] == 0)
                 {
-                    $opt = Option::find($parameter['option']['id']);
+                    if(isset($parameter['option']['id']))
+                    {
+                        $opt = Option::find($parameter['option']['id']);
+                        $form_detail = FormDetail::create([
+                            'form_subject_area_id' => $form_subject_area->id,
+                            'parameter_id' => $parameter['id'],
+                            'remarks' => $parameter['remarks'],
+                            'option_id' => $opt->id,
+                            'marks' => $opt->points,
+                            'is_applicable' => $parameter['is_applicable'],
+                        ]);  
+                    }
+                }
+                else
+                {
                     $form_detail = FormDetail::create([
                         'form_subject_area_id' => $form_subject_area->id,
                         'parameter_id' => $parameter['id'],
                         'remarks' => $parameter['remarks'],
-                        'option_id' => $opt->id,
-                        'marks' => $opt->points,
                         'is_applicable' => $parameter['is_applicable'],
-                    ]);  
+                        'option_id' =>null,
+                        'marks' => $max_points,
+                    ]);
                 }
             }
-            else
-            {
-                $form_detail = FormDetail::create([
-                    'form_subject_area_id' => $form_subject_area->id,
-                    'parameter_id' => $parameter['id'],
-                    'remarks' => $parameter['remarks'],
-                    'is_applicable' => $parameter['is_applicable'],
-                    'option_id' =>null,
-                    'marks' => $max_points,
-                ]);
-            }
+
+            $total = $form_subject_area->parameters->sum('pivot.marks');
+            $form_subject_area->update([
+                'marks'=> $total
+            ]);
+
+            $total_marks = $form->subjectAreas->sum('pivot.marks');
+            $form->total_marks = $total_marks;
+            $form->save();
         }
 
-        $total = $form_subject_area->parameters->sum('pivot.marks');
-        $form_subject_area->update([
-            'marks'=> $total
-        ]);
-
-        $total_marks = $form->subjectAreas->sum('pivot.marks');
-        $form->total_marks = $total_marks;
-        $form->save();
-
         if($request->mode == 'documents') {
+            $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
+            // dd($form->subjectAreas()->selected_subjectareas);
             foreach($request->documents as $id => $document) {
-                $document_parameter_id = Document::find($id)->pluck('parameter_id');
-                $form_subject_area_parameter = $form->subjectAreas()->whereHas('selected_subjectareas', function($query) use ($document_parameter_id) {
-                        $query->where('parameter_id', $document_parameter_id);
-                    })->first();
+                $document_parameter_id = Document::find($id);
+                   
+                $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_parameter_id) {
+                        $query->where('parameter_id', $document_parameter_id->parameter_id);
+                    })
+                    ->with(['selected_subjectareas' => function($query) use ($document_parameter_id) {
+                        $query->where('parameter_id', $document_parameter_id->parameter_id);
+                    }])
+                    ->first();
                 
-                // dd($document->parameter);
-                $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-                $form_subject_area_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+                    dd($subject_parameter);
+                    $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+                    $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+
+                }
             }
         }
 

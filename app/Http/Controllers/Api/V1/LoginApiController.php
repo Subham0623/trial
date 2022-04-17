@@ -22,7 +22,7 @@ class LoginApiController extends Controller
         ]);
         
         $user = User::where('email',$request->username)->orwhere('token',$request->username)->first();
-        // dd($user);
+        
         if(isset($user))
         {
 
