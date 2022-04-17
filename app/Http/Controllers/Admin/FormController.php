@@ -23,7 +23,9 @@ class FormController extends Controller
 // dd(Auth::user());
         $roles = Auth::user()->roles()->pluck('id');
         $orgs = Auth::user()->organizations()->pluck('id');
-
+        $years = Form::distinct()->pluck('year');
+        $org = 0;
+        $yr = 0;
         if($roles->contains(5))
         {
             $verified_forms = Auth::user()->verifiedForms()->get();
@@ -33,7 +35,7 @@ class FormController extends Controller
             ->where('is_verified',0)->get();
 
             $forms = $forms->merge($verified_forms)->all();
-
+            $organizations = Auth::user()->organizations()->get();
             // dd($forms);
             
         }
@@ -47,6 +49,8 @@ class FormController extends Controller
             ->where('is_audited',0)->get();
 
             $forms = $forms->merge($audited_forms)->all();
+            $organizations = Auth::user()->organizations()->get();
+
             // dd($forms);
 
         }
@@ -62,16 +66,20 @@ class FormController extends Controller
             ->get();
 
             $forms = $forms->merge($final_verified_forms)->all();
+            $organizations = Auth::user()->organizations()->get();
+
             // dd($forms);
 
         }
-        else
+        elseif($roles->contains(1))
         {
             $forms = Form::all();
-            $verified_forms=0; //what is this..?
+            $organizations = Organization::all();
+
+            // $verified_forms=0; //what is this..?
             
         }
-        return view('admin.forms.index',compact('forms'));
+        return view('admin.forms.index',compact('forms','organizations','years','org','yr'));
         }
 
    
@@ -79,6 +87,8 @@ public function filter(Request $request)
 {
     // dd('here');
     // dd($request->organization);
+    $org = $request->organization;
+    $yr = $request->year;
     if((isset($request->organization)) && (isset($request->year)))
     {
         $forms = Form::where('organization_id',$request->organization)->where('year',$request->year)->get();
@@ -96,7 +106,7 @@ public function filter(Request $request)
 
         $years = Form::groupBy('year')->pluck('year')->filter();
 
-        $html = view('admin.forms.index', compact('forms','organizations','years'))->render();
+        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org'))->render();
         // dd($html);
         return response()->json(array(
             'success' => true,
