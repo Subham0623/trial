@@ -56,7 +56,7 @@
 
             <div class="form-group">
                 <label class="required" for="token">{{ trans('cruds.user.fields.token') }}</label>
-                <input class="form-control {{ $errors->has('token') ? 'is-invalid' : '' }}" type="text" name="token" id="token" value="{{ old('token', $user->token) }}" required>
+                <input class="form-control {{ $errors->has('token') ? 'is-invalid' : '' }}" type="text" name="token" id="token" value="{{ old('token', $user->token) }}">
                 @if($errors->has('token'))
                     <div class="invalid-feedback">
                         {{ $errors->first('token') }}
