@@ -96,4 +96,11 @@ class Form extends Model
     {
         return $query->where('final_verified',1);
     }
+
+
+    // form's relation with pivot model form-subject-area
+    public function form_subjectareas()
+    {
+        return $this->hasMany(FormSubjectArea::class);
+    }
 }
