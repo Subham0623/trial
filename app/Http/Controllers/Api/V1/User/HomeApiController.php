@@ -98,28 +98,28 @@ class HomeApiController extends Controller
             $form->save();
         }
 
-        if($request->mode == 'documents') {
-            $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
-            // dd($form->subjectAreas()->selected_subjectareas);
-            foreach($request->documents as $id => $document) {
-                $document_parameter_id = Document::find($id);
+        // if($request->mode == 'documents') {
+        //     $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
+        //     // dd($form->subjectAreas()->selected_subjectareas);
+        //     foreach($request->documents as $id => $document) {
+        //         $document_parameter_id = Document::find($id);
                    
-                $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_parameter_id) {
-                        $query->where('parameter_id', $document_parameter_id->parameter_id);
-                    })
-                    ->with(['selected_subjectareas' => function($query) use ($document_parameter_id) {
-                        $query->where('parameter_id', $document_parameter_id->parameter_id);
-                    }])
-                    ->first();
+        //         $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_parameter_id) {
+        //                 $query->where('parameter_id', $document_parameter_id->parameter_id);
+        //             })
+        //             ->with(['selected_subjectareas' => function($query) use ($document_parameter_id) {
+        //                 $query->where('parameter_id', $document_parameter_id->parameter_id);
+        //             }])
+        //             ->first();
                 
-                foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
-                    dd($subject_parameter);
-                    $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-                    $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+        //         foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+        //             dd($subject_parameter);
+        //             $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+        //             $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
         return response([
             'message'=>'Form saved successfully',
