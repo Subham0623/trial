@@ -15,13 +15,13 @@
                         <select name="organization" id="organization">
                             <option value = "">Select Organization</option>
                             @foreach($organizations as $organization)
-                                <option class = "organizations" value="{{ $organization->id }}" {{ old('organization') == $organization->id ? 'selected' : '' }}>{{ $organization->name }}</option>
+                                <option class = "organizations" value="{{ $organization->id }}" {{ $org == $organization->id ? 'selected' : '' }}>{{ $organization->name }}</option>
                             @endforeach
                         </select>
                         <select name="year" id="year">
                             <option value = "">Select Year</option>
                             @foreach($years as $year)
-                                <option class = "years" value="{{ $year }}" {{ old('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                <option class = "years" value="{{ $year }}" {{ $yr == $year ? 'selected' : '' }}>{{ $year }}</option>
                             @endforeach
                         </select>
                         <a class="btn btn-primary" id="search">Search</a>
