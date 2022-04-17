@@ -87,21 +87,28 @@ class HomeApiController extends Controller
 
         $form = $organization->forms()->finalVerified()->where('year',$request->fiscal_year)->first();
         $years = Form::finalVerified()->distinct()->pluck('year');
+        if(isset($form))
+        {
 
-        $selected_subjectareas = $form->subjectAreas()->get();
-        $selected_subjectareas_id = [];
-        foreach($selected_subjectareas as $selected_subjectarea) {
-            array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
-
+            $selected_subjectareas = $form->subjectAreas()->get();
+            $selected_subjectareas_id = [];
+            foreach($selected_subjectareas as $selected_subjectarea) {
+                array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+    
+            }
+            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
+    
+            return response([
+                'form' => $form,
+                'selected_options' => $selected_options,
+                'years' => $years,
+                'organization' => $organization,
+            ]);
         }
-        $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
-
-        return response([
-            'form' => $form,
-            'selected_options' => $selected_options,
-            'years' => $years,
-            'organization' => $organization,
-        ]);
+        else
+        {
+            return response(['message'=>'No form found']);
+        }
     }
 
     public function filter(Request $request)
@@ -385,25 +392,29 @@ class HomeApiController extends Controller
 
         $form = $organization->forms()->finalVerified()->where('year',$fiscal_year)->first();
         
-        $selected_subjectareas = $form->subjectAreas()->get();
+        if(isset($form))
+        {
 
-        $selected_subjectareas_id = [];
-
-        foreach($selected_subjectareas as $selected_subjectarea) {
-            array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
-
+            $selected_subjectareas = $form->subjectAreas()->get();
+    
+            $selected_subjectareas_id = [];
+    
+            foreach($selected_subjectareas as $selected_subjectarea) {
+                array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
+    
+            }
+            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
+    
+    
+            return response([
+                'organization' => $organization,
+                'years' => $years,
+                'form' => $form,
+                'selected_options' => $selected_options,
+    
+    
+            ]);
         }
-        $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
-
-
-        return response([
-            'organization' => $organization,
-            'years' => $years,
-            'form' => $form,
-            'selected_options' => $selected_options,
-
-
-        ]);
     }
 
     public function totalMarks($subjectAreas,$forms,$published_forms)

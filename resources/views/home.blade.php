@@ -18,38 +18,45 @@
                 </div>
 
                 <div class="row container">
-                    <div class="col-sm-3">
-                        <!-- <div class="home-title"><span class="">PLGSP|</span><span class=""
+                    <!-- <div class="col-sm-3">
+                        <div class="home-title"><span class="">PLGSP|</span><span class=""
                                 style="font-size: 18px; font-weight: bold; color: black; margin-left: 5px;">Home</span>
-                        </div> -->
-                    </div>
+                        </div>
+                    </div> -->
                     <div class="col-sm-3">
                         <div class="position-relative form-group"><select name="fiscal_year" id="fiscalYearSelect"
                                 class="form-control filter">
                                 <option value="" disabled>Select Fiscal Year</option>
                                 @foreach($years as $key => $year)
-                                <option value="{{$year}}" {{ $year == $fiscal_year ? 'selected' : '' }}>{{$year}}</option>
+                                <option value="{{$year}}" {{ $year == $fiscal_year ? 'selected' : '' }}>{{$year}}
+                                </option>
                                 @endforeach
                             </select></div>
                     </div>
-                    
+
                     <div class="col-sm-3">
-                        <div class="position-relative form-group"><select placeholder="Select Province"
-                                name="province" id="provinceId" class="form-control filter">
+                        <div class="position-relative form-group"><select placeholder="Select Province" name="province"
+                                id="provinceId" class="form-control filter">
                                 <option value="">Select Province</option>
                                 @foreach($provinces as $item)
-                                <option value="{{$item->id}}" {{ $item->id == $province ? 'selected' : '' }}>{{$item->name}}</option>
+                                <option value="{{$item->id}}" {{ $item->id == $province ? 'selected' : '' }}>
+                                    {{$item->name}}</option>
                                 @endforeach
                             </select></div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="position-relative form-group"><select placeholder="Select District"
-                                name="district" id="districtId" class="form-control filter">
-                                <option value="" >Select District</option>
+                        <div class="position-relative form-group"><select placeholder="Select District" name="district"
+                                id="districtId" class="form-control filter">
+                                <option value="">Select District</option>
                                 @foreach($districts as $item)
-                                <option value="{{$item->id}}" {{ $item->id == $district ? 'selected' : '' }}>{{$item->name}}</option>
+                                <option value="{{$item->id}}" {{ $item->id == $district ? 'selected' : '' }}>
+                                    {{$item->name}}</option>
                                 @endforeach
                             </select></div>
+                    </div>
+                    <div class="col-sm-3">
+
+                        <a class="btn btn-primary" id="search">Search</a>
                     </div>
                     <!-- <div class="col-sm-2">
                         <div class="position-relative form-group"><select placeholder="पालिका चयन गर्नुहोस"
@@ -91,7 +98,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Highest Score</h5>
-                                <p class="card-text" style="font-size:20px;">{{$highest_score}}</p>
+                                <p class="card-text" style="font-size:20px;">{{$highest_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
                         </div>
@@ -100,7 +107,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Lowest Score</h5>
-                                <p class="card-text" style="font-size:20px;">{{$lowest_score}}</p>
+                                <p class="card-text" style="font-size:20px;">{{$lowest_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
                         </div>
@@ -109,7 +116,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Average Score</h5>
-                                <p class="card-text" style="font-size:20px;">{{$average_score}}</p>
+                                <p class="card-text" style="font-size:20px;">{{$average_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
                         </div>
@@ -129,26 +136,28 @@
                                 <table class="table table-responsive table-bordered my-custom__table">
                                     <thead>
                                         <tr>
-                                            <th  class="toplevel">S.N. </th>
+                                            <th class="toplevel">S.N. </th>
                                             <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
                                             <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
                                                 प्राप्तांक (औसत)</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
-                                       @if(count($topOrgs)>0)
+                                        @if(count($topOrgs)>0)
                                         @foreach($topOrgs as $key => $top)
-                                        
+
                                         <tr>
                                             <th scope="row">{{$key+1}}</th>
-                                            <td style="min-width: 180px;"><a href="{{route('admin.organization-detail',[$top->id])}}">{{$top->name}}</a></td>
+                                            <td style="min-width: 180px;"><a
+                                                    href="{{route('admin.organization-detail',[$top->id])}}">{{$top->name}}</a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                         @else
                                         <tr>
-                                            <th colspan = "2">No data found</th>
+                                            <th colspan="2">No data found</th>
                                         </tr>
-                                        
+
                                         @endif
                                     </tbody>
                                 </table>
@@ -165,8 +174,8 @@
                                 <table class="table table-responsive table-bordered my-custom__table">
                                     <thead>
                                         <tr>
-                                            <th  class="toplevel">S.N. </th>
-                                            <th id="fam"  class="toplevel">Organizations</th>
+                                            <th class="toplevel">S.N. </th>
+                                            <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
                                             <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
                                                 प्राप्तांक (औसत)</th> -->
                                         </tr>
@@ -174,15 +183,17 @@
                                     <tbody>
                                         @if(count($lowOrgs)>0)
                                         @foreach($lowOrgs as $key => $low)
-                                        
+
                                         <tr>
                                             <td scope="row">{{$key+1}}</td>
-                                            <td><a href="{{route('admin.organization-detail',[$low->id])}}">{{$low->name}}</a></td>
+                                            <td><a
+                                                    href="{{route('admin.organization-detail',[$low->id])}}">{{$low->name}}</a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                         @else
                                         <tr>
-                                            <th colspan = "2">No data found</th>
+                                            <th colspan="2">No data found</th>
                                         </tr>
                                         @endif
                                     </tbody>
@@ -196,19 +207,20 @@
 
                 <div class="card-layout container">
                     <div class="row">
-                        
+
 
                         <div class="col mb-3 col-12 text-center">
                             <div class="row table-heading">
                                 <div class="col-md-12">
-                                    <h6 class="sub-heading">Total Marks of all the organizations based on subject areas</h6>
+                                    <h6 class="sub-heading">Total Marks of all the organizations based on subject areas
+                                    </h6>
                                 </div>
                             </div>
                             <div class="row container table-responsive">
                                 <table class="table  table-bordered">
                                     <thead>
                                         <tr>
-                                            <th id="fam"  class="toplevel">S.N. </th>
+                                            <th id="fam" class="toplevel">S.N. </th>
                                             <th id="fam" class="toplevel">Subject Areas</th>
                                             <th>Total Marks</th>
                                             <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
@@ -220,28 +232,29 @@
                                         @php
                                         $total_marks = 0;
                                         $subjectAreaTotal = 0;
-                                        $form_subject_area = App\FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
-                                        
+                                        $form_subject_area =
+                                        App\FormSubjectArea::where('subject_area_id',$subjectArea->id)->whereIn('form_id',$forms)->get();
+
                                         foreach($form_subject_area as $item){
-                                            $total_marks = $item->marksByFinalVerifier + $total_marks;
+                                        $total_marks = $item->marksByFinalVerifier + $total_marks;
                                         }
                                         if($subjectArea->parameters)
                                         {
 
-                                            foreach($subjectArea->parameters as  $parameter)
-                                            {
-                                                $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
-                                            }
+                                        foreach($subjectArea->parameters as $parameter)
+                                        {
+                                        $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+                                        }
                                         }
 
                                         if($published_forms !== 0 && $subjectAreaTotal !== 0)
                                         {
 
-                                            $percentage = ($total_marks/($subjectAreaTotal*$published_forms))*100;
+                                        $percentage = ($total_marks/($subjectAreaTotal*$published_forms))*100;
                                         }
                                         else
                                         {
-                                            $percentage = 0;
+                                        $percentage = 0;
                                         }
                                         @endphp
 
@@ -268,7 +281,7 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
-        $('.filter').change(function () {
+        $('#search').click(function () {
             // e.preventDefault();
 
             console.log('here');
@@ -283,7 +296,7 @@
 
             if (fiscal_year.length > 0) {
                 $.ajax({
-                    url:"{{ route('admin.filter-index') }}",
+                    url: "{{ route('admin.filter-index') }}",
 
                     type: 'GET',
                     data: {
@@ -298,7 +311,7 @@
                     }
                 });
             }
-       });
+        });
     });
 
 </script>

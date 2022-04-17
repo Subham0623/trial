@@ -43,88 +43,100 @@ class HomeApiController extends Controller
         $user = Auth::user();
         $user_organization = $user->organizations->first();
 
-        if($request->mode == 'options') {
-            $data = [
-                'user_id' => $user->id,
-                'year' => $request->year,
-                'organization_id' => $user_organization->id,
-            ];
+        
+        $forms = Form::where('year',$request->year)->pluck('organization_id');
 
-            $form = Form::create($data);
-            // dd($form);
-            $form_subject_area = FormSubjectArea::create([
-                'form_id' => $form->id,
-                'subject_area_id' => $request->subject_area,
-            ]);
+        if(!$forms->contains($user_organization->id)) {
+            if($request->mode == 'options') {
+                $data = [
+                    'user_id' => $user->id,
+                    'year' => $request->year,
+                    'organization_id' => $user_organization->id,
+                ];
 
-            foreach($request->parameters as $parameter )
-            {   
-                $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
-                if($parameter['is_applicable'] == 0)
-                {
-                    if(isset($parameter['option']['id']))
+                $form = Form::create($data);
+                // dd($form);
+                $form_subject_area = FormSubjectArea::create([
+                    'form_id' => $form->id,
+                    'subject_area_id' => $request->subject_area,
+                ]);
+                
+                foreach($request->parameters as $parameter )
+                {   
+                    $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
+                    if($parameter['is_applicable'] == 0)
                     {
-                        $opt = Option::find($parameter['option']['id']);
+                        if(isset($parameter['option']['id']))
+                        {
+                            $opt = Option::find($parameter['option']['id']);
+                            $form_detail = FormDetail::create([
+                                'form_subject_area_id' => $form_subject_area->id,
+                                'parameter_id' => $parameter['id'],
+                                'remarks' => $parameter['remarks'],
+                                'option_id' => $opt->id,
+                                'marks' => $opt->points,
+                                'is_applicable' => $parameter['is_applicable'],
+                            ]);  
+                        }
+                    }
+                    else
+                    {
                         $form_detail = FormDetail::create([
                             'form_subject_area_id' => $form_subject_area->id,
                             'parameter_id' => $parameter['id'],
                             'remarks' => $parameter['remarks'],
-                            'option_id' => $opt->id,
-                            'marks' => $opt->points,
                             'is_applicable' => $parameter['is_applicable'],
-                        ]);  
+                            'option_id' =>null,
+                            'marks' => $max_points,
+                        ]);
                     }
                 }
-                else
-                {
-                    $form_detail = FormDetail::create([
-                        'form_subject_area_id' => $form_subject_area->id,
-                        'parameter_id' => $parameter['id'],
-                        'remarks' => $parameter['remarks'],
-                        'is_applicable' => $parameter['is_applicable'],
-                        'option_id' =>null,
-                        'marks' => $max_points,
-                    ]);
-                }
+        
+                $total = $form_subject_area->parameters->sum('pivot.marks');
+                $form_subject_area->update([
+                    'marks'=> $total
+                ]);
+
+                $total_marks = $form->subjectAreas->sum('pivot.marks');
+                $form->total_marks = $total_marks;
+                $form->save();
             }
 
-            $total = $form_subject_area->parameters->sum('pivot.marks');
-            $form_subject_area->update([
-                'marks'=> $total
-            ]);
+            // if($request->mode == 'documents') {
+            //     $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
+            //     // dd($form->subjectAreas()->selected_subjectareas);
+            //     foreach($request->documents as $id => $document) {
+            //         $document_parameter_id = Document::find($id);
+                    
+            //         $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_parameter_id) {
+            //                 $query->where('parameter_id', $document_parameter_id->parameter_id);
+            //             })
+            //             ->with(['selected_subjectareas' => function($query) use ($document_parameter_id) {
+            //                 $query->where('parameter_id', $document_parameter_id->parameter_id);
+            //             }])
+            //             ->first();
+                    
+            //         foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+            //             dd($subject_parameter);
+            //             $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+            //             $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
 
-            $total_marks = $form->subjectAreas->sum('pivot.marks');
-            $form->total_marks = $total_marks;
-            $form->save();
+            //         }
+            //     }
+            // }
+
+            return response([
+                'message'=>'Form saved successfully',
+                'form_id'=>$form->id
+            ],201);
+        }
+        else
+        {
+            return response([
+                'message'=> 'You have already submitted the form'
+            ]);
         }
 
-        // if($request->mode == 'documents') {
-        //     $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
-        //     // dd($form->subjectAreas()->selected_subjectareas);
-        //     foreach($request->documents as $id => $document) {
-        //         $document_parameter_id = Document::find($id);
-                   
-        //         $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_parameter_id) {
-        //                 $query->where('parameter_id', $document_parameter_id->parameter_id);
-        //             })
-        //             ->with(['selected_subjectareas' => function($query) use ($document_parameter_id) {
-        //                 $query->where('parameter_id', $document_parameter_id->parameter_id);
-        //             }])
-        //             ->first();
-                
-        //         foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
-        //             dd($subject_parameter);
-        //             $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-        //             $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-
-        //         }
-        //     }
-        // }
-
-        return response([
-            'message'=>'Form saved successfully',
-            'form_id'=>$form->id
-        ],201);
     }
 
     public function fileUpload(Request $request)
