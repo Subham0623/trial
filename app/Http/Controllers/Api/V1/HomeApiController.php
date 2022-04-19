@@ -385,7 +385,7 @@ class HomeApiController extends Controller
                 $total = $item->marksByFinalVerifier + $total;
             }
 
-            if($subjectArea->parameter)
+            if($subjectArea->parameters->count())
             {
 
                 foreach($subjectArea->parameters as  $parameter)
@@ -412,6 +412,8 @@ class HomeApiController extends Controller
     
     public function detail($form, $organization)
     {
+        $total = [];
+        $subjectAreaTotal = 0;
         $years = Form::finalVerified()->distinct()->pluck('year');
 
         if(isset($form))
@@ -425,7 +427,7 @@ class HomeApiController extends Controller
             $SA_ids = $SA->pluck('id');
     
             $form_subject_areas = FormSubjectArea::where('form_id',$form->id)->whereIn('subject_area_id',$SA_ids)->get();
-    
+
             $parameters = Parameter::whereHas('formSubjectAreas',function($query) use($form_subject_areas ,$form){
                 $query->where('form_id',$form->id)
                 ->whereIn('form_subject_area_id',$form_subject_areas);
@@ -433,12 +435,59 @@ class HomeApiController extends Controller
                 $query->where('form_id',$form->id)->whereIn('form_subject_area_id',$form_subject_areas);
             }])->get();
 
+            // $obtained_marks = $form_subject_areas->sum('marksByFinalVerifier');
+
+            $subjectAreas = SubjectArea::with('parameters')->get();
+
+            foreach($subjectAreas as $subjectArea)
+            {
+                if($subjectArea->parameters->count())
+                {
+    
+                    foreach($subjectArea->parameters as  $parameter)
+                    {
+                        
+                        $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+                    }
+
+                    $item = FormSubjectArea::where('form_id',$form->id)->where('subject_area_id',$subjectArea->id)->first();
+                    
+                    if(isset($item))
+                    {
+
+                        $final_marks = $item->marksByFinalVerifier;
+                    }
+                    else
+                    {
+                      $final_marks = 0;  
+                    }
+
+                    if($subjectAreaTotal !== 0)
+                    {
+
+                        $percentage = ($final_marks/$subjectAreaTotal)*100;
+                    }
+                    else
+                    {
+                        $percentage = 0;
+                    }
+                    
+                    array_push($total,['subjectArea'=> $subjectArea,'percentage'=>$percentage]);
+
+
+                }
+            }
+
+
+
             return response([
                 'form' => $form,
                 'years' => $years,
                 'organization' => $organization,
                 'subject_areas' => $SA,
                 'parameters' => $parameters,
+                'subjectAreas' => $subjectAreas,
+                'total' => $total,
             ]);
         }
         else
