@@ -40,7 +40,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
 
 Route::get('/index', 'Api\V1\HomeApiController@index')->name('index');
 Route::get('/index/filter','Api\V1\HomeApiController@filter')->name('filter-index');
-Route::get('/filter','Api\V1\HomeApiController@filterOrg')->name('filter');
+// Route::get('/filter/{organization}','Api\V1\HomeApiController@organizationDetail');
 Route::get('organization/detail/{organization}','Api\V1\HomeApiController@organizationDetail')->name('organization-details');
 
 Route::get('/province','Api\V1\HomeApiController@province')->name('province');
