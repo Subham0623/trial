@@ -126,8 +126,7 @@ class HomeApiController extends Controller
                             $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
                             $media->document_id = $document_details->id;
                             $media->setCustomProperty('document_id',$document_details->id);
-                            $media->save;
-                            // dd($media);
+                            $media->save();
                         });
                     }
                 }
