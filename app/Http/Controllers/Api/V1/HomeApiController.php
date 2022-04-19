@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use App\FormDetail;
 use App\FormSubjectArea;
 use App\SubjectArea;
+use App\Parameter;
 
 class HomeApiController extends Controller
 {
@@ -80,35 +81,6 @@ class HomeApiController extends Controller
             'total_marks' => $total_marks,
             
             ]);
-    }
-
-    public function organizationDetail(Request $request, Organization $organization)
-    {
-
-        $form = $organization->forms()->finalVerified()->where('year',$request->fiscal_year)->first();
-        $years = Form::finalVerified()->distinct()->pluck('year');
-        if(isset($form))
-        {
-
-            $selected_subjectareas = $form->subjectAreas()->get();
-            $selected_subjectareas_id = [];
-            foreach($selected_subjectareas as $selected_subjectarea) {
-                array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
-    
-            }
-            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
-    
-            return response([
-                'form' => $form,
-                'selected_options' => $selected_options,
-                'years' => $years,
-                'organization' => $organization,
-            ]);
-        }
-        else
-        {
-            return response(['message'=>'No form found']);
-        }
     }
 
     public function filter(Request $request)
@@ -381,40 +353,22 @@ class HomeApiController extends Controller
         
     }
 
+    public function organizationDetail(Request $request, Organization $organization)
+    {
+
+        $form = $organization->forms()->finalVerified()->where('year',$request->fiscal_year)->first();
+        
+        return $result = $this->detail($form, $organization);
+
+    }
+
     public function filterOrg(Request $request)
     {
         $organization = Organization::where('id',$request->organization)->first();
 
-        $years = Form::finalVerified()->distinct()->pluck('year');
-
-        $fiscal_year = $request->fiscal_year;
-        $form_subject_area = [];
-
-        $form = $organization->forms()->finalVerified()->where('year',$fiscal_year)->first();
+        $form = $organization->forms()->finalVerified()->where('year',$request->fiscal_year)->first();
         
-        if(isset($form))
-        {
-
-            $selected_subjectareas = $form->subjectAreas()->get();
-    
-            $selected_subjectareas_id = [];
-    
-            foreach($selected_subjectareas as $selected_subjectarea) {
-                array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
-    
-            }
-            $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea')->get();
-    
-    
-            return response([
-                'organization' => $organization,
-                'years' => $years,
-                'form' => $form,
-                'selected_options' => $selected_options,
-    
-    
-            ]);
-        }
+        return $result = $this->detail($form, $organization);
     }
 
     public function totalMarks($subjectAreas,$forms,$published_forms)
@@ -458,4 +412,45 @@ class HomeApiController extends Controller
         return $total_marks;
     }
     
+    public function detail($form, $organization)
+    {
+        $years = Form::finalVerified()->distinct()->pluck('year');
+
+        if(isset($form))
+        {
+            $SA = SubjectArea::whereHas('forms',function($query) use ($form) {
+                $query->where('form_id',$form->id);
+            })->with(['forms' => function($query) use ($form) {
+                $query->where('form_id',$form->id);
+            }])->get();
+    
+            $SA_ids = $SA->pluck('id');
+    
+            $form_subject_areas = FormSubjectArea::where('form_id',$form->id)->whereIn('subject_area_id',$SA_ids)->get();
+    
+            $parameters = Parameter::whereHas('formSubjectAreas',function($query) use($form_subject_areas ,$form){
+                $query->where('form_id',$form->id)
+                ->whereIn('form_subject_area_id',$form_subject_areas);
+            })->with(['formSubjectAreas'=>function($query) use ($form_subject_areas,$form){
+                $query->where('form_id',$form->id)->whereIn('form_subject_area_id',$form_subject_areas);
+            }])->get();
+
+            return response([
+                'form' => $form,
+                'years' => $years,
+                'organization' => $organization,
+                'subject_areas' => $SA,
+                'parameters' => $parameters,
+            ]);
+        }
+        else
+        {
+            return response([
+                'years' => $years,
+                'organization' => $organization,
+                'message' => 'Form not found',
+            ]);
+        }
+        
+    }
 }
