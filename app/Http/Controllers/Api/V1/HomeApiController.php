@@ -431,7 +431,7 @@ class HomeApiController extends Controller
             $parameters = Parameter::whereHas('formSubjectAreas',function($query) use($form_subject_areas ,$form){
                 $query->where('form_id',$form->id)
                 ->whereIn('form_subject_area_id',$form_subject_areas);
-            })->with(['formSubjectAreas'=>function($query) use ($form_subject_areas){
+            })->with(['formSubjectAreas'=>function($query) use ($form_subject_areas,$form){
                 $query->where('form_id',$form->id)->whereIn('form_subject_area_id',$form_subject_areas);
             }])->get();
 
