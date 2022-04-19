@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class FormDetail extends Model
+class FormDetail extends Model implements HasMedia
 {
+    use HasMediaTrait;
+
     public $timestamps = false;
     protected $table = 'form_subject_area_parameter';
     
