@@ -101,12 +101,12 @@ class HomeApiController extends Controller
                 $form->total_marks = $total_marks;
                 $form->save();
             }
-        }
-        else
-        {
-            return response([
-                'message'=> 'Your organization has already submitted the form'
-            ]);
+            else
+            {
+                return response([
+                    'message'=> 'Your organization has already submitted the form'
+                ]);
+            }
         }
 
         if($request->mode == 'documents') {
