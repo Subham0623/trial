@@ -12,7 +12,9 @@ class FormDetail extends Model implements HasMedia
 
     public $timestamps = false;
     protected $table = 'form_subject_area_parameter';
-    
+    protected $appends = [
+        'documents',
+    ];
     protected $fillable = [
         'form_subject_area_id',
         'parameter_id',
@@ -36,5 +38,14 @@ class FormDetail extends Model implements HasMedia
     }
     
 
+    public function getDocumentsAttribute()
+    {
+        $files = $this->getMedia('documents');
+        $files->each(function ($item) {
+            $item->url = $item->getUrl();
+        });
+
+        return $files;
+    }
     
 }

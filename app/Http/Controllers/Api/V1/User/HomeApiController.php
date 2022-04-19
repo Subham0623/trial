@@ -46,7 +46,7 @@ class HomeApiController extends Controller
         
         $forms = Form::where('year',$request->year)->pluck('organization_id');
 
-        // if(!$forms->contains($user_organization->id)) {
+        if(!$forms->contains($user_organization->id)) {
             if($request->mode == 'options') {
                 $data = [
                     'user_id' => $user->id,
@@ -125,7 +125,7 @@ class HomeApiController extends Controller
                         $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
                             $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
                             $media->document_id = $document_details->id;
-                            $media->setCustomProperty('document_id',$document_details->id);
+                            // $media->setCustomProperty('document_id',$document_details->id);
                             $media->save();
                         });
                     }
@@ -136,13 +136,13 @@ class HomeApiController extends Controller
                 'message'=>'Form saved successfully',
                 'form_id'=>$form->id
             ],201);
-        // }
-        // else
-        // {
-        //     return response([
-        //         'message'=> 'You have already submitted the form'
-        //     ]);
-        // }
+        }
+        else
+        {
+            return response([
+                'message'=> 'Your organization has already submitted the form'
+            ]);
+        }
 
     }
 
