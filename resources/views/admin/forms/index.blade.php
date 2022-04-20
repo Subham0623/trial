@@ -68,6 +68,9 @@
                             {{ trans('cruds.form.fields.total_marks') }}
                         </th>
                         <th>
+                            Publish?
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -110,12 +113,15 @@
                                 {{ $form->total_marks ?? '' }}
                             </td>
                             <td>
-                            @can('form_edit')
-                                    <a class="btn btn-xs btn-info" href="http://mangosoftsolution.com:3930/form/{{$form->id}}">
-                                        {{ trans('global.audit') }}
-                                    </a>
-                             @endcan   
+                                <input data-id="{{$form->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Yes" data-off="No" {{ $form->publish ? 'checked' : '' }}>
                             </td>
+                            <td>
+                                    @can('form_edit')
+                                        <a class="btn btn-xs btn-info" href="http://mangosoftsolution.com:3930/form/{{$form->id}}">
+                                            {{ trans('global.audit') }}
+                                        </a>
+                                        @endcan   
+                                </td>
 
                         </tr>
                     @endforeach
@@ -224,5 +230,24 @@
                     
                 
         });
+</script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script>
+    $(function() {
+    $('.toggle-class').change(function() {
+        var publish = $(this).prop('checked') == true ? 1 : 0; 
+        var form_id = $(this).data('id'); 
+         
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{{route('admin.form-publish')}}",
+            data: {'publish': publish, 'form_id': form_id},
+            success: function(data){
+              console.log(data.success)
+            }
+        });
+    })
+  });
 </script>
 @endsection

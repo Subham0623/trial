@@ -115,6 +115,15 @@ public function filter(Request $request)
         
     }
 
+    public function changePublish(Request $request)
+    {
+        $form = Form::find($request->form_id);
+        $form->publish = $request->publish;
+        $form->save();
+  
+        return response()->json(['success'=>'Publish status changed successfully.']);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

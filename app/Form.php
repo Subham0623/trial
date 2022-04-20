@@ -103,4 +103,9 @@ class Form extends Model
     {
         return $this->hasMany(FormSubjectArea::class);
     }
+
+    public function scopePublish($query)
+    {
+        return $query->where('publish',1);
+    }
 }

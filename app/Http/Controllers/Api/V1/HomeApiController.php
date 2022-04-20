@@ -354,7 +354,7 @@ class HomeApiController extends Controller
     public function organizationDetail(Request $request, Organization $organization)
     {
 
-        $form = $organization->forms()->finalVerified()->where('year',$request->fiscal_year)->first();
+        $form = $organization->forms()->finalVerified()->publish()->where('year',$request->fiscal_year)->first();
         
         return $result = $this->detail($form, $organization);
 
