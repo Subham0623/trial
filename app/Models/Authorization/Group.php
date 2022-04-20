@@ -38,9 +38,13 @@ class Group extends Model
         //     $query->whereIn('id', $group_permission_id);
         // }])->get();
         // dd($group_permission_id);
-
+            $user = auth()->user();
+            
+            if($user->roles->contains(7)){
+                return $this->permissions;
+            }
             $user_permissions = collect();
-            foreach(auth()->user()->roles as $role) {
+            foreach($user->roles as $role) {
                 $user_permissions = $user_permissions->merge($role->permissions()->whereIn('id',$group_permission_id)->get());
             }
             // dd($user_permissions);
