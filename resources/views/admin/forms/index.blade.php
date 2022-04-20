@@ -67,15 +67,18 @@
                         <th>
                             {{ trans('cruds.form.fields.total_marks') }}
                         </th>
+                        @can('form_publish')
                         <th>
                             Publish?
                         </th>
+                        @endcan
                         <th>
                             &nbsp;
                         </th>
                     </tr>
                 </thead>
                 <tbody>
+                    
                     @foreach($forms as $key => $form)
                         <tr data-entry-id="{{ $form->id }}">
                             <td>
@@ -112,9 +115,11 @@
                             <td>
                                 {{ $form->total_marks ?? '' }}
                             </td>
+                            @can('form_publish')
                             <td>
                                 <input data-id="{{$form->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Yes" data-off="No" {{ $form->publish ? 'checked' : '' }}>
                             </td>
+                            @endcan
                             <td>
                                     @can('form_edit')
                                         <a class="btn btn-xs btn-info" href="http://mangosoftsolution.com:3930/form/{{$form->id}}">
@@ -125,6 +130,7 @@
 
                         </tr>
                     @endforeach
+                    
                 </tbody>
             </table>
         </div>
@@ -231,7 +237,7 @@
                 
         });
 </script>
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
 <script>
     $(function() {
     $('.toggle-class').change(function() {
@@ -239,10 +245,10 @@
         var form_id = $(this).data('id'); 
          
         $.ajax({
-            type: "GET",
+            type: "POST",
             dataType: "json",
             url: "{{route('admin.form-publish')}}",
-            data: {'publish': publish, 'form_id': form_id},
+            data: {'publish': publish, 'form_id': form_id,"_token": "{{ csrf_token() }}"},
             success: function(data){
               console.log(data.success)
             }

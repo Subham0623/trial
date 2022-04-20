@@ -69,7 +69,7 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::resource('provinces','ProvinceController');
 
             //Forms
-            Route::get('/publish','FormController@changePublish')->name('form-publish');
+            Route::post('/publish','FormController@changePublish')->name('form-publish');
             Route::get('/forms/organization','FormController@filter')->name('form-filter'); 
             Route::get('forms','FormController@index')->name('forms');  
             
