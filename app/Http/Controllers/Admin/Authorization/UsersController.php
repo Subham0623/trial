@@ -73,10 +73,12 @@ class UsersController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        
+    //  dd($request->all());   
         $data = [
-            'title' =>$request->title,
+            'name' =>$request->name,
+            'email' => $request->email,
             'updated_by' => auth()->user()->id,
+            'password' => ($request->password ? $request->password : auth()->user()->password),
             'token' => $request->token,
             'status' => $request->status,
             ];

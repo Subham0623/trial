@@ -54,11 +54,13 @@ Route::middleware(['IsInstalled'])->group(function () {
 
             
             //Subject Areas
+            Route::post('change-status','SubjectAreaController@changeStatus')->name('subjectarea-changeStatus');
             Route::delete('subject-areas/destroy', 'SubjectAreaController@massDestroy')->name('subject-areas.massDestroy');
             Route::get('subject-areas/check-slug', 'SubjectAreaController@checkSlug')->name('subject-areas.checkSlug');
             Route::resource('subject-areas','SubjectAreaController');
             
             //Parameters and options
+            Route::post('change-status','ParameterController@changeStatus')->name('parameter-changeStatus');
             Route::delete('parameters/destroy', 'ParameterController@massDestroy')->name('parameters.massDestroy');
             Route::get('parameters/check-slug', 'ParameterController@checkSlug')->name('parameters.checkSlug');
             Route::resource('parameters','ParameterController');
@@ -69,7 +71,7 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::resource('provinces','ProvinceController');
 
             //Forms
-            Route::get('/publish','FormController@changePublish')->name('form-publish');
+            Route::post('/publish','FormController@changePublish')->name('form-publish');
             Route::get('/forms/organization','FormController@filter')->name('form-filter'); 
             Route::get('forms','FormController@index')->name('forms');  
             

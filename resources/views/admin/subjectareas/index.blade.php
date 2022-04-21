@@ -29,10 +29,10 @@
                             {{ trans('cruds.subjectarea.fields.title') }}
                         </th>
                         <th>
-                            {{ trans('cruds.subjectarea.fields.status') }}
+                            {{ trans('cruds.subjectarea.fields.sort') }}
                         </th>
                         <th>
-                            {{ trans('cruds.subjectarea.fields.sort') }}
+                            {{ trans('cruds.subjectarea.fields.status') }}
                         </th>
                         <th>
                             &nbsp;
@@ -52,14 +52,10 @@
                                 {{ $subject->title ?? '' }}
                             </td>
                             <td>
-                                @if($subject->status == 1)
-                                    <span class="badge badge-info">Active</span>
-                                @else
-                                    <span class="badge badge-info">Inactive</span>
-                                @endif
+                                {{ $subject->sort ?? '' }}
                             </td>
                             <td>
-                                {{ $subject->sort ?? '' }}
+                                <input data-id="{{$subject->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="InActive" {{ $subject->status ? 'checked' : '' }}>
                             </td>
                             <td>
                                 @can('subject_area_show')
@@ -141,5 +137,23 @@
     });
 });
 
+</script>
+<script>
+    $(function() {
+    $('.toggle-class').change(function() {
+        var status = $(this).prop('checked') == true ? 1 : 0; 
+        var subjectArea_id = $(this).data('id'); 
+         
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{route('admin.subjectarea-changeStatus')}}",
+            data: {'status': status, 'subjectArea_id': subjectArea_id, "_token": "{{ csrf_token() }}"},
+            success: function(data){
+              console.log(data.success)
+            }
+        });
+    })
+  });
 </script>
 @endsection

@@ -71,36 +71,39 @@ class FormController extends Controller
             // dd($forms);
 
         }
-        elseif($roles->contains(1))
+        elseif($roles->contains(1) || $roles->contains(2))
         {
             $forms = Form::all();
             $organizations = Organization::all();
-
-            // $verified_forms=0; //what is this..?
             
         }
-        return view('admin.forms.index',compact('forms','organizations','years','org','yr'));
+        else
+        {
+            $forms = [];
+            $organizations = Organization::all();
         }
+        return view('admin.forms.index',compact('forms','organizations','years','org','yr'));
+    }
 
    
-public function filter(Request $request)
-{
-    // dd('here');
-    // dd($request->organization);
-    $org = $request->organization;
-    $yr = $request->year;
-    if((isset($request->organization)) && (isset($request->year)))
+    public function filter(Request $request)
     {
-        $forms = Form::where('organization_id',$request->organization)->where('year',$request->year)->get();
+        // dd('here');
+        // dd($request->organization);
+        $org = $request->organization;
+        $yr = $request->year;
+        if((isset($request->organization)) && (isset($request->year)))
+        {
+            $forms = Form::where('organization_id',$request->organization)->where('year',$request->year)->get();
+        }
+        elseif((isset($request->organization)) && ($request->year == null))
+        {
+            $forms = Form::where('organization_id',$request->organization)->get();
+        }
+        else
+        {
+            $forms=Form::where('year',$request->year)->get();
     }
-    elseif((isset($request->organization)) && ($request->year == null))
-    {
-        $forms = Form::where('organization_id',$request->organization)->get();
-    }
-    else
-    {
-        $forms=Form::where('year',$request->year)->get();
-}
 
         $organizations = Organization::all();
 
@@ -117,6 +120,8 @@ public function filter(Request $request)
 
     public function changePublish(Request $request)
     {
+        abort_if(Gate::denies('form_publish'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $form = Form::find($request->form_id);
         $form->publish = $request->publish;
         $form->save();
