@@ -51,15 +51,20 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('/notification/show/{id}', 'HomeController@show_notifications')->name('show_notifications');
             Route::get('/notification/readall', 'HomeController@read_all_notifications')->name('read_all_notifications');
 
+            Route::get('/organization/detail/{organization}','HomeController@organizationDetail')->name('organization-detail');
+            Route::get('/filter','HomeController@filterOrg')->name('filter');
+            Route::get('/index/filter','HomeController@filter')->name('filter-index');
             includeRouteFiles(__DIR__ . '/AdminBackend/');
 
             
             //Subject Areas
+            Route::post('change-status','SubjectAreaController@changeStatus')->name('subjectarea-changeStatus');
             Route::delete('subject-areas/destroy', 'SubjectAreaController@massDestroy')->name('subject-areas.massDestroy');
             Route::get('subject-areas/check-slug', 'SubjectAreaController@checkSlug')->name('subject-areas.checkSlug');
             Route::resource('subject-areas','SubjectAreaController');
             
             //Parameters and options
+            Route::post('change-status','ParameterController@changeStatus')->name('parameter-changeStatus');
             Route::delete('parameters/destroy', 'ParameterController@massDestroy')->name('parameters.massDestroy');
             Route::get('parameters/check-slug', 'ParameterController@checkSlug')->name('parameters.checkSlug');
             Route::resource('parameters','ParameterController');
@@ -70,9 +75,16 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::resource('provinces','ProvinceController');
 
             //Forms
-            Route::get('forms','FormController@index')->name('forms');   
+            Route::post('/publish','FormController@changePublish')->name('form-publish');
+            Route::get('/forms/organization','FormController@filter')->name('form-filter'); 
+            Route::get('forms','FormController@index')->name('forms');  
             
             Route::get('/province/organizations','HomeController@list')->name('list');
+            Route::get('/district/organizations','HomeController@district');
+
+            Route::get('/province-select/{id}','HomeController@provinceDistrict');
+            Route::get('/search-organizations','HomeController@search');
+
         
             //Organizations
             Route::get('organizations/download-format',function(){

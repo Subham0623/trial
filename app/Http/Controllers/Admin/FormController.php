@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Gate;
 use App\Form;
+use App\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Auth;
 
@@ -24,7 +25,9 @@ class FormController extends Controller
 
         $roles = Auth::user()->roles()->pluck('id');
         $orgs = Auth::user()->organizations()->pluck('id');
-        
+        $years = Form::distinct()->pluck('year');
+        $org = 0;
+        $yr = 0;
         if($roles->contains(5))
         {
             $verified_forms = Auth::user()->verifiedForms()->get();
@@ -34,7 +37,7 @@ class FormController extends Controller
             ->where('is_verified',0)->get();
 
             $forms = $forms->merge($verified_forms)->all();
-
+            $organizations = Auth::user()->organizations()->get();
             // dd($forms);
             
         }
@@ -48,8 +51,10 @@ class FormController extends Controller
             ->where('is_audited',0)->get();
 
             $forms = $forms->merge($audited_forms)->all();
+            $organizations = Auth::user()->organizations()->get();
+
             // dd($forms);
-    
+
         }
         elseif($roles->contains(6))
         {
@@ -63,16 +68,67 @@ class FormController extends Controller
             ->get();
 
             $forms = $forms->merge($final_verified_forms)->all();
+            $organizations = Auth::user()->organizations()->get();
+
             // dd($forms);
-    
+
+        }
+        elseif($roles->contains(1) || $roles->contains(2))
+        {
+            $forms = Form::all();
+            $organizations = Organization::all();
+            
         }
         else
         {
-            $forms = Form::all();
-            $verified_forms=0; //what is this..?
+            $forms = [];
+            $organizations = Organization::all();
         }
+        return view('admin.forms.index',compact('forms','organizations','years','org','yr'));
+    }
 
-        return view('admin.forms.index',compact('forms'));
+   
+    public function filter(Request $request)
+    {
+        // dd('here');
+        // dd($request->organization);
+        $org = $request->organization;
+        $yr = $request->year;
+        if((isset($request->organization)) && (isset($request->year)))
+        {
+            $forms = Form::where('organization_id',$request->organization)->where('year',$request->year)->get();
+        }
+        elseif((isset($request->organization)) && ($request->year == null))
+        {
+            $forms = Form::where('organization_id',$request->organization)->get();
+        }
+        else
+        {
+            $forms=Form::where('year',$request->year)->get();
+    }
+
+        $organizations = Organization::all();
+
+        $years = Form::groupBy('year')->pluck('year')->filter();
+
+        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org'))->render();
+        // dd($html);
+        return response()->json(array(
+            'success' => true,
+            'html' => $html,
+        ));
+        
+    }
+
+    public function changePublish(Request $request)
+    {
+        abort_if(Gate::denies('form_publish'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $form = Form::find($request->form_id);
+        $form->publish = $request->publish;
+        $form->save();
+  
+        return response()->json(['success'=>'Publish status changed successfully.']);
     }
 
     /**
@@ -140,4 +196,6 @@ class FormController extends Controller
     {
         //
     }
+
+
 }

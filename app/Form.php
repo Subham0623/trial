@@ -91,4 +91,21 @@ class Form extends Model
     {
         return $this->belongsTo(Organization::class);
     }
+
+    public function scopeFinalVerified($query)
+    {
+        return $query->where('final_verified',1);
+    }
+
+
+    // form's relation with pivot model form-subject-area
+    public function form_subjectareas()
+    {
+        return $this->hasMany(FormSubjectArea::class);
+    }
+
+    public function scopePublish($query)
+    {
+        return $query->where('publish',1);
+    }
 }

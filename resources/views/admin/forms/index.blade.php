@@ -3,8 +3,34 @@
 
 <div class="card">
     <div class="card-header">
-        {{ trans('cruds.form.title_singular') }} {{ trans('global.list') }}
+        <div class ="row">
+
+            <div class="col">
+
+                {{ trans('cruds.form.title_singular') }} {{ trans('global.list') }}
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div>
+                        <select name="organization" id="organization">
+                            <option value = "">Select Organization</option>
+                            @foreach($organizations as $organization)
+                                <option class = "organizations" value="{{ $organization->id }}" {{ $org == $organization->id ? 'selected' : '' }}>{{ $organization->name }}</option>
+                            @endforeach
+                        </select>
+                        <select name="year" id="year">
+                            <option value = "">Select Year</option>
+                            @foreach($years as $year)
+                                <option class = "years" value="{{ $year }}" {{ $yr == $year ? 'selected' : '' }}>{{ $year }}</option>
+                            @endforeach
+                        </select>
+                        <a class="btn btn-primary" id="search">Search</a>
+                    </div>   
+                </div>
+            </div>
+        </div>
     </div>
+        
 
     <div class="card-body">
         <div class="table-responsive">
@@ -41,12 +67,18 @@
                         <th>
                             {{ trans('cruds.form.fields.total_marks') }}
                         </th>
+                        @can('form_publish')
+                        <th>
+                            Publish?
+                        </th>
+                        @endcan
                         <th>
                             &nbsp;
                         </th>
                     </tr>
                 </thead>
                 <tbody>
+                    
                     @foreach($forms as $key => $form)
                         <tr data-entry-id="{{ $form->id }}">
                             <td>
@@ -83,16 +115,22 @@
                             <td>
                                 {{ $form->total_marks ?? '' }}
                             </td>
+                            @can('form_publish')
                             <td>
-                            @can('form_edit')
-                                    <a class="btn btn-xs btn-info" href="http://mangosoftsolution.com:3930/form/{{$form->id}}">
-                                        {{ trans('global.audit') }}
-                                    </a>
-                             @endcan   
+                                <input data-id="{{$form->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Yes" data-off="No" {{ $form->publish ? 'checked' : '' }}>
                             </td>
+                            @endcan
+                            <td>
+                                    @can('form_edit')
+                                        <a class="btn btn-xs btn-info" href="http://mangosoftsolution.com:3930/form/{{$form->id}}">
+                                            {{ trans('global.audit') }}
+                                        </a>
+                                        @endcan   
+                                </td>
 
                         </tr>
                     @endforeach
+                    
                 </tbody>
             </table>
         </div>
@@ -148,5 +186,74 @@
     });
 });
 
+</script>
+<script>
+    $("#search").click(function(){
+            var org = $('#organization').val();
+            console.log(org);
+            var year = $('#year').val();
+            console.log(year);
+
+            if(org == '' && year == '')
+            {
+                alert('select any option first');
+            }
+            else{
+
+                $.ajax({
+                        url: "{{route('admin.form-filter')}}",
+                        type: "GET",
+                        dataType: "json",
+                        data:{
+                            'organization': org,
+                            'year': year,
+                        },
+                        success:function(data) {
+                            console.log(data);
+                            // $("table tbody").empty();
+                            $('body').html(data.html);
+                            // $('tbody').html(data);
+                                    // let newData = '<tbody>';
+                                    // $.each(data, function(key, value) {
+                                    //     newData += `
+                                    //     <tr>
+                                    //     <td>${key+1}</td>
+                                    //     <td>${value.organization_id}</td>
+                                    //     <td>${value.year}</td>
+                                    //     <td>${value.status}</td>
+                                    //     <td>${value.created_by}</td>
+                                    //     <td>${value.}</td>
+                                    //     <td><a class="btn btn-xs btn-info" href="">View Forms</a></td>
+                                    //     </tr>`;
+                                    // });
+                                    // newData += '</tbody>';
+                                    // $("#list2 table ").append(newData);
+                                                        }
+                                                    });
+            }
+
+
+                    
+                
+        });
+</script>
+
+<script>
+    $(function() {
+    $('.toggle-class').change(function() {
+        var publish = $(this).prop('checked') == true ? 1 : 0; 
+        var form_id = $(this).data('id'); 
+         
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{route('admin.form-publish')}}",
+            data: {'publish': publish, 'form_id': form_id,"_token": "{{ csrf_token() }}"},
+            success: function(data){
+              console.log(data.success)
+            }
+        });
+    })
+  });
 </script>
 @endsection
