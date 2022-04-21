@@ -255,7 +255,7 @@ class HomeApiController extends Controller
         $roles = $user->roles->pluck('id');
         $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
         
-        
+
         $form = Form::findOrFail($form->id);
         
         // dd('here');
@@ -285,7 +285,7 @@ class HomeApiController extends Controller
 
                                     if(isset($parameter['option']['id'])) {
                                         $opt = Option::findorFail($parameter['option']['id']);
-                                        if($roles->contains(2) && ($user->id == $form->user_id) && ($form->status == 0))
+                                        if($roles->contains(3) && ($user->id == $form->user_id) && ($form->status == 0))
                                         {
                                             $form_detail->update([
                                                 'remarks' => $parameter['remarks'],
@@ -502,7 +502,6 @@ class HomeApiController extends Controller
             } 
 
             if($request->mode == 'documents') {
-                // dd($request->all());
                 foreach($request->documents as $id => $document) {
                     $document_details = Document::find($id);
                     
@@ -533,6 +532,9 @@ class HomeApiController extends Controller
                         });
                     }
                 }
+
+                
+
                 return response([
                     'message'=>'Document updated successfully',
                     'form_details' => $form->load('organization'),

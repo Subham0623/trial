@@ -8,22 +8,23 @@ class RolesTableSeeder extends Seeder
 {
     public function run()
     {
+        \DB::table('roles')->delete(); 
 
         $user = User::findOrFail(1);
         $roles = [
             [
                 'id'    => 1,
-                'title' => 'Admin',
+                'title' => 'IT Admin',
                 'created_by'    => $user->id,
             ],
             [
                 'id'    => 2,
-                'title' => 'User',
+                'title' => 'System Admin',
                 'created_by'    => $user->id,
             ],
             [
                 'id'    => 3,
-                'title' => 'Teacher',
+                'title' => 'User',
                 'created_by'    => $user->id,
             ],
         ];

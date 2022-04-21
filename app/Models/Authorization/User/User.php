@@ -58,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getIsAdminAttribute()
     {
-        return $this->roles()->whereNotIn('id', [2,3])->exists();
+        return $this->roles()->whereNotIn('id', [3])->exists();
 
     }
 
@@ -132,7 +132,7 @@ class User extends Authenticatable implements MustVerifyEmail
     
     public function getIsMainAdminAttribute()
     {
-        return $this->roles()->whereIn('id', [1,7])->exists();
+        return $this->roles()->whereIn('id', [1,2])->exists();
 
     }
 
