@@ -533,6 +533,9 @@ class HomeApiController extends Controller
                         });
                     }
                 }
+
+                $selected_options = $this->selectedOptions($form);
+
                 return response([
                     'message'=>'Document updated successfully',
                     'form_details' => $form->load('organization'),
