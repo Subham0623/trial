@@ -496,7 +496,7 @@ class HomeController
 
         $fiscal_year = Form::finalVerified()->latest()->pluck('year')->first();
 
-        $form = $organization->forms()->finalVerified()->where('year',$fiscal_year)->first();
+        $form = $organization->forms()->finalVerified()->publish()->where('year',$fiscal_year)->first();
 
         $form_subject_area = $this->fiscalYear($fiscal_year,$organization,$form);
         // dd($form_subject_area);
@@ -514,7 +514,7 @@ class HomeController
 
         $fiscal_year = $request->fiscal_year;
         $form_subject_area = [];
-        $form = $organization->forms()->finalVerified()->where('year',$fiscal_year)->first();
+        $form = $organization->forms()->finalVerified()->publish()->where('year',$fiscal_year)->first();
 
         // dd($form);
         if(isset($form)){
