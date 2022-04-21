@@ -22,7 +22,7 @@ class HomeApiController extends Controller
 {
     public function form()
     {
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+        $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
         $selected_options = [];
         return response([
             'subject_areas' => $subject_areas,
@@ -63,7 +63,7 @@ class HomeApiController extends Controller
                 
                 foreach($request->parameters as $parameter )
                 {   
-                    $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
+                    $max_points = Parameter::where('id',$parameter['id'])->first()->activeOptions()->max('points');
                     if($parameter['is_applicable'] == 0)
                     {
                         if(isset($parameter['option']['id']))
@@ -190,7 +190,7 @@ class HomeApiController extends Controller
             // }])->with('options')->get();
         
         // dd($options);
-        // $subject_areas = SubjectArea::with(['parameters.options'=>function($query) use($form_option){
+        // $subject_areas = SubjectArea::with(['activeParameters.activeOptions'=>function($query) use($form_option){
         //        $query->where('id',$form_option);
         //     }])->get();
         
@@ -224,7 +224,7 @@ class HomeApiController extends Controller
             {
                 $selected_options = $this->selectedOptions($form);
                 
-                $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+                $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
                 
                 return response([
                     'subject_areas' => $subject_areas,
@@ -253,7 +253,7 @@ class HomeApiController extends Controller
     {        
         $user = Auth::user();
         $roles = $user->roles->pluck('id');
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+        $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
         
         
         $form = Form::findOrFail($form->id);
@@ -271,7 +271,7 @@ class HomeApiController extends Controller
                     
                     foreach($request->parameters as $parameter )
                     {   
-                        $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
+                        $max_points = Parameter::where('id',$parameter['id'])->first()->activeOptions()->max('points');
                         $form_detail = FormDetail::where('form_subject_area_id',$form_subject_area->id)->where('parameter_id',$parameter['id'])->first();
                         
                         if(isset($form_detail))
@@ -664,7 +664,7 @@ class HomeApiController extends Controller
 
             }
 
-            $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+            $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
             $selected_options = $this->selectedOptions($form);
 
             return response([
@@ -687,7 +687,7 @@ class HomeApiController extends Controller
         // dd($request->all());
         $form = Form::findOrFail($request->form_id);
         $feedback = Feedback::findOrFail($feedback->id);
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+        $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
 
         
         if(isset($feedback))

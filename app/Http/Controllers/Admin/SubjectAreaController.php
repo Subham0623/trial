@@ -89,7 +89,7 @@ class SubjectAreaController extends Controller
     public function edit(SubjectArea $subjectArea)
     {
         abort_if(Gate::denies('subject_area_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-               
+
         return view('admin.subjectareas.edit', compact('subjectArea'));
     }
 

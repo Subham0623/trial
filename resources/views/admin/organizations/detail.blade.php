@@ -55,15 +55,15 @@
                                         <span>{{$organization->address ?? ''}}</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <h5>Province</h5> <span>{{$organization->province->name}}</span>
+                                        <h5>Province</h5> <span>{{$organization->province ? $organization->province->name : ''}}</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <h5>District</h5> <span>{{$organization->district->name}}</span>
+                                        <h5>District</h5> <span>{{$organization->district ? $organization->district->name : ''}}</span>
                                     </li>
                                     
                                     <li class="list-group-item">
                                         <h5>Contact</h5>
-                                        <span>{{$organization->contact}}</span>
+                                        <span>{{$organization->contact ?? ''}}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -146,7 +146,7 @@
                                 <tbody>
                                     @if($form !== null)
                                     @foreach($form_subject_area as $subjectArea)
-                                    @foreach($subjectArea->parameters as $key => $parameter)
+                                    @foreach($subjectArea->activeParameters as $key => $parameter)
                                     <tr>
                                         <th scope="row">{{$i++}}</th>
                                         <td style="min-width: 180px;">{{$parameter->title}}</td>
