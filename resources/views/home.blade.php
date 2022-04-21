@@ -10,13 +10,13 @@
 
                 <div class="card-body">
                     @if(session('status'))
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success" role="alert" id="messageId">
                         {{ session('status') }}
                     </div>
                     @endif
                     <!-- you are logged in -->
                 </div>
-
+                <div id = "messageId" class="container"></div>
                 <div class="row container">
                     <!-- <div class="col-sm-3">
                         <div class="home-title"><span class="">PLGSP|</span><span class=""
@@ -241,9 +241,9 @@
                                         if($subjectArea->parameters)
                                         {
 
-                                        foreach($subjectArea->parameters as $parameter)
+                                        foreach($subjectArea->activeParameters as $parameter)
                                         {
-                                        $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+                                        $subjectAreaTotal = $parameter->activeOptions()->max('points') + $subjectAreaTotal;
                                         }
                                         }
 
@@ -280,6 +280,35 @@
 @endsection
 @section('scripts')
 <script>
+     $('#provinceId').change(function() {
+    
+    var province = $('#provinceId').find(':selected').val();
+    console.log(province);
+    if(province .length > 0)
+    {
+        $.ajax({
+               type:'GET',
+               url:'/admins/province/districts',
+               data:{
+                
+                   province: province,
+               },
+               success:function(data) {
+                $("#districtId").empty();
+                $("#districtId").append("<option value=''>Select District</option>");
+                $.each(data, function (index, value) {
+                            $("#districtId").append("<option value=" + index + ">" +
+                                value + "</option>");
+                        });
+                    
+                }
+                });
+    }
+    
+    
+  });
+</script>
+<script>
     $(document).ready(function () {
         $('#search').click(function () {
             // e.preventDefault();
@@ -293,6 +322,7 @@
             // var organization = $('#organization').val();
             console.log(fiscal_year);
             console.log(province);
+            console.log(district);
 
             if (fiscal_year.length > 0) {
                 $.ajax({
@@ -310,6 +340,10 @@
 
                     }
                 });
+            }
+            else
+            {
+                $("#messageId").append("<b>No form has been verified.</b>");
             }
         });
     });
