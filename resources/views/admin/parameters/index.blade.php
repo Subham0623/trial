@@ -35,13 +35,13 @@
                             {{ trans('cruds.parameter.fields.sort') }}
                         </th>
                         <th>
-                            {{ trans('cruds.parameter.fields.status') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.parameter.fields.option') }}
                         </th>
                         <th>
                             {{ trans('cruds.parameter.fields.document') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.parameter.fields.status') }}
                         </th>
                         <th>
                             &nbsp;
@@ -67,13 +67,6 @@
                                 {{ $parameter->sort ?? '' }}
                             </td>
                             <td>
-                                @if($parameter->status == 1)
-                                    <span class="badge badge-info">Active</span>
-                                @else
-                                    <span class="badge badge-info">Inactive</span>
-                                @endif
-                            </td>
-                            <td>
                                 @foreach($parameter->options as $key => $item)
                                     <span class="badge badge-info">{{ $item->title }}</span>
                                 @endforeach
@@ -82,6 +75,9 @@
                                 @foreach($parameter->documents as $key => $item)
                                     <span class="badge badge-info">{{ $item->title }}</span>
                                 @endforeach
+                            </td>
+                            <td>
+                                <input data-id="{{$parameter->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="InActive" {{ $parameter->status ? 'checked' : '' }}>
                             </td>
                             <td>
                                 @can('parameter_show')
@@ -163,5 +159,23 @@
     });
 });
 
+</script>
+<script>
+    $(function() {
+    $('.toggle-class').change(function() {
+        var status = $(this).prop('checked') == true ? 1 : 0; 
+        var parameter_id = $(this).data('id'); 
+         
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{route('admin.parameter-changeStatus')}}",
+            data: {'status': status, 'parameter_id': parameter_id, "_token": "{{ csrf_token() }}"},
+            success: function(data){
+              console.log(data.success)
+            }
+        });
+    })
+  });
 </script>
 @endsection
