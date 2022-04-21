@@ -235,4 +235,15 @@ class ParameterController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
 
     }
+
+    public function changeStatus(Request $request)
+    {
+        abort_if(Gate::denies('parameter_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $parameter = Parameter::find($request->parameter_id);
+        $parameter->status = $request->status;
+        $parameter->save();
+  
+        return response()->json(['success'=>'Status changed successfully.']);
+    }
 }
