@@ -615,7 +615,7 @@ class HomeApiController extends Controller
                     return response(['message'=>'You are not allowed to verify this form']);
                 }
             }
-            elseif($roles->contains(2))
+            elseif($roles->contains(3))
             {
                 $form->update([
 
