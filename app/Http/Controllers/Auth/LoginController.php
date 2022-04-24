@@ -75,4 +75,23 @@ class LoginController extends Controller
 
         return $credentials;
     }
+
+     /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $token = $request->user()->tokens()->first();
+        // $token = 'fs';
+        // dd(redirect('http://mangosoftsolution.com:3930/')->with('accessToken',$token));
+        // dd( $token->id);
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return $this->loggedOut($request) ?: redirect("http://mangosoftsolution.com:3930/?token={$token->id}");
+    }
 }
