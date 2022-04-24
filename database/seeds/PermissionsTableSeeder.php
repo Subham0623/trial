@@ -7,6 +7,8 @@ class PermissionsTableSeeder extends Seeder
 {
     public function run()
     {
+        \DB::table('permissions')->delete();
+        
         $permissions = [
             [
                 'id'    => '1',
@@ -247,6 +249,42 @@ class PermissionsTableSeeder extends Seeder
             [
                 'id'    => '60',
                 'title' => 'document_access',
+            ],
+            [
+                'id'    => '61',
+                'title' => 'group_create',
+            ],
+            [
+                'id'    => '62',
+                'title' => 'group_edit',
+            ],
+            [
+                'id'    => '63',
+                'title' => 'group_show',
+            ],
+            [
+                'id'    => '64',
+                'title' => 'group_delete',
+            ],
+            [
+                'id'    => '65',
+                'title' => 'group_access',
+            ],
+            [
+                'id'    => '66',
+                'title' => 'form_create',
+            ],
+            [
+                'id'    => '67',
+                'title' => 'form_edit',
+            ],
+            [
+                'id'    => '68',
+                'title' => 'form_access',
+            ],
+            [
+                'id'    => '69',
+                'title' => 'form_publish',
             ],
         ];
 
