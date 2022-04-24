@@ -54,10 +54,10 @@ Route::middleware(['IsInstalled'])->group(function () {
 
             
             //Subject Areas
-            Route::post('change-status','SubjectAreaController@changeStatus')->name('subjectarea-changeStatus');
             Route::delete('subject-areas/destroy', 'SubjectAreaController@massDestroy')->name('subject-areas.massDestroy');
             Route::get('subject-areas/check-slug', 'SubjectAreaController@checkSlug')->name('subject-areas.checkSlug');
             Route::resource('subject-areas','SubjectAreaController');
+            Route::post('subject-area/change-status','SubjectAreaController@changeStatus')->name('changeStatus');
             
             //Parameters and options
             Route::post('change-status','ParameterController@changeStatus')->name('parameter-changeStatus');
