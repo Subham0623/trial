@@ -266,14 +266,14 @@ class HomeApiController extends Controller
 
         $form = Form::findOrFail($form->id);
         
-        // dd('here');
+        // dd($form);
         if(isset($form)){
             if($request->mode == 'options') {
                 $form_subject_area = FormSubjectArea::updateOrCreate([
                     'form_id' => $form->id,
                     'subject_area_id' => $request->subject_area,
                 ]);
-                
+                // dd($form_subject_area);
                 if($request->parameters)
                 {
                     
@@ -284,15 +284,14 @@ class HomeApiController extends Controller
                         
                         if(isset($form_detail))
                         {
-
                             if($form_detail->is_applicable == $parameter['is_applicable'])
                             {
-            
+
                                 if($parameter['is_applicable'] == 0) //0 means applicable and 1 means not applicable
                                 {
-
                                     if(isset($parameter['option']['id'])) {
                                         $opt = Option::findorFail($parameter['option']['id']);
+                
                                         if($roles->contains(3) && ($user->id == $form->user_id) && ($form->status == 0))
                                         {
                                             $form_detail->update([
@@ -305,6 +304,8 @@ class HomeApiController extends Controller
                                             $form->update([
                                                 'updated_by'=>$user->id
                                             ]);
+        
+
                                         }
                                         elseif($roles->contains(5))
                                         {
@@ -321,7 +322,6 @@ class HomeApiController extends Controller
                                                     'updated_by'=>$user->id,
                                                     'verified_by' => $user->id
                                                 ]);
-        
                                             }
                                             else
                                             {
@@ -371,7 +371,7 @@ class HomeApiController extends Controller
                                 {
                                     if($form->user_id == $user->id && ($form->status == 0))
                                     {
-                                        
+                                        // dd($parameter);
                                         $form_detail = FormDetail::updateOrCreate([
                                             'form_subject_area_id' => $form_subject_area->id,
                                             'parameter_id' => $parameter['id'],
@@ -385,8 +385,9 @@ class HomeApiController extends Controller
                                         ]); 
                                         $form->update([
                                             'updated_by'=>$user->id,
-                                            'verified_by' => ($roles->contains(5) ? $user->id : '')
+                                            'verified_by' => ($roles->contains(5) ? $user->id : null)
                                         ]);
+                                        
                                     }
                                     // else
                                     // {
@@ -413,7 +414,7 @@ class HomeApiController extends Controller
                                             ]);
                                             $form->update([
                                                 'updated_by' => $user->id, 
-                                                'verified_by' => ($roles->contains(5) ? $user->id : ''),
+                                                'verified_by' => ($roles->contains(5) ? $user->id : null),
                                             ]);
                                         }
                                     }
@@ -428,7 +429,7 @@ class HomeApiController extends Controller
                                         ]);
                                         $form->update([
                                             'updated_by' => $user->id, 
-                                            'verified_by' => ($roles->contains(5) ? $user->id : ''),
+                                            'verified_by' => ($roles->contains(5) ? $user->id : null),
                                         ]);
                                     }
                                 }
