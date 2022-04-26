@@ -57,7 +57,6 @@ class SubjectAreaController extends Controller
         $data = [
             'title' => $request->title,
             'sort' => $request->sort,
-            'slug' => $request->slug,
             'status' => $request->status,
         ];
         
@@ -106,7 +105,6 @@ class SubjectAreaController extends Controller
         $data = [
             'title' => $request->title,
             'sort' => $request->sort,
-            'slug' => $request->slug,
             'status' => $request->status,
         ];
 
