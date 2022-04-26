@@ -35,6 +35,12 @@
                             {{ trans('cruds.user.fields.email_verified_at') }}
                         </th>
                         <th>
+                            {{ trans('cruds.user.fields.token') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.user.fields.status') }}
+                        </th>
+                        <th>
                             {{ trans('cruds.user.fields.roles') }}
                         </th>
                         <th>
@@ -62,6 +68,16 @@
                             </td>
                             <td>
                                 {{ $user->email_verified_at ?? '' }}
+                            </td>
+                            <td>
+                                {{$user->token ?? ''}}
+                            </td>
+                            <td>
+                                @if($user->status == 1)
+                                    <span class="badge badge-info">Active</span>
+                                @else
+                                    <span class="badge badge-info">Inactive</span>
+                                @endif
                             </td>
                             <td>
                                 @foreach($user->roles as $key => $item)

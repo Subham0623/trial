@@ -20,6 +20,7 @@ class Document extends Model
 
     protected $fillable = [
         'title',
+        'status',
         'parameter_id',
         'created_at',
         'updated_at',
@@ -34,6 +35,6 @@ class Document extends Model
 
     public function parameter()
     {
-        return $this->belongsTo(Province::class);
+        return $this->belongsTo(Parameter::class);
     }
 }

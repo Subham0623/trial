@@ -25,6 +25,25 @@ return [
         ],
     ],
 
+    'group'        => [
+        'title'          => 'Groups',
+        'title_singular' => 'group',
+        'fields'         => [
+            'id'                => 'ID',
+            'id_helper'         => '',
+            'sn'                => 'S.N',
+            'sn_helper'         => '',
+            'title'             => 'Title',
+            'title_helper'      => '',
+            'created_at'        => 'Created at',
+            'created_at_helper' => '',
+            'updated_at'        => 'Updated at',
+            'updated_at_helper' => '',
+            'deleted_at'        => 'Deleted at',
+            'deleted_at_helper' => '',
+        ],
+    ],
+
     'role'              => [
         'title'          => 'Roles',
         'title_singular' => 'Role',
@@ -76,6 +95,10 @@ return [
             'updated_at_helper'        => '',
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => '',
+            'token'                    => 'Token',
+            'token_helper'             => '',
+            'status'                   => 'Status',
+            'status_helper'            => '',
         ],
     ],
 
@@ -237,6 +260,8 @@ return [
             'sort_helper'      => '',
             'slug'             => 'Slug',
             'slug_helper'      => '',
+            'status'           => 'Status',
+            'status_helper'    => '',
         ],
     ],
 
@@ -260,6 +285,8 @@ return [
             'slug_helper'           => '',
             'option'                => 'Options',
             'document'              => 'Documents',
+            'status'                => 'Status',
+            'status_helper'         => '',
         ],
     ],
 

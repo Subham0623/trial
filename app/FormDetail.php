@@ -3,17 +3,27 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class FormDetail extends Model
+class FormDetail extends Model implements HasMedia
 {
+    use HasMediaTrait;
+
     public $timestamps = false;
     protected $table = 'form_subject_area_parameter';
-    
+    protected $appends = [
+        'documents',
+    ];
     protected $fillable = [
         'form_subject_area_id',
         'parameter_id',
         'remarks',
+        'is_applicable',
         'marks',
+        'marksByVerifier',
+        'marksByAuditor',
+        'marksByFinalVerifier',
         'option_id'
     ];
 
@@ -28,5 +38,14 @@ class FormDetail extends Model
     }
     
 
+    public function getDocumentsAttribute()
+    {
+        $files = $this->getMedia('documents');
+        $files->each(function ($item) {
+            $item->url = $item->getUrl();
+        });
+
+        return $files;
+    }
     
 }

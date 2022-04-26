@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Auth;
+
 
 class LoginController extends Controller
 {
@@ -45,5 +48,50 @@ class LoginController extends Controller
         }
 
         return route('user.home');
+    }
+
+    protected function credentials(Request $request)
+    {
+        $username = $request->email; //the input field has name='email' in form
+
+        if(filter_var($username, FILTER_VALIDATE_EMAIL))    
+        {
+            //user sent their email 
+           $credentials = [
+               'email' => $username,
+               'password' => $request->password,
+               'status' => 1,
+           ];
+        } 
+        else 
+        {
+            //they sent their token instead 
+            $credentials = [
+                'token' => $username,
+                'password' => $request->password,
+                'status' => 1,
+            ];
+        }
+
+        return $credentials;
+    }
+
+     /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $token = $request->user()->tokens()->first();
+        // $token = 'fs';
+        // dd(redirect('http://mangosoftsolution.com:3930/')->with('accessToken',$token));
+        // dd( $token->id);
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return $this->loggedOut($request) ?: redirect("http://mangosoftsolution.com:3930/?token={$token->id}");
     }
 }

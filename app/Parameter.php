@@ -23,6 +23,7 @@ class Parameter extends Model
         'title',
         'sort',
         'slug',
+        'status',
         'description',
         'subject_area_id',
         'created_at',
@@ -50,9 +51,15 @@ class Parameter extends Model
         return $this->belongsTo(SubjectArea::class);
     }
 
+
     public function options()
     {
         return $this->hasMany(Option::class);
+    }
+
+    public function activeOptions()
+    {
+        return $this->options()->where('status',1);
     }
 
     public function documents()
@@ -60,8 +67,13 @@ class Parameter extends Model
         return $this->hasMany(Document::class);
     }
 
+    public function activeDocuments()
+    {
+        return $this->documents()->where('status',1);
+    }
+
     public function formSubjectAreas()
     {
-        return $this->belongsToMany(FormSubjectArea::class)->withPivot('marks','remarks','option_id');
+        return $this->belongsToMany(FormSubjectArea::class)->withPivot('marks','remarks','option_id','marksByVerifier','marksByAuditor','marksByfinalVerifier','is_applicable');
     }
 }

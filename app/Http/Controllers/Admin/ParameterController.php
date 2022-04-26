@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input; 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreParameterRequest;
 use App\Http\Requests\UpdateParameterRequest;
@@ -62,6 +63,7 @@ class ParameterController extends Controller
             'sort'              => $request->sort,
             'slug'              =>$request->slug,
             'description'       => $request->description,
+            'status'            => $request->status,
         ];
         // dd($data);
         $parameter = Parameter::create($data);
@@ -76,7 +78,8 @@ class ParameterController extends Controller
             Option::create([
                 'title' => $value['title'],
                 'points' => $value['points'],
-                'parameter_id' => $parameter->id
+                'parameter_id' => $parameter->id,
+                'status' => $value['status']
             ]);
         }
 
@@ -88,7 +91,8 @@ class ParameterController extends Controller
                 // dd($value['title']);
                 Document::create([
                     'title' => $value['title'],
-                    'parameter_id' => $parameter->id
+                    'parameter_id' => $parameter->id,
+                    'status' => $value['status']
                 ]);
             }
         
@@ -141,6 +145,7 @@ class ParameterController extends Controller
             'slug'              => $request->slug,
             'sort'              => $request->sort,
             'description'       => $request->description,
+            'status'            => $request->status,
         ];
         // dd($data);
         $parameter->update($data);
@@ -150,16 +155,25 @@ class ParameterController extends Controller
             $option->delete();
         }
 
-        foreach ($request->addmore as $key => $value) {
-            // dd($value['points']);
-            
+        if(isset($request->addmore))
+        {
 
-                Option::create([
-                    'title' => $value['title'],
-                    'points' => $value['points'],
-                    'parameter_id' => $parameter->id
-                ]);
-            
+            foreach ($request->addmore as $key => $value) 
+            {
+                // dd($value['points']);
+                
+                if(isset($value['title']))
+                {
+                    Option::create([
+                        'title' => $value['title'],
+                        'points' => $value['points'],
+                        'parameter_id' => $parameter->id,
+                        'status' => $value['status']
+                    ]);
+    
+                }
+                
+            }
         }
 
         foreach($parameter->documents as $document)
@@ -167,15 +181,24 @@ class ParameterController extends Controller
             $document->delete();
         }
 
-        foreach ($request->addmore1 as $key => $value) {
-            // dd($value['title']);
-            
+        if(isset($request->addmore1))
+        {
 
-                Document::create([
-                    'title' => $value['title'],
-                    'parameter_id' => $parameter->id
-                ]);
-            
+            foreach ($request->addmore1 as $key => $value) 
+            {
+                // dd($value['status']);
+                
+                if(isset($value['title']))
+                {
+    
+                    Document::create([
+                        'title' => $value['title'],
+                        'parameter_id' => $parameter->id,
+                        'status' => $value['status']
+                    ]);
+                }
+                
+            }
         }
 
         return redirect()->route('admin.parameters.index')->with('message','Parameter details edited successfully!');
@@ -211,5 +234,16 @@ class ParameterController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
 
+    }
+
+    public function changeStatus(Request $request)
+    {
+        abort_if(Gate::denies('parameter_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $parameter = Parameter::find($request->parameter_id);
+        $parameter->status = $request->status;
+        $parameter->save();
+  
+        return response()->json(['success'=>'Status changed successfully.']);
     }
 }

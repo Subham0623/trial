@@ -24,6 +24,7 @@ class SubjectArea extends Model
         'title',
         'sort',
         'slug',
+        'status',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -49,8 +50,18 @@ class SubjectArea extends Model
         return $this->hasMany(Parameter::class);
     }
 
+    public function activeParameters()
+    {
+        return $this->parameters()->where('status',1);
+    }
+
     public function forms()
     {
-        return $this->belongsToMany(Forms::class)->withPivot('marks','id');
+        return $this->belongsToMany(Form::class)->withPivot('marks','id','marksByVerifier','marksByAuditor','marksByFinalVerifier');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status',1);
     }
 }
