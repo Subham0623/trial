@@ -354,7 +354,7 @@ class HomeApiController extends Controller
                                         }
                                         elseif($roles->contains(6) && $form->final_verified == 0)
                                         {
-                                            $form_details->update([
+                                            $form_detail->update([
                                                 'option_id' => $opt->id,
                                                 'marksByFinalVerifier' => $opt->points,
                                             ]); 

@@ -10,7 +10,7 @@
     }
     
     // product search
-    Route::get('/search', 'HomeController@search')->name('search');
+    // Route::get('/search', 'HomeController@search')->name('search');
 
     // contact page
     Route::get('/contact', function () {
