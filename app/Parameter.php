@@ -22,7 +22,6 @@ class Parameter extends Model
     protected $fillable = [
         'title',
         'sort',
-        'slug',
         'status',
         'description',
         'subject_area_id',

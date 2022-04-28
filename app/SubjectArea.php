@@ -23,7 +23,6 @@ class SubjectArea extends Model
     protected $fillable = [
         'title',
         'sort',
-        'slug',
         'status',
         'created_at',
         'updated_at',
