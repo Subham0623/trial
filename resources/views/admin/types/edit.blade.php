@@ -27,13 +27,15 @@
                     <option value="">{{ trans('global.pleaseSelect') }}</option>
                     @foreach($types as $item)
                         @if($type->id !== $item->id)
-                            <option value="{{ $item->id }}" {{ old('type_id', $type->type_id) == $item->id ? 'selected' : '' }}>{{ $item->title }}</option>
+                            <option value="{{ $item->id }}" {{ old('tyoe_id', $type->type_id) == $item->id ? 'selected' : '' }}>{{ $item->title }}</option>
                             @foreach($item->childTypes as $childType)
                                 @if($type->id !== $childType->id)
-                                    <option
-                                        value="{{ $childType->id }}"
-                                        {{ old('type_id', $type->type_id) == $childType->id ? 'selected' : '' }}
-                                    >-- {{ $childType->title }}</option>
+                                    <option value="{{ $childType->id }}" {{ old('type_id', $type->type_id) == $childType->id ? 'selected' : '' }}>-- {{ $childType->title }}</option>
+                                        @foreach($childType->childTypes as $subType)
+                                            @if($type->id !== $subType->id)
+                                            <option value="{{ $subType->id }}" {{ old('type_id', $type->type_id) == $subType->id ? 'selected' : '' }}>--- {{ $subType->title }}</option>
+                                            @endif
+                                        @endforeach    
                                 @endif
                             @endforeach
                         @endif
@@ -51,6 +53,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.types.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>

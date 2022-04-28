@@ -80,6 +80,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.product-categories.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>

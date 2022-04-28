@@ -12,7 +12,6 @@
             @csrf
             <div class="form-group">
                 <label class="required" for="title">{{ trans('cruds.parameter.fields.title') }}</label>
-                <!-- <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', $parameter->title) }}" required> -->
                 <textarea name="title" placeholder="Enter title" class="input form-control">{{ $parameter->title }}</textarea>
                 
                 @if($errors->has('title'))
@@ -37,7 +36,6 @@
 
             <div class="form-group">
                 <label class="required" for="description">{{ trans('cruds.parameter.fields.description') }}</label>
-                <!-- <input class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" type="text" name="description" id="description" value="{{ old('description', $parameter->description) }}" required> -->
                 <textarea name="description" placeholder="Enter description" class="input form-control">{{ $parameter->description }}</textarea>
                 
                 @if($errors->has('description'))
@@ -141,6 +139,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.parameters.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>
@@ -172,10 +172,10 @@ $('#title').change(function(e) {
 
         $("#dynamicTable").append(`<tr>
         <td>
-            <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control" required></textarea>
         </td>
         <td>
-            <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" />
+            <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" required/>
         </td>
         <td>
             <input type="radio" name="addmore[${i}][status]" value="1" checked> Active<br>
@@ -201,7 +201,7 @@ $('#title').change(function(e) {
 
         $("#dynamicTable1").append(`<tr>
         <td>
-            <textarea name="addmore1[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore1[${i}][title]" placeholder="Enter title" class="input form-control" required></textarea>
         </td>
         <td>
             <input type="radio" name="addmore1[${i}][status]" value="1" checked> Active<br>

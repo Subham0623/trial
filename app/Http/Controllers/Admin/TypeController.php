@@ -56,7 +56,6 @@ class TypeController extends Controller
         $data = [
             'title'             => $request->title,
             'type_id'           => $request->type_id,
-            'slug'              => $request->slug,
         ];
         // dd($data);
         $type = Type::create($data);
@@ -90,6 +89,7 @@ class TypeController extends Controller
         $types = Type::whereNull('type_id')
             ->with('childTypes')
             ->get();
+        $type->load('parentType');
 
         return view('admin.types.edit',compact('type','types'));
     }

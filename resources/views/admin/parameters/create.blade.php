@@ -11,7 +11,6 @@
             @csrf
             <div class="form-group">
                 <label class="required" for="title">{{ trans('cruds.parameter.fields.title') }}</label>
-                <!-- <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', '') }}" required> -->
                 <textarea name="title" id="title" placeholder="Enter title" class="input form-control" required>{{ old('title','') }}</textarea>
                 
                 @if($errors->has('title'))
@@ -36,8 +35,7 @@
 
             <div class="form-group">
                 <label class="required" for="description">{{ trans('cruds.parameter.fields.description') }}</label>
-                <!-- <input class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" type="text" name="description" id="description" value="{{ old('description', '') }}" required> -->
-                <textarea name="description" id="description" placeholder="Enter description" class="input form-control">{{ old('description','') }}</textarea>
+                <textarea required name="description" id="description" placeholder="Enter description" class="input form-control">{{ old('description','') }}</textarea>
                 
                 @if($errors->has('description'))
                     <div class="invalid-feedback">
@@ -77,7 +75,7 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.parameter.fields.sort_helper') }}</span>
             </div> -->
-            <input type="hidden" name="sort" value="{{$sort}}">
+            <input type="hidden" name="sort" value="{{$sort}}" />
             
 
             <label class="required" for="option">{{ trans('cruds.parameter.fields.option') }}</label>
@@ -89,18 +87,17 @@
                 <th>Action</th>
             </tr>
             <tr>  
-                <!-- <td><input type="text" name="addmore[0][title]" placeholder="Enter title" class="form-control" /></td>  
-                <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" /></td>   -->
                 
-                <td><textarea name="addmore[0][title]" placeholder="Enter title" class="input form-control"></textarea></td>
-                <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" value="{{old('points','')}}"/></td>
+                <td><textarea name="addmore[0][title]" placeholder="Enter title" class="input form-control" required>{{old('addmore')[0]['title'] ?? ''}}</textarea></td>
+                <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" value="{{old('addmore')[0]['points'] ?? ''}}" required/></td>
                 <td>
                     <input type="radio" name="addmore[0][status]" value="1" checked> Active<br>
                     <input type="radio" name="addmore[0][status]" value="0" > Inactive<br>
                 </td>
-            
+
                 
             </tr>  
+            
         </table>
             <button type="button" name="add" id="add" class="btn btn-success mb-3">Add More</button><br>
 
@@ -112,10 +109,8 @@
                 <th>Action</th>
             </tr>
             <tr>  
-                <!-- <td><input type="text" name="addmore[0][title]" placeholder="Enter title" class="form-control" /></td>  
-                <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" /></td>   -->
                 
-                <td><textarea name="addmore1[0][title]" placeholder="Enter title" class="input form-control"></textarea></td>
+                <td><textarea name="addmore1[0][title]" placeholder="Enter title" class="input form-control" required>{{old('addmore1')[0]['title'] ?? ''}}</textarea></td>
                 <td>
                     <input type="radio" name="addmore1[0][status]" value="1" checked> Active<br>
                     <input type="radio" name="addmore1[0][status]" value="0" > Inactive<br>
@@ -142,6 +137,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.parameters.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>
@@ -173,10 +170,10 @@ $('#title').change(function(e) {
    
         $("#dynamicTable").append(`<tr>
         <td>
-            <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control" required></textarea>
         </td>
         <td>
-            <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" />
+            <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" required/>
         </td>
         <td>
             <input type="radio" name="addmore[${i}][status]" value="1" checked> Active<br>
@@ -191,7 +188,6 @@ $('#title').change(function(e) {
     });  
    
 </script>
-
 <script type="text/javascript">
    
     var i = 0;
@@ -202,7 +198,7 @@ $('#title').change(function(e) {
    
         $("#dynamicTable1").append(`<tr>
         <td>
-            <textarea name="addmore1[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore1[${i}][title]" placeholder="Enter title" class="input form-control" required></textarea>
         </td>
         <td>
             <input type="radio" name="addmore1[${i}][status]" value="1" checked> Active<br>

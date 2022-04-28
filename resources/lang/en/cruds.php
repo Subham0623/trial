@@ -324,6 +324,10 @@ return [
             'address_helper'        => '',
             'slug'                  => 'Slug',
             'slug_helper'           => '',
+            'type'                  =>  'Type',
+            'type_helper'           => '',
+            'organization'          => 'Organizations',
+            'organization_helper'   => '',
         ],
     ],
 

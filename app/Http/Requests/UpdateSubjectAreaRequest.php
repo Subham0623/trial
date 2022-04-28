@@ -22,9 +22,6 @@ class UpdateSubjectAreaRequest extends FormRequest
         return [
             'title' => [
                 'required'],
-            'slug' => [ 
-                'required',
-                'unique:subject_areas,slug,' . request()->route('subject_area')->id],
             'sort' => [ 
                 'required'],    
         ];

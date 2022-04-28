@@ -55,6 +55,9 @@
                             {{ trans('cruds.organization.fields.district') }}
                         </th>
                         <th>
+                            {{ trans('cruds.organization.fields.type') }}
+                        </th>
+                        <th>
                             {{ trans('cruds.organization.fields.address') }}
                         </th>
                         <th>
@@ -82,6 +85,9 @@
                             </td>
                             <td>
                                 {{ $organization->district ? $organization->district->name : '' }}
+                            </td>
+                            <td>
+                                {{ $organization->type ? $organization->type->title : '' }}
                             </td>
                             <td>
                                 {{ $organization->address ?? '' }}

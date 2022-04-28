@@ -29,7 +29,10 @@
                         @foreach($type->childTypes as $childType)
                             <option value="{{ $childType->id }}" {{ old('type_id') == $childType->id ? 'selected' : '' }}>-- {{ $childType->title }}</option>                            
                             @foreach($childType->childTypes as $subType)
-                                <option value="{{ $subType->id }}" {{ old('type_id') == $subType->id ? 'selected' : '' }}>---- {{ $subType->title }}</option>
+                                <option value="{{ $subType->id }}" {{ old('type_id') == $subType->id ? 'selected' : '' }}>--- {{ $subType->title }}</option>
+                                @foreach($subType->childTypes as $item)
+                                    <option value="{{$item->id}}" {{ old('type_id') == $item->id ? 'selected' : '' }}>---- {{ $item->title }}</option>
+                                @endforeach
                             @endforeach
                         @endforeach
                     @endforeach
@@ -57,6 +60,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.types.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>

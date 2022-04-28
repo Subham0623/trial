@@ -103,6 +103,16 @@
             </li>
             @endcan
 
+            @can('type_access')
+            <li class="nav-item">
+                <a href="{{ route('admin.types.index') }}"
+                    class="nav-link {{ request()->is('admin/types') || request()->is('admin/types/*') ? 'active' : '' }}">
+                    <i class=" nav-icon fa fa-gear"></i>
+                    {{ trans('cruds.type.title') }}
+                </a>
+            </li>
+            @endcan
+
             @can('organization_access')
             <li class="nav-item">
                 <a href="{{ route('admin.organizations.index') }}"

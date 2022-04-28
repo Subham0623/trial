@@ -49,15 +49,15 @@ class ProvinceController extends Controller
     public function store(StoreProvinceRequest $request)
     {
         // dd($request->all());
+        $request->validate([
+            'addmore.*.name' => 'required',
+        ]);
         $data = [
             'name' => $request->name,
         ];
 
         $province = Province::create($data);
 
-        $request->validate([
-            'addmore.*.name' => 'required',
-        ]);
     
         foreach ($request->addmore as $key => $value) {
             District::create([
@@ -104,6 +104,10 @@ class ProvinceController extends Controller
      */
     public function update(UpdateProvinceRequest $request,Province $province)
     {
+        $request->validate([
+            'addmore.*.name' => 'required',
+        ]);
+        
         $data = [
             'name' => $request->name,
         ];
