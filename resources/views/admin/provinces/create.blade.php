@@ -43,11 +43,11 @@
                 <th>Action</th>
             </tr>
             <tr>  
-                <td><input type="text" name="addmore[0][name]" placeholder="Enter name" class="form-control" /></td>  
+                <td><input type="text" name="addmore[0][name]" placeholder="Enter name" class="form-control" value="{{ old('addmore')[0]['name'] ?? '' }}" required></td>  
                 
-                <td><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>  
             </tr>  
         </table>
+        <button type="button" name="add" id="add" class="btn btn-success mb-3">Add More</button>
 
             
 
@@ -58,6 +58,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.provinces.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>
@@ -75,12 +77,12 @@
     var i = 0;
        
     $("#add").click(function(){
-   console.log('here');
         ++i;
+        console.log(i);
    
         $("#dynamicTable").append(`<tr>
         <td>
-        <input type="text" name="addmore[${i}][name]" placeholder="Enter name" class="form-control" />
+        <input type="text" name="addmore[${i}][name]" placeholder="Enter name" class="form-control" required>
         </td>
         <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td>
         </tr>`);

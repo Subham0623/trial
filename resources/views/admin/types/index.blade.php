@@ -1,38 +1,35 @@
 @extends('layouts.admin')
 @section('content')
-@can('subject_area_create')
+@can('type_create')
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route("admin.subject-areas.create") }}">
-                {{ trans('global.add') }} {{ trans('cruds.subjectarea.title_singular') }}
+            <a class="btn btn-success" href="{{ route("admin.types.create") }}">
+                {{ trans('global.add') }} {{ trans('cruds.type.title_singular') }}
             </a>
         </div>
     </div>
-@endcan
+@endcan 
 <div class="card">
     <div class="card-header">
-        {{ trans('cruds.subjectarea.title_singular') }} {{ trans('global.list') }}
+        {{ trans('cruds.type.title_singular') }} {{ trans('global.list') }} 
     </div>
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-SubjectArea">
+            <table class=" table table-bordered table-striped table-hover datatable datatable-type">
                 <thead>
                     <tr>
                         <th width="10">
 
                         </th>
                         <th>
-                            {{ trans('cruds.subjectarea.fields.sn') }}
+                            {{ trans('cruds.type.fields.sn') }}
                         </th>
                         <th>
-                            {{ trans('cruds.subjectarea.fields.title') }}
+                            {{ trans('cruds.type.fields.title') }}
                         </th>
                         <th>
-                            {{ trans('cruds.subjectarea.fields.sort') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.subjectarea.fields.status') }}
+                            {{ trans('cruds.type.fields.type') }}
                         </th>
                         <th>
                             &nbsp;
@@ -40,8 +37,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($subject_areas as $key => $subject)
-                        <tr data-entry-id="{{ $subject->id }}">
+                    @foreach($types as $key => $type)
+                        <tr data-entry-id="{{ $type->id }}">
                             <td>
 
                             </td>
@@ -49,29 +46,26 @@
                                 {{ $loop->index+1 ?? '' }}
                             </td>
                             <td>
-                                {{ $subject->title ?? '' }}
+                                {{ $type->title ?? '' }}
                             </td>
                             <td>
-                                {{ $subject->sort ?? '' }}
+                                {{ $type->parentType ? $type->parentType->title : '' }}
                             </td>
                             <td>
-                                <input data-id="{{$subject->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="InActive" {{ $subject->status ? 'checked' : '' }}>
-                            </td>
-                            <td>
-                                @can('subject_area_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.subject-areas.show', $subject->id) }}">
+                                @can('type_show')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.types.show', $type->id) }}">
                                         {{ trans('global.view') }}
                                     </a>
                                 @endcan
 
-                                @can('subject_area_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.subject-areas.edit', $subject->id) }}">
+                                @can('type_edit')
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.types.edit', $type->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
                                 @endcan
 
-                                @can('subject_area_delete')
-                                    <form action="{{ route('admin.subject-areas.destroy', $subject->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                @can('type_delete')
+                                    <form action="{{ route('admin.types.destroy', $type->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
@@ -96,11 +90,11 @@
 <script>
     $(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('subject_area_delete')
+@can('type_delete')
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
   let deleteButton = {
     text: deleteButtonTrans,
-    url: "{{ route('admin.subject-areas.massDestroy') }}",
+    url: "{{ route('admin.types.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
@@ -130,30 +124,12 @@
     order: [[ 1, 'asc' ]],
     pageLength: 100,
   });
-  $('.datatable-SubjectArea:not(.ajaxTable)').DataTable({ buttons: dtButtons })
+  $('.datatable-type:not(.ajaxTable)').DataTable({ buttons: dtButtons })
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
         $($.fn.dataTable.tables(true)).DataTable()
             .columns.adjust();
     });
 });
 
-</script>
-<script>
-    $(function() {
-    $('.toggle-class').change(function() {
-        var status = $(this).prop('checked') == true ? 1 : 0; 
-        var subjectArea_id = $(this).data('id'); 
-         
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "admins/change-status",
-            data: {'status': status, 'subjectArea_id': subjectArea_id, "_token": "{{ csrf_token() }}"},
-            success: function(data){
-              console.log(data.success)
-            }
-        });
-    })
-  });
 </script>
 @endsection

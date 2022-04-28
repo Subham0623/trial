@@ -36,7 +36,6 @@ class ForgetPasswordApiController extends Controller
                 $message->to($email);
                 $message->subject('reset your password');
              });
-
             return response(['message'=>'check your email']);
         }
         catch(\Exception $exception){

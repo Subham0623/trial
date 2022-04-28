@@ -23,9 +23,6 @@ class StoreParameterRequest extends FormRequest
         return [
             'title'         => [
                 'required'],
-            // 'slug'         => [
-            //     'required',
-            //     'unique:parameters'],
             
         ];
 

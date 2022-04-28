@@ -21,7 +21,7 @@ class UpdateParameterRequest extends FormRequest
     {
         return [
             'title' => [
-                'required'], 
+                'required'],
         ];
 
     }

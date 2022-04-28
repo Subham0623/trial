@@ -32,7 +32,7 @@
            
                 @foreach($province->districts as $key => $district)
                 <tr class = "old_options">  
-                    <td><input type="text" name="addmore[{{$key}}][name]"  class="form-control" value="{{$district->name}}" /></td>  
+                    <td><input type="text" name="addmore[{{$key}}][name]"  class="form-control" value="{{$district->name}}" required></td>  
                     
                     <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td>  
                 </tr>  
@@ -46,6 +46,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.provinces.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>
@@ -68,7 +70,7 @@
 
         $("#dynamicTable").append(`<tr>
         <td>
-        <input type="text" name="addmore[${i}][name]" placeholder="Enter name" class="form-control" />
+        <input type="text" name="addmore[${i}][name]" placeholder="Enter name" class="form-control" required>
         </td>
         <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td>
         </tr>`);

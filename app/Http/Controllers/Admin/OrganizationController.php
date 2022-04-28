@@ -10,6 +10,7 @@ use App\Http\Requests\MassDestroyOrganizationRequest;
 use App\Organization;
 use App\Province;
 use App\District;
+use App\Type;
 use Gate;
 use App\Imports\OrganizationsImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -44,8 +45,9 @@ class OrganizationController extends Controller
 
         $provinces = Province::all();
         $districts = District::all();
+        $types = Type::all();
 
-        return view('admin.organizations.create',compact('provinces','districts'));
+        return view('admin.organizations.create',compact('provinces','districts','types'));
     }
 
     /**
@@ -58,12 +60,13 @@ class OrganizationController extends Controller
     {
         // dd($request->all());
         $data = [
-            'name'          => $request->name,
-            'contact'       => $request->contact,
-            'province_id'   => $request->province,
-            'district_id'   => $request->district,
-            'address'       => $request->address,
-            'slug'          => $request->slug,
+            'name'              => $request->name,
+            'contact'           => $request->contact,
+            'province_id'       => $request->province,
+            'district_id'       => $request->district,
+            'address'           => $request->address,
+            'type_id'           => $request->type,
+            'organization_id'   => $request->organization, 
         ];
         // dd($data);
 
@@ -98,8 +101,10 @@ class OrganizationController extends Controller
 
         $provinces = Province::all();
         $districts = District::where('province_id',$organization->province_id)->get();
+        $types = Type::all();
+        $organizations = Organization::where('type_id',$organization->type->type_id)->get();
 
-        return view('admin.organizations.edit',compact('provinces','districts','organization'));
+        return view('admin.organizations.edit',compact('provinces','districts','organization','types','organizations'));
     }
 
     /**
@@ -113,12 +118,13 @@ class OrganizationController extends Controller
     {
         // dd($request->all());
         $data = [
-            'name'      => $request->name,
-            'contact'   => $request->contact,
-            'province_id'  => $request->province,
-            'district_id'  => $request->district,
-            'address'   => $request->address,
-            'slug'      => $request->slug,
+            'name'              => $request->name,
+            'contact'           => $request->contact,
+            'province_id'       => $request->province,
+            'district_id'       => $request->district,
+            'address'           => $request->address,
+            'type_id'           => $request->type,
+            'organization_id'   => $request->organization,
         ];
 
         $organization->update($data);
@@ -177,5 +183,11 @@ class OrganizationController extends Controller
            
         return redirect()->route('admin.organizations.index')->with('message','New Organizations added successfully!');
         
+    }
+
+    public function type(Request $request) 
+    {
+        $type = Type::find($request->type);
+        return $organizations = Organization::where('type_id',$type->type_id)->pluck('name','id');
     }
 }

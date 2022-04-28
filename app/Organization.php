@@ -23,10 +23,12 @@ class Organization extends Model
 
     protected $fillable = [
         'name',
-        'slug',
         'address',
         'province_id',
         'district_id',
+        'type_id',
+        'organization_id',
+        'audit_type',
         'contact',
         'created_at',
         'updated_at',
@@ -77,5 +79,20 @@ class Organization extends Model
     public function forms()
     {
         return $this->hasMany(Form::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
+    public function parentOrganization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id');
+    }
+
+    public function childOrganizations()
+    {
+        return $this->hasMany(Organization::class, 'organization_id');
     }
 }
