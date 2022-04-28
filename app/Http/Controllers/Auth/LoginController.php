@@ -85,13 +85,14 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $token = $request->user()->tokens()->first();
-        // $token = 'fs';
-        // dd(redirect('http://mangosoftsolution.com:3930/')->with('accessToken',$token));
-        // dd( $token->id);
         $this->guard()->logout();
 
         $request->session()->invalidate();
-
-        return $this->loggedOut($request) ?: redirect("http://mangosoftsolution.com:3930/?token={$token->id}");
+        if($token) {
+            return $this->loggedOut($request) ?: redirect(config('panel.homepage')."/?token={$token->id}");
+        } else {
+            return $this->loggedOut($request) ?: redirect()->route('index');
+        }
+            
     }
 }
