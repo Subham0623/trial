@@ -147,7 +147,7 @@
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "{{route('admin.subjectarea-changeStatus')}}",
+            url: "{{route('admin.changeStatus')}}",
             data: {'status': status, 'subjectArea_id': subjectArea_id, "_token": "{{ csrf_token() }}"},
             success: function(data){
               console.log(data.success)
