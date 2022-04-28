@@ -67,7 +67,6 @@ class ParameterController extends Controller
             'title'             => $request->title,
             'subject_area_id'   => $request->subject_area_id,
             'sort'              => $request->sort,
-            // 'slug'              =>$request->slug,
             'description'       => $request->description,
             'status'            => $request->status,
         ];
@@ -139,10 +138,15 @@ class ParameterController extends Controller
     public function update(UpdateParameterRequest $request, Parameter $parameter)
     {
         // dd($request->all());
+        $request->validate([
+            'addmore.*.title' => 'required',
+            'addmore.*.points' => 'required',
+            'addmore1.*.title' => 'required',
+        ]);
+
         $data = [
             'title'             => $request->title,
             'subject_area_id'   => $request->subject_area_id,
-            'slug'              => $request->slug,
             'sort'              => $request->sort,
             'description'       => $request->description,
             'status'            => $request->status,

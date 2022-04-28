@@ -123,7 +123,7 @@
                 @endforeach
                 
         </table>
-        <button type="button" name="add" id="add1" class="btn btn-success mb-3">Add More</button>
+        <button type="button" name="add1" id="add1" class="btn btn-success mb-3">Add More</button>
 
 
             <div class="form-group" style="display: none;">
@@ -163,23 +163,22 @@ $('#title').change(function(e) {
 </script>
 
 <script type="text/javascript">
-   
-    var i = $('.old_options').length;
-    console.log(i);
-       
+    
+    let index = <?=$parameter->options->count();?>;
+    index = index == 0 ? index : index-1;
+    console.log(index);
     $("#add").click(function(){
-        ++i;
-
+        index++;
         $("#dynamicTable").append(`<tr>
         <td>
-            <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore[${index}][title]" placeholder="Enter title" class="input form-control"></textarea>
         </td>
         <td>
-            <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" />
+            <input type="text" name="addmore[${index}][points]" placeholder="Enter points" class="form-control" />
         </td>
         <td>
-            <input type="radio" name="addmore[${i}][status]" value="1" checked> Active<br>
-            <input type="radio" name="addmore[${i}][status]" value="0" > Inactive<br>
+            <input type="radio" name="addmore[${index}][status]" value="1" checked> Active<br>
+            <input type="radio" name="addmore[${index}][status]" value="0" > Inactive<br>
         </td>
         <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td>
         </tr>`);
@@ -193,11 +192,12 @@ $('#title').change(function(e) {
 
 <script type="text/javascript">
    
-    var i = $('.old_options1').length;
+    let i = <?=$parameter->documents->count();?>;
+    i = i == 0 ? i : i-1;
     console.log(i);
        
     $("#add1").click(function(){
-        ++i;
+        i++;
 
         $("#dynamicTable1").append(`<tr>
         <td>

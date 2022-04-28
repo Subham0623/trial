@@ -21,10 +21,7 @@ class UpdateParameterRequest extends FormRequest
     {
         return [
             'title' => [
-                'required'],
-            'slug' => [ 
-                'required',
-                'unique:parameters,slug,' . request()->route('parameter')->id], 
+                'required'], 
         ];
 
     }

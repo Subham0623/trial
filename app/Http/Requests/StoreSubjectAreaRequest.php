@@ -22,9 +22,6 @@ class StoreSubjectAreaRequest extends FormRequest
         return [
             'title'         => [
                 'required'],
-            'slug'         => [
-                'required',
-                'unique:subject_areas'],
             'sort'   =>[
                 'required'],
             
