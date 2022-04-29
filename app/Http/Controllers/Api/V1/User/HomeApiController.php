@@ -122,37 +122,40 @@ class HomeApiController extends Controller
             $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
             
             if($form) {
-                foreach($request->documents as $id => $document) {
-                    $document_details = Document::find($id);
-                    
-                    $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
-                            $query->where('parameter_id', $document_details->parameter_id);
-                        })
-                        ->with(['selected_subjectareas' => function($query) use ($document_details) {
-                            $query->where('parameter_id', $document_details->parameter_id);
-                        }])
-                        ->first();
+                if($request->documents) {
+                    foreach($request->documents as $id => $document) {
+                        $document_details = Document::find($id);
                         
-                    if($form_subject_area) {
-                        $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-                        // foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+                        $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            })
+                            ->with(['selected_subjectareas' => function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            }])
+                            ->first();
                             
-                        //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                        // }
-                        $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
-                            foreach ($subject_parameter->documents as $media) {
-                               
-                                if (!in_array($media->file_name, $request->input('resource', []))) {
-                                    $media->delete();
+                        if($form_subject_area) {
+                            $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+                            // foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+                                
+                            //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                            // }
+                            $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
+                                foreach ($subject_parameter->documents as $media) {
+                                   
+                                    if (!in_array($media->file_name, $request->input('resource', []))) {
+                                        $media->delete();
+                                    }
                                 }
-                            }
-                            
-                            $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                            $media->document_id = $document_details->id;
-                            // $media->setCustomProperty('document_id',$document_details->id);
-                            $media->save();
-                        });
+                                
+                                $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                                $media->document_id = $document_details->id;
+                                // $media->setCustomProperty('document_id',$document_details->id);
+                                $media->save();
+                            });
+                        }
                     }
+
                 }
             } else {
                 return response([
@@ -351,7 +354,7 @@ class HomeApiController extends Controller
                                         }
                                         elseif($roles->contains(6) && $form->final_verified == 0)
                                         {
-                                            $form_details->update([
+                                            $form_detail->update([
                                                 'option_id' => $opt->id,
                                                 'marksByFinalVerifier' => $opt->points,
                                             ]); 
@@ -521,35 +524,38 @@ class HomeApiController extends Controller
             } 
 
             if($request->mode == 'documents') {
-                foreach($request->documents as $id => $document) {
-                    $document_details = Document::find($id);
-                    
-                    $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
-                            $query->where('parameter_id', $document_details->parameter_id);
-                        })
-                        ->with(['selected_subjectareas' => function($query) use ($document_details) {
-                            $query->where('parameter_id', $document_details->parameter_id);
-                        }])
-                        ->first();
+                if($request->documents) {
+                    foreach($request->documents as $id => $document) {
+                        $document_details = Document::find($id);
                         
-                    if($form_subject_area) {
-                        $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-                        // dd($form_subject_area);
-                        $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
+                        $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            })
+                            ->with(['selected_subjectareas' => function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            }])
+                            ->first();
                             
-                            if (count($subject_parameter->documents) > 0) {
-                                foreach ($subject_parameter->documents as $media) {
-                                    if($media->document_id == $document_details->id) {
-                                        $media->delete();
+                        if($form_subject_area) {
+                            $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+                            // dd($form_subject_area);
+                            $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
+                                
+                                if (count($subject_parameter->documents) > 0) {
+                                    foreach ($subject_parameter->documents as $media) {
+                                        if($media->document_id == $document_details->id) {
+                                            $media->delete();
+                                        }
                                     }
                                 }
-                            }
-
-                            $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                            $media->document_id = $document_details->id;
-                            $media->save();
-                        });
+    
+                                $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                                $media->document_id = $document_details->id;
+                                $media->save();
+                            });
+                        }
                     }
+
                 }
 
                 $selected_options = $this->selectedOptions($form);
