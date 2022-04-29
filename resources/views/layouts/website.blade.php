@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Asmita Publication</title>
-    <link rel="shortcut icon" href="{{asset('asmita_favicon.png')}}">
+    <title>{{ trans('panel.site_title') }}</title>
+    <link rel="shortcut icon" href="{{asset('site/img/plgsp.png')}}">
     <!-- bootstrap -->
     <link
       rel="stylesheet"
@@ -35,7 +35,7 @@
       <section class="header-section section">
         <!-- logo -->
         <a href="{{route('index')}}" class="logo-link">
-          <img src="{{ asset('site/img/asmita.png')}}" alt="" />
+          <img src="{{ asset('site/img/plgsp.png')}}" alt="" width="100px" height="100px" />
         </a>
         <form action="{{route('search')}}" class="header-section__form">
           <div class="form__group">
@@ -72,7 +72,7 @@
           </div>
           <div class="logo-container">
             <a href="{{route('index')}}" class="logo-container__link">
-              <img src="{{ asset('site/img/asmita.png')}}" alt="" />
+              <img src="{{ asset('site/img/plgsp.png')}}" alt="" />
             </a>
           </div>
           <!-- desktop nav and then transformed into mobile now -->
@@ -80,7 +80,7 @@
             <!-- after sticky should be displayed -->
             <div class="logo-container">
               <a href="{{route('index')}}" class="logo-container__link">
-                <img src="{{asset('site/img/asmita.png')}}" alt="" />
+                <img src="{{asset('site/img/plgsp.png')}}" alt="" />
               </a>
             </div>
             <div class="nav-links">
