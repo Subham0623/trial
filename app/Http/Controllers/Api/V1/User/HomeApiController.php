@@ -822,7 +822,7 @@ class HomeApiController extends Controller
             array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
 
         }
-        $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea','media')->get();
+        $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','feedbacks.user','feedbacks.user.roles','selected_subjectarea','media')->get();
                 
         return $selected_options;
     }
