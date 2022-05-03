@@ -188,9 +188,9 @@
     <footer class="footer utility-padding">
       <div class="logo--holder">
         <a href="#" class="logo-link">
-          <img src="{{ asset('site/img/asmita.png')}}" alt="" />
+          <img src="{{ asset('site/img/plgsp.png')}}" alt="" />
         </a>
-        <p>&#169; 2020.All Rights Reserved</p>
+        <p>&#169; 2022.All Rights Reserved</p>
       </div>
       <div class="links-section">
         <div class="social-link__container">
