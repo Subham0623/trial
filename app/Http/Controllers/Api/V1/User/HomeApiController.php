@@ -679,7 +679,8 @@ class HomeApiController extends Controller
 
     public function show()
     {
-        $forms = Auth::user()->forms()->get();
+        $user = Auth::user()->organizations()->pluck('id');
+        $forms = Form::whereIn('organization_id',$user)->with('user')->get();
         return response()->json(['forms'=> $forms]);
     }
 
