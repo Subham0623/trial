@@ -35,7 +35,7 @@ class SendFormCreatedJob implements ShouldQueue
     public function handle()
     {
         $admins = User::whereHas('roles', function ($query) {
-            $query->where('id',1);
+            $query->where('id',2);
         })->get();
 
         if($admins) {

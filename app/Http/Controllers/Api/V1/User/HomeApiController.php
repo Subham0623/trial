@@ -507,17 +507,7 @@ class HomeApiController extends Controller
                         'total_marks_verifier' => $total_marks_verifier,
                         'total_marks_auditor' => $total_marks_auditor,
                         'total_marks_finalVerifier' => $total_marks_finalVerifier,
-                    ]);
-        
-                    $selected_options = $this->selectedOptions($form);
-
-                    return response([
-                        'message'=>'Form updated successfully',
-                        'form_details' => $form->load('organization'),
-                        'subject_areas' => $subject_areas,
-                        'selected_options' => $selected_options,
-                    ],201);
-                    
+                    ]);                    
                 }
                 else{
                     return response([
@@ -560,16 +550,18 @@ class HomeApiController extends Controller
                     }
 
                 }
-
-                $selected_options = $this->selectedOptions($form);
-
-                return response([
-                    'message'=>'Document updated successfully',
-                    'form_details' => $form->load('organization'),
-                    'subject_areas' => $subject_areas,
-                    'selected_options' => $selected_options,
-                ],201);
             }
+
+            $selected_options = $this->selectedOptions($form);
+
+            dispatch(new SendFormUpdatedJob($form));
+
+            return response([
+                'message'=>'Form updated successfully',
+                'form_details' => $form->load('organization'),
+                'subject_areas' => $subject_areas,
+                'selected_options' => $selected_options,
+            ],201);
         }
         else
         {

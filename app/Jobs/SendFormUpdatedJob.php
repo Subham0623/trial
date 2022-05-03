@@ -7,24 +7,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Form;
 use App\Models\Authorization\User\User;
-use App\Notifications\UserAddedNotification;
+use App\Notifications\FormUpdatedNotification;
 use Illuminate\Support\Facades\Notification;
 
-class SendUserAddedJob implements ShouldQueue
+class SendFormUpdatedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    private $user;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(Form $form)
     {
-        $this->user = $user;
+        $this->form = $form;
     }
 
     /**
@@ -34,14 +33,12 @@ class SendUserAddedJob implements ShouldQueue
      */
     public function handle()
     {
-        auth()->user()->notify(new UserAddedNotification($this->user, route('admin.users.index')));
-        
         $admins = User::whereHas('roles', function ($query) {
-                    $query->where('id',2);
-                })->get();
-        
+            $query->whereIn('id',2);
+        })->get();
+
         if($admins) {
-            Notification::send($admins,new UserAddedNotification($this->user, route('admin.users.index')));
+            Notification::send($admins, new FormUpdatedNotification($this->form, route('admin.forms')));
         }
     }
 }
