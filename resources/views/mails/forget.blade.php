@@ -1,1 +1,1 @@
-Change your password   <a href="http://mangosoftsolution.com:3930/reset-password/?token={{$token}}">here</a>
+Change your password   <a href="{{config('panel.homepage')}}/reset-password/?token={{$token}}">here</a>

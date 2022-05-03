@@ -54,16 +54,12 @@ class LoginApiController extends Controller
             }
             else
             {
-                return response(['status'=> '401',
-                    'message'=> 'User is deactivated'
-                ]);
+                return response(['message'=> 'User is deactivated']);
             }
         }
         else
         {
-            return response(['status'=> '401',
-                'message'=> 'invalid login credentials'
-            ]);
+            return response(['message'=> 'invalid login credentials']);
         }
     }
     
