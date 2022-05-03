@@ -324,6 +324,10 @@ return [
             'address_helper'        => '',
             'slug'                  => 'Slug',
             'slug_helper'           => '',
+            'type'                  =>  'Type',
+            'type_helper'           => '',
+            'organization'          => 'Organizations',
+            'organization_helper'   => '',
         ],
     ],
 
@@ -357,4 +361,20 @@ return [
         ],
     ],
 
+    'type'           => [
+        'title'          => 'Types',
+        'title_singular' => 'Type',
+        'fields'         => [
+            'id'                    => 'ID',
+            'id_helper'             => '',
+            'sn'                    => 'S.N',
+            'sn_helper'             => '',
+            'title'                 => 'Title',
+            'title_helper'          => '',
+            'type'                  => 'Type',
+            'type_helper'           => '',
+            'slug'                  =>'Slug',
+            'slug_helper'           =>''
+        ],
+    ],
 ];

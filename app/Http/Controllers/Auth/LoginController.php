@@ -75,4 +75,24 @@ class LoginController extends Controller
 
         return $credentials;
     }
+
+     /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $token = $request->user()->tokens()->first();
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+        if($token) {
+            return $this->loggedOut($request) ?: redirect(config('panel.homepage')."/?token={$token->id}");
+        } else {
+            return $this->loggedOut($request) ?: redirect()->route('index');
+        }
+            
+    }
 }

@@ -23,7 +23,7 @@ class HomeApiController extends Controller
 {
     public function form()
     {
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+        $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
         $selected_options = [];
         return response([
             'subject_areas' => $subject_areas,
@@ -42,6 +42,7 @@ class HomeApiController extends Controller
     {
         
         $user = Auth::user();
+        $roles = $user->roles()->pluck('id');
         $user_organization = $user->organizations->first();
 
         
@@ -61,35 +62,42 @@ class HomeApiController extends Controller
                     'form_id' => $form->id,
                     'subject_area_id' => $request->subject_area,
                 ]);
-                
-                foreach($request->parameters as $parameter )
-                {   
-                    $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
-                    if($parameter['is_applicable'] == 0)
-                    {
-                        if(isset($parameter['option']['id']))
+                if($request->parameters)
+                {
+
+                    foreach($request->parameters as $parameter )
+                    {   
+                        $max_points = Parameter::where('id',$parameter['id'])->first()->activeOptions()->max('points');
+                        if($parameter['is_applicable'] == 0)
                         {
-                            $opt = Option::find($parameter['option']['id']);
+                            if(isset($parameter['option']['id']))
+                            {
+                                $opt = Option::find($parameter['option']['id']);
+                                
+
+                                    $form_detail = FormDetail::create([
+                                        'form_subject_area_id' => $form_subject_area->id,
+                                        'parameter_id' => $parameter['id'],
+                                        'remarks' => $parameter['remarks'],
+                                        'option_id' => $opt->id,
+                                        'marks' => $opt->points,
+                                        'marksByVerifier' => ($roles->contains(5) ? $opt->points : ''),
+                                        'is_applicable' => $parameter['is_applicable'],
+                                    ]);  
+                            }
+                        }
+                        else
+                        {
                             $form_detail = FormDetail::create([
                                 'form_subject_area_id' => $form_subject_area->id,
                                 'parameter_id' => $parameter['id'],
                                 'remarks' => $parameter['remarks'],
-                                'option_id' => $opt->id,
-                                'marks' => $opt->points,
                                 'is_applicable' => $parameter['is_applicable'],
-                            ]);  
+                                'option_id' =>null,
+                                'marks' => $max_points,
+                                'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
+                            ]);
                         }
-                    }
-                    else
-                    {
-                        $form_detail = FormDetail::create([
-                            'form_subject_area_id' => $form_subject_area->id,
-                            'parameter_id' => $parameter['id'],
-                            'remarks' => $parameter['remarks'],
-                            'is_applicable' => $parameter['is_applicable'],
-                            'option_id' =>null,
-                            'marks' => $max_points,
-                        ]);
                     }
                 }
         
@@ -115,37 +123,40 @@ class HomeApiController extends Controller
             $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
             
             if($form) {
-                foreach($request->documents as $id => $document) {
-                    $document_details = Document::find($id);
-                    
-                    $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
-                            $query->where('parameter_id', $document_details->parameter_id);
-                        })
-                        ->with(['selected_subjectareas' => function($query) use ($document_details) {
-                            $query->where('parameter_id', $document_details->parameter_id);
-                        }])
-                        ->first();
+                if($request->documents) {
+                    foreach($request->documents as $id => $document) {
+                        $document_details = Document::find($id);
                         
-                    if($form_subject_area) {
-                        $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-                        // foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+                        $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            })
+                            ->with(['selected_subjectareas' => function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            }])
+                            ->first();
                             
-                        //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                        // }
-                        $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
-                            foreach ($subject_parameter->documents as $media) {
-                               
-                                if (!in_array($media->file_name, $request->input('resource', []))) {
-                                    $media->delete();
+                        if($form_subject_area) {
+                            $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+                            // foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+                                
+                            //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                            // }
+                            $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
+                                foreach ($subject_parameter->documents as $media) {
+                                   
+                                    if (!in_array($media->file_name, $request->input('resource', []))) {
+                                        $media->delete();
+                                    }
                                 }
-                            }
-                            
-                            $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                            $media->document_id = $document_details->id;
-                            // $media->setCustomProperty('document_id',$document_details->id);
-                            $media->save();
-                        });
+                                
+                                $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                                $media->document_id = $document_details->id;
+                                // $media->setCustomProperty('document_id',$document_details->id);
+                                $media->save();
+                            });
+                        }
                     }
+
                 }
             } else {
                 return response([
@@ -193,7 +204,7 @@ class HomeApiController extends Controller
             // }])->with('options')->get();
         
         // dd($options);
-        // $subject_areas = SubjectArea::with(['parameters.options'=>function($query) use($form_option){
+        // $subject_areas = SubjectArea::with(['activeParameters.activeOptions'=>function($query) use($form_option){
         //        $query->where('id',$form_option);
         //     }])->get();
         
@@ -227,7 +238,7 @@ class HomeApiController extends Controller
             {
                 $selected_options = $this->selectedOptions($form);
                 
-                $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+                $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
                 
                 return response([
                     'subject_areas' => $subject_areas,
@@ -256,39 +267,38 @@ class HomeApiController extends Controller
     {        
         $user = Auth::user();
         $roles = $user->roles->pluck('id');
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+        $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
         
-        
+
         $form = Form::findOrFail($form->id);
         
-        // dd('here');
+        // dd($form);
         if(isset($form)){
             if($request->mode == 'options') {
                 $form_subject_area = FormSubjectArea::updateOrCreate([
                     'form_id' => $form->id,
                     'subject_area_id' => $request->subject_area,
                 ]);
-                
+                // dd($form_subject_area);
                 if($request->parameters)
                 {
                     
                     foreach($request->parameters as $parameter )
                     {   
-                        $max_points = Parameter::where('id',$parameter['id'])->first()->options()->max('points');
+                        $max_points = Parameter::where('id',$parameter['id'])->first()->activeOptions()->max('points');
                         $form_detail = FormDetail::where('form_subject_area_id',$form_subject_area->id)->where('parameter_id',$parameter['id'])->first();
                         
                         if(isset($form_detail))
                         {
-
                             if($form_detail->is_applicable == $parameter['is_applicable'])
                             {
-            
+
                                 if($parameter['is_applicable'] == 0) //0 means applicable and 1 means not applicable
                                 {
-
                                     if(isset($parameter['option']['id'])) {
                                         $opt = Option::findorFail($parameter['option']['id']);
-                                        if($roles->contains(2) && ($user->id == $form->user_id) && ($form->status == 0))
+                
+                                        if($roles->contains(3) && ($user->id == $form->user_id) && ($form->status == 0))
                                         {
                                             $form_detail->update([
                                                 'remarks' => $parameter['remarks'],
@@ -300,6 +310,8 @@ class HomeApiController extends Controller
                                             $form->update([
                                                 'updated_by'=>$user->id
                                             ]);
+        
+
                                         }
                                         elseif($roles->contains(5))
                                         {
@@ -310,11 +322,12 @@ class HomeApiController extends Controller
                                                     'is_applicable' => $parameter['is_applicable'],
                                                     'option_id' => $opt->id,
                                                     'marksByVerifier' => $opt->points,
+                                                    'marks' => $opt->points,
                                                 ]); 
                                                 $form->update([
-                                                    'updated_by'=>$user->id
+                                                    'updated_by'=>$user->id,
+                                                    'verified_by' => $user->id
                                                 ]);
-        
                                             }
                                             else
                                             {
@@ -344,7 +357,7 @@ class HomeApiController extends Controller
                                         }
                                         elseif($roles->contains(6) && $form->final_verified == 0)
                                         {
-                                            $form_details->update([
+                                            $form_detail->update([
                                                 'option_id' => $opt->id,
                                                 'marksByFinalVerifier' => $opt->points,
                                             ]); 
@@ -364,7 +377,7 @@ class HomeApiController extends Controller
                                 {
                                     if($form->user_id == $user->id && ($form->status == 0))
                                     {
-                                        
+                                        // dd($parameter);
                                         $form_detail = FormDetail::updateOrCreate([
                                             'form_subject_area_id' => $form_subject_area->id,
                                             'parameter_id' => $parameter['id'],
@@ -373,11 +386,14 @@ class HomeApiController extends Controller
                                             'remarks' => $parameter['remarks'],
                                             'option_id' => null,
                                             'marks' => $max_points,
+                                            'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
                                             'is_applicable' => $parameter['is_applicable'],
                                         ]); 
                                         $form->update([
-                                            'updated_by'=>$user->id
+                                            'updated_by'=>$user->id,
+                                            'verified_by' => ($roles->contains(5) ? $user->id : null)
                                         ]);
+                                        
                                     }
                                     // else
                                     // {
@@ -399,10 +415,12 @@ class HomeApiController extends Controller
                                                 'remarks' => $parameter['remarks'],
                                                 'is_applicable' => $parameter['is_applicable'],
                                                 'option_id' => $opt->id,
+                                                'marksByVerifier' => ($roles->contains(5) ? $opt->id : ''),
                                                 'marks' => $opt->points,
                                             ]);
                                             $form->update([
                                                 'updated_by' => $user->id, 
+                                                'verified_by' => ($roles->contains(5) ? $user->id : null),
                                             ]);
                                         }
                                     }
@@ -412,10 +430,12 @@ class HomeApiController extends Controller
                                             'remarks' => $parameter['remarks'],
                                             'option_id' => null,
                                             'marks' => $max_points,
+                                            'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
                                             'is_applicable' => $parameter['is_applicable'],
                                         ]);
                                         $form->update([
                                             'updated_by' => $user->id, 
+                                            'verified_by' => ($roles->contains(5) ? $user->id : null),
                                         ]);
                                     }
                                 }
@@ -441,6 +461,7 @@ class HomeApiController extends Controller
                                             'remarks' => $parameter['remarks'],
                                             'option_id' => $opt->id,
                                             'marks' => $opt->points,
+                                            'marksByVerifier' => ($roles->contains(5) ? $opt->points : ''),
                                             'is_applicable' => $parameter['is_applicable'],
                                         ]);  
                                     }
@@ -454,6 +475,7 @@ class HomeApiController extends Controller
                                         'is_applicable' => $parameter['is_applicable'],
                                         'option_id' => null,
                                         'marks' => $max_points,
+                                        'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
                                     ]);
                                 }
                             }
@@ -505,36 +527,38 @@ class HomeApiController extends Controller
             } 
 
             if($request->mode == 'documents') {
-                // dd($request->all());
-                foreach($request->documents as $id => $document) {
-                    $document_details = Document::find($id);
-                    
-                    $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
-                            $query->where('parameter_id', $document_details->parameter_id);
-                        })
-                        ->with(['selected_subjectareas' => function($query) use ($document_details) {
-                            $query->where('parameter_id', $document_details->parameter_id);
-                        }])
-                        ->first();
+                if($request->documents) {
+                    foreach($request->documents as $id => $document) {
+                        $document_details = Document::find($id);
                         
-                    if($form_subject_area) {
-                        $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-                        // dd($form_subject_area);
-                        $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
+                        $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            })
+                            ->with(['selected_subjectareas' => function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            }])
+                            ->first();
                             
-                            if (count($subject_parameter->documents) > 0) {
-                                foreach ($subject_parameter->documents as $media) {
-                                    if($media->document_id == $document_details->id) {
-                                        $media->delete();
+                        if($form_subject_area) {
+                            $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+                            // dd($form_subject_area);
+                            $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
+                                
+                                if (count($subject_parameter->documents) > 0) {
+                                    foreach ($subject_parameter->documents as $media) {
+                                        if($media->document_id == $document_details->id) {
+                                            $media->delete();
+                                        }
                                     }
                                 }
-                            }
-
-                            $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                            $media->document_id = $document_details->id;
-                            $media->save();
-                        });
+    
+                                $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                                $media->document_id = $document_details->id;
+                                $media->save();
+                            });
+                        }
                     }
+
                 }
 
                 $selected_options = $this->selectedOptions($form);
@@ -614,12 +638,23 @@ class HomeApiController extends Controller
 
                     return response(['message'=>'Form verified successfully'],200);
                 }
+                elseif($form->status == 0 && $form->user_id == $user)
+                {
+                    $form->update([
+                        'status' => 1,
+                        'user_id' => $user,
+                        'is_verified' => 1,
+                        'verified_by' => $user,
+                        'verified_at' => Carbon::now()->toDateTimeString(),
+                    ]);
+                    return response(['message'=>'Form submitted successfully'],200);
+                }
                 else
                 {
                     return response(['message'=>'You are not allowed to verify this form']);
                 }
             }
-            elseif($roles->contains(2))
+            elseif($roles->contains(3))
             {
                 $form->update([
 
@@ -670,7 +705,7 @@ class HomeApiController extends Controller
 
             }
 
-            $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+            $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
             $selected_options = $this->selectedOptions($form);
 
             return response([
@@ -693,7 +728,7 @@ class HomeApiController extends Controller
         // dd($request->all());
         $form = Form::findOrFail($request->form_id);
         $feedback = Feedback::findOrFail($feedback->id);
-        $subject_areas = SubjectArea::with('parameters.options','parameters.documents')->get();
+        $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
 
         
         if(isset($feedback))
@@ -741,7 +776,7 @@ class HomeApiController extends Controller
 
         if(isset($form))
         {
-            if($roles->contains(6))
+            if($roles->contains(6) && $form->final_verified == 0)
             {
                 $form->update([
                     'is_audited' => 0,
@@ -752,7 +787,7 @@ class HomeApiController extends Controller
                     'message' => "Form reassigned successfully"
                 ]);
             }
-            elseif($roles->contains(5))
+            elseif($roles->contains(5) && $form->is_verified == 0)
             {
                 $form->update([
 
@@ -763,7 +798,7 @@ class HomeApiController extends Controller
                     'message' => "Form reassigned successfully"
                 ]);
             }
-            elseif($roles->contains(4))
+            elseif($roles->contains(4) && $form->is_audited == 0)
             {
                 $form->update([
 
@@ -796,7 +831,7 @@ class HomeApiController extends Controller
             array_push($selected_subjectareas_id, $selected_subjectarea->pivot->id);
 
         }
-        $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','selected_subjectarea','media')->get();
+        $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','feedbacks.user','feedbacks.user.roles','selected_subjectarea','media')->get();
                 
         return $selected_options;
     }

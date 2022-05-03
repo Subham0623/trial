@@ -40,7 +40,7 @@ class Group extends Model
         // dd($group_permission_id);
             $user = auth()->user();
             
-            if($user->roles->contains(7)){
+            if($user->roles->contains(1)){
                 return $this->permissions;
             }
             $user_permissions = collect();

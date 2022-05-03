@@ -22,9 +22,6 @@ class UpdateOrganizationRequest extends FormRequest
         return [
             'name' => [
                 'required'],
-            'slug' => [ 
-                'required',
-                'unique:organizations,slug,' . request()->route('organization')->id], 
         ];
 
     }

@@ -12,7 +12,6 @@
             @csrf
             <div class="form-group">
                 <label class="required" for="title">{{ trans('cruds.parameter.fields.title') }}</label>
-                <!-- <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', $parameter->title) }}" required> -->
                 <textarea name="title" placeholder="Enter title" class="input form-control">{{ $parameter->title }}</textarea>
                 
                 @if($errors->has('title'))
@@ -37,8 +36,7 @@
 
             <div class="form-group">
                 <label class="required" for="description">{{ trans('cruds.parameter.fields.description') }}</label>
-                <!-- <input class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" type="text" name="description" id="description" value="{{ old('description', $parameter->description) }}" required> -->
-                <textarea name="description" placeholder="Enter description" class="input form-control">{{ $parameter->description }}</textarea>
+                <textarea name="description" placeholder="Enter description" class="input form-control" >{{ $parameter->description }}</textarea>
                 
                 @if($errors->has('description'))
                     <div class="invalid-feedback">
@@ -89,8 +87,8 @@
                 @foreach($parameter->options as $key => $option)
                 <tr class = "old_options">
                     
-                    <td><textarea name="addmore[{{$key}}][title]" class="input form-control">{{ $option->title }}</textarea></td> 
-                    <td><input type="text" name="addmore[{{$key}}][points]"  class="form-control" value="{{$option->points}}" /></td> 
+                    <td><textarea name="addmore[{{$key}}][title]" class="input form-control" required>{{ $option->title }}</textarea></td> 
+                    <td><input type="text" name="addmore[{{$key}}][points]"  class="form-control" value="{{$option->points}}" required/></td> 
                     <td>
                         <input type="radio" name="addmore[{{$key}}][status]" value="1" {{$option->status == 1 ? 'checked' : ''}}> Active<br>
                         <input type="radio" name="addmore[{{$key}}][status]" value="0" {{$option->status == 0 ? 'checked' : ''}}> Inactive<br>
@@ -113,7 +111,7 @@
                 @foreach($parameter->documents as $key => $document)
                 <tr class = "old_options1">
                     
-                    <td><textarea name="addmore1[{{$key}}][title]" class="input form-control">{{ $document->title }}</textarea></td>
+                    <td><textarea name="addmore1[{{$key}}][title]" class="input form-control" required>{{ $document->title }}</textarea></td>
                     <td>
                         <input type="radio" name="addmore1[{{$key}}][status]" value="1" {{$document->status == 1 ? 'checked' : ''}}> Active<br>
                         <input type="radio" name="addmore1[{{$key}}][status]" value="0" {{$document->status == 0 ? 'checked' : ''}}> Inactive<br>
@@ -123,7 +121,7 @@
                 @endforeach
                 
         </table>
-        <button type="button" name="add" id="add1" class="btn btn-success mb-3">Add More</button>
+        <button type="button" name="add1" id="add1" class="btn btn-success mb-3">Add More</button>
 
 
             <div class="form-group" style="display: none;">
@@ -141,6 +139,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.parameters.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>
@@ -163,23 +163,22 @@ $('#title').change(function(e) {
 </script>
 
 <script type="text/javascript">
-   
-    var i = $('.old_options').length;
-    console.log(i);
-       
+    
+    let index = <?=$parameter->options->count();?>;
+    index = index == 0 ? index : index-1;
+    console.log(index);
     $("#add").click(function(){
-        ++i;
-
+        index++;
         $("#dynamicTable").append(`<tr>
         <td>
-            <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore[${index}][title]" placeholder="Enter title" class="input form-control" required></textarea>
         </td>
         <td>
-            <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" />
+            <input type="text" name="addmore[${index}][points]" placeholder="Enter points" class="form-control" required/>
         </td>
         <td>
-            <input type="radio" name="addmore[${i}][status]" value="1" checked> Active<br>
-            <input type="radio" name="addmore[${i}][status]" value="0" > Inactive<br>
+            <input type="radio" name="addmore[${index}][status]" value="1" checked> Active<br>
+            <input type="radio" name="addmore[${index}][status]" value="0" > Inactive<br>
         </td>
         <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td>
         </tr>`);
@@ -193,15 +192,16 @@ $('#title').change(function(e) {
 
 <script type="text/javascript">
    
-    var i = $('.old_options1').length;
+    let i = <?=$parameter->documents->count();?>;
+    i = i == 0 ? i : i-1;
     console.log(i);
        
     $("#add1").click(function(){
-        ++i;
+        i++;
 
         $("#dynamicTable1").append(`<tr>
         <td>
-            <textarea name="addmore1[${i}][title]" placeholder="Enter title" class="input form-control"></textarea>
+            <textarea name="addmore1[${i}][title]" placeholder="Enter title" class="input form-control" required></textarea>
         </td>
         <td>
             <input type="radio" name="addmore1[${i}][status]" value="1" checked> Active<br>

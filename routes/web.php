@@ -58,10 +58,10 @@ Route::middleware(['IsInstalled'])->group(function () {
 
             
             //Subject Areas
-            Route::post('change-status','SubjectAreaController@changeStatus')->name('subjectarea-changeStatus');
             Route::delete('subject-areas/destroy', 'SubjectAreaController@massDestroy')->name('subject-areas.massDestroy');
             Route::get('subject-areas/check-slug', 'SubjectAreaController@checkSlug')->name('subject-areas.checkSlug');
             Route::resource('subject-areas','SubjectAreaController');
+            Route::post('subject-area/change-status','SubjectAreaController@changeStatus')->name('changeStatus');
             
             //Parameters and options
             Route::post('change-status','ParameterController@changeStatus')->name('parameter-changeStatus');
@@ -74,15 +74,21 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('provinces/check-slug', 'ProvinceController@checkSlug')->name('provinces.checkSlug');
             Route::resource('provinces','ProvinceController');
 
+            //Types
+            Route::delete('types/destroy', 'TypeController@massDestroy')->name('types.massDestroy');
+            Route::get('types/check-slug', 'TypeController@checkSlug')->name('types.checkSlug');
+            Route::resource('types','TypeController');
+
             //Forms
             Route::post('/publish','FormController@changePublish')->name('form-publish');
             Route::get('/forms/organization','FormController@filter')->name('form-filter'); 
             Route::get('forms','FormController@index')->name('forms');  
             
+            Route::get('/province/districts','HomeController@provinceDistricts')->name('provinceDistricts');
             Route::get('/province/organizations','HomeController@list')->name('list');
             Route::get('/district/organizations','HomeController@district');
 
-            Route::get('/province-select/{id}','HomeController@provinceDistrict');
+            // Route::get('/province-select/{id}','HomeController@provinceDistrict');
             Route::get('/search-organizations','HomeController@search');
 
         
@@ -90,6 +96,7 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('organizations/download-format',function(){
                 return Illuminate\Support\Facades\Storage::download('organizations.xlsx');
             })->name('download-format');
+            Route::get('type/organizations','OrganizationController@type')->name('type-organizations');
             Route::post('organizations/import/organizations','OrganizationController@import')->name('import');
             Route::get('organizations/organization-province','OrganizationController@organizationProvince')->name('organization-province');
             Route::delete('organizations/destroy', 'OrganizationController@massDestroy')->name('organizations.massDestroy');

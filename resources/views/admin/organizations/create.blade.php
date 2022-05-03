@@ -20,6 +20,27 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.name_helper') }}</span>
             </div>
 
+            <div class="form-group" id=div_type>
+                <label class="required" for="type">{{ trans('cruds.organization.fields.type') }}</label>
+                <select class="form-control select2 {{ $errors->has('type') ? 'is-invalid' : '' }}" name="type" id="type" >
+                    <option value="">Select type</option>
+                    @foreach($types as $type)
+                    
+                        <option value="{{ $type->id }}" {{ old('type') == $type->id ? 'selected' : '' }}>{{ $type->title }}</option>
+
+                    @endforeach
+                </select>
+                @if($errors->has('type'))
+                <div class="invalid-feedback">
+                    {{ $errors->first('type') }}
+                </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.organization.fields.type_helper') }}</span>
+            </div>
+            <div id="organization-div" ></div>
+
+            
+
             <div class="form-group">
                 <label class="required" for="province">{{ trans('cruds.organization.fields.province') }}</label>
                 <select class="form-control select2 {{ $errors->has('province') ? 'is-invalid' : '' }}" name="province" id="province" >
@@ -53,7 +74,7 @@
                         {{ $errors->first('district') }}
                     </div>
                 @endif
-                <span class="help-block">{{ trans('cruds.organization.fields.province_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.organization.fields.district_helper') }}</span>
             </div>
 
             <div class="form-group">
@@ -95,6 +116,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.organizations.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>
@@ -116,7 +139,45 @@ $('#name').change(function(e) {
 });
 </script>
 
-
+<script>
+     $('#type').change(function() {
+    
+    var type = $("#type").val();
+    console.log(type);
+    if(type .length > 0)
+    {
+        $.ajax({
+               type:'GET',
+               url:'/admins/type/organizations',
+               data:{
+                
+                   type: type,
+               },
+               success:function(data) {
+                   $('#organization-div').html(
+                `<div class="form-group">
+                <label class="required" for="organization">{{ trans('cruds.organization.fields.organization') }}</label>
+                <select class="form-control select2 {{ $errors->has('organization') ? 'is-invalid' : '' }}" name="organization" id="organization" >
+                    <option value="">Select Organization</option>
+                    
+                </select>
+                @if($errors->has('province'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('province') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.organization.fields.province_helper') }}</span>
+            </div>`);
+            $.each(data, function (index, value) {
+                            $("#organization").append("<option value=" + index + ">" +
+                                value + "</option>");
+                        });
+                }
+                });
+    }
+    
+  });
+</script>
 
 <script>
      $('#province').change(function() {

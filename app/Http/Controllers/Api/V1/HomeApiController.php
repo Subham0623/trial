@@ -59,7 +59,7 @@ class HomeApiController extends Controller
 
         $submittedFormOrgs = $orgs->count();
 
-        $subjectAreas = SubjectArea::all();
+        $subjectAreas = SubjectArea::active()->with('activeParameters')->get();
 
         $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
 
@@ -126,7 +126,7 @@ class HomeApiController extends Controller
     
             $submittedFormOrgs = $orgs->count();
         
-            $subjectAreas = SubjectArea::all();
+            $subjectAreas = SubjectArea::active()->with('activeParameters')->get();
 
             $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
         }
@@ -196,7 +196,7 @@ class HomeApiController extends Controller
         
                 $submittedFormOrgs = $orgs->count();
             
-                $subjectAreas = SubjectArea::all();
+                $subjectAreas = SubjectArea::active()->with('activeParameters')->get();
 
                 $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
             }
@@ -256,7 +256,7 @@ class HomeApiController extends Controller
         
                 $submittedFormOrgs = $orgs->count();
             
-                $subjectAreas = SubjectArea::all();
+                $subjectAreas = SubjectArea::active()->with('activeParameters')->get();
 
                 $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
             }
@@ -351,6 +351,13 @@ class HomeApiController extends Controller
         
     }
 
+    /**
+     * It takes a request and an organization, and returns the result of the detail function, which
+     * takes a form and an organization.
+     * 
+     * @param Request request The request object
+     * @param Organization organization is the organization model
+     */
     public function organizationDetail(Request $request, Organization $organization)
     {
 
@@ -369,6 +376,23 @@ class HomeApiController extends Controller
         return $result = $this->detail($form, $organization);
     }
 
+    /**
+     * It takes in an array of subject areas, an array of forms, and the number of published forms. It
+     * then loops through the subject areas and calculates the total marks for each subject area. It
+     * then calculates the percentage of the total marks for each subject area
+     * 
+     * @param subjectAreas is an array of subject areas
+     * @param forms array of form ids
+     * @param published_forms The number of forms that have been published
+     * 
+     * @return <code>array:2 [▼
+     *   0 =&gt; array:2 [▼
+     *     "subject_area" =&gt; SubjectArea {#841 ▶}
+     *     "percentage" =&gt; 0.0
+     *   ]
+     *   1 =&gt; array:2 [▼
+     *     "subject_area"
+     */
     public function totalMarks($subjectAreas,$forms,$published_forms)
     {
         $total_marks = [];
@@ -385,10 +409,10 @@ class HomeApiController extends Controller
                 $total = $item->marksByFinalVerifier + $total;
             }
 
-            if($subjectArea->parameters->count())
+            if($subjectArea->activeParameters->count())
             {
 
-                foreach($subjectArea->parameters as  $parameter)
+                foreach($subjectArea->activeParameters as  $parameter)
                 {
                     $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
                 }
@@ -410,6 +434,12 @@ class HomeApiController extends Controller
         return $total_marks;
     }
     
+    /**
+     * It returns the percentage of each subject area of a form
+     * 
+     * @param form the form that is being viewed
+     * @param organization The organization that the form belongs to
+     */
     public function detail($form, $organization)
     {
         $total = [];
@@ -418,7 +448,7 @@ class HomeApiController extends Controller
 
         if(isset($form))
         {
-            $SA = SubjectArea::whereHas('forms',function($query) use ($form) {
+            $SA = SubjectArea::active()->whereHas('forms',function($query) use ($form) {
                 $query->where('form_id',$form->id);
             })->with(['forms' => function($query) use ($form) {
                 $query->where('form_id',$form->id);
@@ -437,17 +467,17 @@ class HomeApiController extends Controller
 
             // $obtained_marks = $form_subject_areas->sum('marksByFinalVerifier');
 
-            $subjectAreas = SubjectArea::with('parameters')->get();
+            $subjectAreas = SubjectArea::active()->with('activeParameters')->get();
 
             foreach($subjectAreas as $subjectArea)
             {
-                if($subjectArea->parameters->count())
+                if($subjectArea->activeParameters->count())
                 {
     
-                    foreach($subjectArea->parameters as  $parameter)
+                    foreach($subjectArea->activeParameters as  $parameter)
                     {
                         
-                        $subjectAreaTotal = $parameter->options()->max('points') + $subjectAreaTotal;
+                        $subjectAreaTotal = $parameter->activeOptions()->max('points') + $subjectAreaTotal;
                     }
 
                     $item = FormSubjectArea::where('form_id',$form->id)->where('subject_area_id',$subjectArea->id)->first();

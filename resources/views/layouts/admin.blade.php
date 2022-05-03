@@ -71,7 +71,7 @@
         
         <ul class="nav navbar-nav ml-2">
           <li class="nav-item">
-              <a class="nav-link view-site" href="{{route('index')}}" role="button" target="_blank">
+              <a class="nav-link view-site" href="{{config('panel.homepage')}}" role="button" target="_blank">
                   View Site 
                   <i class="fas fa-arrow-right"></i>
               </a>

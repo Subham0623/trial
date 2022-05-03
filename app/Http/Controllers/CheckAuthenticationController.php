@@ -30,7 +30,7 @@ class CheckAuthenticationController extends Controller
             if ($user->is_admin) {
                 return redirect()->route('admin.home');
             }
-            return redirect('http://mangosoftsolution.com:3930/');
+            return redirect(config('panel.homepage'));
         }
 
         // return $request->header('authorization');

@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
             RolesTableSeeder::class,
             PermissionRoleTableSeeder::class,
             RoleUserTableSeeder::class,
-            ProductCategoriesTableSeeder::class,
+            // ProductCategoriesTableSeeder::class,
             SettingsTableSeeder::class,
         ]);
 

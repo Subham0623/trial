@@ -22,6 +22,42 @@
             </div>
 
             <div class="form-group">
+                <label class="required" for="type">{{ trans('cruds.organization.fields.type') }}</label>
+                <select class="form-control select2 {{ $errors->has('type') ? 'is-invalid' : '' }}" name="type" id="type" >
+                    <option value="">Select Type</option>
+                    @foreach($types as  $type)
+                    
+                        <option value="{{ $type->id }}" {{ $organization->type_id == $type->id ? 'selected' : '' }}>{{ $type->title }}</option>
+
+                    @endforeach
+                </select>
+                @if($errors->has('type'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('type') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.organization.fields.type_helper') }}</span>
+            </div>
+
+            <div class="form-group">
+                <label class="required" for="organization">{{ trans('cruds.organization.fields.organization') }}</label>
+                <select class="form-control select2 {{ $errors->has('organization') ? 'is-invalid' : '' }}" name="organization" id="organization" >
+                    <option value="">Select organization</option>
+                    @foreach($organizations as  $org)
+                    
+                        <option value="{{ $org->id }}" {{ $organization->organization_id == $org->id ? 'selected' : '' }}>{{ $org->name }}</option>
+
+                    @endforeach
+                </select>
+                @if($errors->has('organization'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('organization') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.organization.fields.organization_helper') }}</span>
+            </div>
+
+            <div class="form-group">
                 <label class="required" for="province">{{ trans('cruds.organization.fields.province') }}</label>
                 <select class="form-control select2 {{ $errors->has('province') ? 'is-invalid' : '' }}" name="province" id="province" >
                     <option value="">Select Province</option>
@@ -94,6 +130,8 @@
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+                <a class="btn btn-default btn-close" href="{{ route("admin.organizations.index") }}">Cancel</a>
+
             </div>
         </form>
     </div>
@@ -114,7 +152,34 @@ $('#name').change(function(e) {
     );
 });
 </script>
-
+<script>
+     $('#type').change(function() {
+    
+    var type = $("#type").val();
+    console.log(type);
+    if(type .length > 0)
+    {
+        $.ajax({
+               type:'GET',
+               url:'/admins/type/organizations',
+               data:{
+                
+                   type: type,
+               },
+               success:function(data) {
+                $("#organization").empty();
+                $("#organization").append("<option value=''>Select Organization</option>");
+                $.each(data, function (index, value) {
+                            $("#organization").append("<option value=" + index + ">" +
+                                value + "</option>");
+                        });
+                    
+                }
+                });
+    }
+    
+  });
+</script>
 <script>
      $('#province').change(function() {
     

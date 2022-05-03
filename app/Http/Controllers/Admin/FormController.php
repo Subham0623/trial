@@ -92,6 +92,19 @@ class FormController extends Controller
     {
         // dd('here');
         // dd($request->organization);
+        
+        $roles = Auth::user()->roles()->pluck('id');
+
+
+        if($roles->contains(1) || $roles->contains(2))
+        {
+            $organizations = Organization::all();
+        }
+        else
+        {
+            $organizations = Auth::user()->organizations()->get();
+        }
+
         $org = $request->organization;
         $yr = $request->year;
         if((isset($request->organization)) && (isset($request->year)))
@@ -106,8 +119,6 @@ class FormController extends Controller
         {
             $forms=Form::where('year',$request->year)->get();
     }
-
-        $organizations = Organization::all();
 
         $years = Form::groupBy('year')->pluck('year')->filter();
 

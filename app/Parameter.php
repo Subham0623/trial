@@ -22,7 +22,6 @@ class Parameter extends Model
     protected $fillable = [
         'title',
         'sort',
-        'slug',
         'status',
         'description',
         'subject_area_id',
@@ -51,14 +50,25 @@ class Parameter extends Model
         return $this->belongsTo(SubjectArea::class);
     }
 
+
     public function options()
     {
         return $this->hasMany(Option::class);
     }
 
+    public function activeOptions()
+    {
+        return $this->options()->where('status',1);
+    }
+
     public function documents()
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function activeDocuments()
+    {
+        return $this->documents()->where('status',1);
     }
 
     public function formSubjectAreas()
