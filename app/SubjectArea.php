@@ -56,7 +56,7 @@ class SubjectArea extends Model
 
     public function forms()
     {
-        return $this->belongsToMany(Form::class)->withPivot('marks','id','marksByVerifier','marksByAuditor','marksByFinalVerifier');
+        return $this->belongsToMany(Form::class)->withPivot('marks','id','marksByVerifier','marksByAuditor','marksByFinalVerifier','status_verifier','status_auditor','status_final_verifier');
     }
 
     public function scopeActive($query)

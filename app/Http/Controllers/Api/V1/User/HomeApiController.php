@@ -351,7 +351,7 @@ class HomeApiController extends Controller
                                         }
                                         elseif($roles->contains(6) && $form->final_verified == 0)
                                         {
-                                            $form_details->update([
+                                            $form_detail->update([
                                                 'option_id' => $opt->id,
                                                 'marksByFinalVerifier' => $opt->points,
                                             ]); 
@@ -489,6 +489,9 @@ class HomeApiController extends Controller
                         'marksByVerifier'=> $totalByVerifier,
                         'marksByAuditor'=> $totalByAuditor,
                         'marksbyFinalVerifier'=> $totalByFinalVerifier,
+                        'status_verifier'=> ($roles->contains(5) ? 1 : 0),
+                        'status_auditor' => ($roles->contains(4) ? 1 : 0),
+                        'status_final_verifier' => ($roles->contains(6) ? 1: 0),
                     ]);
         
                     $total_marks = $form->subjectAreas->sum('pivot.marks');
