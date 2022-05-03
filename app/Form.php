@@ -84,7 +84,7 @@ class Form extends Model
 
     public function subjectAreas()
     {
-        return $this->belongsToMany(SubjectArea::class)->withPivot('marks','id','marksByVerifier','marksByAuditor','marksByFinalVerifier');
+        return $this->belongsToMany(SubjectArea::class)->withPivot('marks','id','marksByVerifier','marksByAuditor','marksByFinalVerifier','status_verifier','status_auditor','status_final_verifier');
     }
 
     public function organization()

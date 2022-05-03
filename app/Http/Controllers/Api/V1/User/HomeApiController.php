@@ -264,6 +264,7 @@ class HomeApiController extends Controller
     {        
         $user = Auth::user();
         $roles = $user->roles->pluck('id');
+        
         $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
         
 
@@ -492,6 +493,9 @@ class HomeApiController extends Controller
                         'marksByVerifier'=> $totalByVerifier,
                         'marksByAuditor'=> $totalByAuditor,
                         'marksbyFinalVerifier'=> $totalByFinalVerifier,
+                        'status_verifier'=> ($roles->contains(5) ? 1 : $form_subject_area->status_verifier),
+                        'status_auditor' => ($roles->contains(4) ? 1 : $form_subject_area->status_auditor),
+                        'status_final_verifier' => ($roles->contains(6) ? 1 : $form_subject_area->status_final_verifier),
                     ]);
         
                     $total_marks = $form->subjectAreas->sum('pivot.marks');

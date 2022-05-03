@@ -20,6 +20,9 @@ class FormSubjectArea extends Model
         'marksByVerifier',
         'marksByAuditor',
         'marksByFinalVerifier',
+        'status_verifier',
+        'status_auditor',
+        'status_final_verifier',
         'created_at',
         'updated_at',
     ];
