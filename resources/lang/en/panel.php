@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'site_title' => 'Asmita',
+    'site_title' => 'PLGSP',
 ];
