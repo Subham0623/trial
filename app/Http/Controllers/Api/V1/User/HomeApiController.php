@@ -237,7 +237,7 @@ class HomeApiController extends Controller
                 return response([
                     'subject_areas' => $subject_areas,
                     'selected_options' => $selected_options,
-                    'form_details' => $form->load('organization'),
+                    'form_details' => $form->load('organization','form_subjectareas'),
                 ]);
             }
             else
