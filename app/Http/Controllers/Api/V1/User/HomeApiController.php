@@ -240,7 +240,7 @@ class HomeApiController extends Controller
                 return response([
                     'subject_areas' => $subject_areas,
                     'selected_options' => $selected_options,
-                    'form_details' => $form->load('organization','form_subjectareas'),
+                    'form_details' => $form->load('organization','subjectAreas.activeParameters.activeOptions','subjectAreas.activeParameters.activeDocuments'),
                 ]);
             }
             else
@@ -499,10 +499,10 @@ class HomeApiController extends Controller
                         'status_final_verifier' => ($roles->contains(6) ? 1 : $form_subject_area->status_final_verifier),
                     ]);
         
-                    $total_marks = $form->form_subjectareas->sum('marks');
-                    $total_marks_verifier = $form->form_subjectareas->sum('marksByVerifier');
-                    $total_marks_auditor = $form->form_subjectareas->sum('marksByAuditor');
-                    $total_marks_finalVerifier = $form->form_subjectareas->sum('marksByFinalVerifier');
+                    $total_marks = $form->subjectAreas->sum('pivot.marks');
+                    $total_marks_verifier = $form->subjectAreas->sum('pivot.marksByVerifier');
+                    $total_marks_auditor = $form->subjectAreas->sum('pivot.marksByAuditor');
+                    $total_marks_finalVerifier = $form->subjectAreas->sum('pivot.marksByFinalVerifier');
         
                     $form->update([
                         'total_marks' => $total_marks,
@@ -515,7 +515,7 @@ class HomeApiController extends Controller
                     $selected_options = $this->selectedOptions($form);
                     return response([
                         'message'=>'Form updated successfully',
-                        'form_details' => $form->load('organization','form_subjectareas'),
+                        'form_details' => $form->load('organization','subjectAreas.activeParameters.activeOptions','subjectAreas.activeParameters.activeDocuments'),
                         'subject_areas' => $subject_areas,
                         'selected_options' => $selected_options,
                     ],201);
@@ -567,7 +567,7 @@ class HomeApiController extends Controller
 
                 return response([
                     'message'=>'Document updated successfully',
-                    'form_details' => $form->load('organization','form_subjectareas'),
+                    'form_details' => $form->load('organization','subjectAreas.activeParameters.activeOptions','subjectAreas.activeParameters.activeDocuments'),
                     'subject_areas' => $subject_areas,
                     'selected_options' => $selected_options,
                 ],201);

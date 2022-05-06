@@ -21,7 +21,8 @@ class UpdateProvinceRequest extends FormRequest
     {
         return [
             'name' => [
-                'required'],
+                'required',
+            'unique:provinces'],
         ];
 
     }

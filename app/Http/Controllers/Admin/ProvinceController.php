@@ -50,7 +50,7 @@ class ProvinceController extends Controller
     {
         // dd($request->all());
         $request->validate([
-            'addmore.*.name' => 'required',
+            'addmore.*.name' => 'required|unique:districts',
         ]);
         $data = [
             'name' => $request->name,
@@ -105,7 +105,7 @@ class ProvinceController extends Controller
     public function update(UpdateProvinceRequest $request,Province $province)
     {
         $request->validate([
-            'addmore.*.name' => 'required',
+            'addmore.*.name' => 'required|unique:districts',
         ]);
         
         $data = [
@@ -118,8 +118,9 @@ class ProvinceController extends Controller
         {
             $district->delete();
         }
-
-        foreach ($request->addmore as $key => $value) {
+        if($request->addmore)
+        {
+            foreach ($request->addmore as $key => $value) {
             // dd($value['name']);
             
 
@@ -128,6 +129,7 @@ class ProvinceController extends Controller
                     'province_id' => $province->id
                 ]);
             
+            }
         }
         return redirect()->route('admin.provinces.index')->with('message','Province details edited successfully!');
 

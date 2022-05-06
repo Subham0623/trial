@@ -96,13 +96,7 @@
                                     </a>
                                 @endcan
 
-                                @if($user->roles->contains(3))
-                                    @can('user_show')
-                                        <a class="btn btn-xs btn-primary" href="{{ route('admin.users.manageAccessToBook', $user->id) }}">
-                                            Manage Access
-                                        </a>
-                                    @endcan
-                                @endif
+                                
                                 @can('user_edit')
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.users.edit', $user->id) }}">
                                         {{ trans('global.edit') }}

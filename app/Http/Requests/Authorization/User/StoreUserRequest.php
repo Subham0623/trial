@@ -31,6 +31,8 @@ class StoreUserRequest extends FormRequest
             'roles'    => [
                 'required',
                 'array'],
+            'token'    => [
+                'unique:users'],
         ];
 
     }

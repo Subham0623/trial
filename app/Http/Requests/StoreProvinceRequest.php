@@ -22,7 +22,8 @@ class StoreProvinceRequest extends FormRequest
     {
         return [
             'name'         => [
-                'required'],
+                'required',
+            'unique:provinces'],
             
         ];
 

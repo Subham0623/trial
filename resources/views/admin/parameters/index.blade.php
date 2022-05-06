@@ -32,9 +32,6 @@
                             {{ trans('cruds.parameter.fields.subject_area') }}
                         </th>
                         <th>
-                            {{ trans('cruds.parameter.fields.sort') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.parameter.fields.option') }}
                         </th>
                         <th>
@@ -62,9 +59,6 @@
                             </td>
                             <td>
                                 {{ ($parameter->subjectArea) ? $parameter->subjectArea->title : '' }}
-                            </td>
-                            <td>
-                                {{ $parameter->sort ?? '' }}
                             </td>
                             <td>
                                 @foreach($parameter->options as $key => $item)
