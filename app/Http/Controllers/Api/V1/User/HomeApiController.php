@@ -243,7 +243,7 @@ class HomeApiController extends Controller
                 return response([
                     'subject_areas' => $subject_areas,
                     'selected_options' => $selected_options,
-                    'form_details' => $form->load('organization'),
+                    'form_details' => $form->load('organization','form_subjectareas'),
                 ]);
             }
             else
@@ -267,6 +267,7 @@ class HomeApiController extends Controller
     {        
         $user = Auth::user();
         $roles = $user->roles->pluck('id');
+        
         $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
         
 
@@ -280,6 +281,7 @@ class HomeApiController extends Controller
                     'subject_area_id' => $request->subject_area,
                 ]);
                 // dd($form_subject_area);
+                
                 if($request->parameters)
                 {
                     
@@ -495,12 +497,15 @@ class HomeApiController extends Controller
                         'marksByVerifier'=> $totalByVerifier,
                         'marksByAuditor'=> $totalByAuditor,
                         'marksbyFinalVerifier'=> $totalByFinalVerifier,
+                        'status_verifier'=> ($roles->contains(5) ? 1 : $form_subject_area->status_verifier),
+                        'status_auditor' => ($roles->contains(4) ? 1 : $form_subject_area->status_auditor),
+                        'status_final_verifier' => ($roles->contains(6) ? 1 : $form_subject_area->status_final_verifier),
                     ]);
         
-                    $total_marks = $form->subjectAreas->sum('pivot.marks');
-                    $total_marks_verifier = $form->subjectAreas->sum('pivot.marksByVerifier');
-                    $total_marks_auditor = $form->subjectAreas->sum('pivot.marksByAuditor');
-                    $total_marks_finalVerifier = $form->subjectAreas->sum('pivot.marksByFinalVerifier');
+                    $total_marks = $form->form_subjectareas->sum('marks');
+                    $total_marks_verifier = $form->form_subjectareas->sum('marksByVerifier');
+                    $total_marks_auditor = $form->form_subjectareas->sum('marksByAuditor');
+                    $total_marks_finalVerifier = $form->form_subjectareas->sum('marksByFinalVerifier');
         
                     $form->update([
                         'total_marks' => $total_marks,
@@ -590,7 +595,7 @@ class HomeApiController extends Controller
                         'final_verified_at' => Carbon::now()->toDateTimeString(),
 
                     ]);
-
+                    dispatch(new SendFormVerifiedJob($form));
                     return response(['message'=>'Form verified successfully'],200);
                 }
                 else
@@ -609,7 +614,7 @@ class HomeApiController extends Controller
                         'audited_at' => Carbon::now()->toDateTimeString(),
 
                     ]);
-
+                    dispatch(new SendFormAudittedJob($form));
                     return response(['message'=>'Form audited successfully'],200);
                 }
                 else
@@ -627,8 +632,8 @@ class HomeApiController extends Controller
                         'verified_by' => $user,
                         'verified_at' => Carbon::now()->toDateTimeString(),
                     ]);
-
-                    return response(['message'=>'Form verified successfully'],200);
+                    dispatch(new SendFormSubmittedJob($form));
+                    return response(['message'=>'Form submitted successfully'],200);
                 }
                 elseif($form->status == 0 && $form->user_id == $user)
                 {
@@ -639,6 +644,7 @@ class HomeApiController extends Controller
                         'verified_by' => $user,
                         'verified_at' => Carbon::now()->toDateTimeString(),
                     ]);
+                    dispatch(new SendFormSubmittedJob($form));
                     return response(['message'=>'Form submitted successfully'],200);
                 }
                 else
@@ -653,7 +659,7 @@ class HomeApiController extends Controller
                     'status' => 1,
                     'user_id' => $user
                 ]);
-                
+                dispatch(new SendFormSubmittedJob($form));
                 return response(['message'=>'Form submitted successfully'],200);
             }
             else
@@ -670,7 +676,8 @@ class HomeApiController extends Controller
 
     public function show()
     {
-        $forms = Auth::user()->forms()->get();
+        $user = Auth::user()->organizations()->pluck('id');
+        $forms = Form::whereIn('organization_id',$user)->with('user')->get();
         return response()->json(['forms'=> $forms]);
     }
 

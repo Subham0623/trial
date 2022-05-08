@@ -20,17 +20,21 @@ class FormSubjectArea extends Model
         'marksByVerifier',
         'marksByAuditor',
         'marksByFinalVerifier',
+        'status_verifier',
+        'status_auditor',
+        'status_final_verifier',
         'created_at',
         'updated_at',
     ];
 
     public function parameters()
     {
-        return $this->belongsToMany(Parameter::class)->withPivot('marks','remarks','option_id','marksByVerifier','marksByAuditor','marksByFinalVerifier','is_applicable');
+        return $this->belongsToMany(Parameter::class)->where('status',1)->withPivot('marks','remarks','option_id','marksByVerifier','marksByAuditor','marksByFinalVerifier','is_applicable');
     }
 
     public function selected_subjectareas()
     {
-        return $this->hasMany(FormDetail::class, 'form_subject_area_id');
+        $active_parameters = $this->parameters()->pluck('parameter_id');
+        return $this->hasMany(FormDetail::class, 'form_subject_area_id')->whereIn('parameter_id',$active_parameters);
     }
 }

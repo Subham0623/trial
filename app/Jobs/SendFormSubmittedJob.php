@@ -9,10 +9,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Form;
 use App\Models\Authorization\User\User;
-use App\Notifications\FormUpdatedNotification;
+use App\Notifications\FormSubmittedNotification;
 use Illuminate\Support\Facades\Notification;
 
-class SendFormUpdatedJob implements ShouldQueue
+class SendFormSubmittedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -37,8 +37,10 @@ class SendFormUpdatedJob implements ShouldQueue
             $query->whereIn('id',[1,2]);
         })->get();
 
+        $this->form->organization;
+
         if($admins) {
-            Notification::send($admins, new FormUpdatedNotification($this->form, route('admin.forms')));
+            Notification::send($admins, new FormSubmittedNotification($this->form, route('admin.forms')));
         }
     }
 }

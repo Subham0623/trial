@@ -9,10 +9,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Form;
 use App\Models\Authorization\User\User;
-use App\Notifications\FormUpdatedNotification;
+use App\Notifications\FormAudittedNotification;
 use Illuminate\Support\Facades\Notification;
 
-class SendFormUpdatedJob implements ShouldQueue
+class SendFormAudittedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -38,7 +38,7 @@ class SendFormUpdatedJob implements ShouldQueue
         })->get();
 
         if($admins) {
-            Notification::send($admins, new FormUpdatedNotification($this->form, route('admin.forms')));
+            Notification::send($admins, new FormAudittedNotification($this->form, route('admin.forms')));
         }
     }
 }

@@ -84,7 +84,7 @@ class Form extends Model
 
     public function subjectAreas()
     {
-        return $this->belongsToMany(SubjectArea::class)->withPivot('marks','id','marksByVerifier','marksByAuditor','marksByFinalVerifier');
+        return $this->belongsToMany(SubjectArea::class)->where('status',1)->withPivot('marks','id','marksByVerifier','marksByAuditor','marksByFinalVerifier','status_verifier','status_auditor','status_final_verifier');
     }
 
     public function organization()
@@ -101,7 +101,8 @@ class Form extends Model
     // form's relation with pivot model form-subject-area
     public function form_subjectareas()
     {
-        return $this->hasMany(FormSubjectArea::class);
+        $active_SA = $this->subjectAreas()->pluck('subject_area_id');
+        return $this->hasMany(FormSubjectArea::class)->whereIn('subject_area_id',$active_SA);
     }
 
     public function scopePublish($query)

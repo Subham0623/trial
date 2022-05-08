@@ -37,7 +37,7 @@ class SendUserAddedJob implements ShouldQueue
         auth()->user()->notify(new UserAddedNotification($this->user, route('admin.users.index')));
         
         $admins = User::whereHas('roles', function ($query) {
-                    $query->where('id',2);
+                    $query->whereIn('id',[1,2]);
                 })->get();
         
         if($admins) {

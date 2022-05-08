@@ -43,7 +43,7 @@ class FormUpdatedNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Form was created by organization ' . $this->form->organization->name . ' for year '. $this->form->year)
+                    ->line('Form is being updated by organization ' . $this->form->organization->name . ' for year '. $this->form->year)
                     ->action('Click me to view', url($this->redirect_url))  
                     ->line('Thank you for using our application!');
     }
@@ -61,7 +61,7 @@ class FormUpdatedNotification extends Notification
         // if auth user has role User
         if($roles->contains(3)){
             return [
-                'message' => 'Form was updated by organization ' . $this->form->organization->name . ' for year '. $this->form->year,
+                'message' => 'Form is being updated by organization ' . $this->form->organization->name . ' for year '. $this->form->year,
                 'url' => $this->redirect_url,
             ];
         }
@@ -75,7 +75,7 @@ class FormUpdatedNotification extends Notification
         // if auth user has role OrgAdmin
         elseif($roles->contains(5)){
             return [
-                'message' => 'Form was updated by organization ' . $this->form->organization->name . ' for year '. $this->form->year,
+                'message' => 'Form is being updated by organization ' . $this->form->organization->name . ' for year '. $this->form->year,
                 'url' => $this->redirect_url,
             ];
         }

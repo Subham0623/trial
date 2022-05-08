@@ -25,6 +25,7 @@ class SendFormCreatedJob implements ShouldQueue
     public function __construct(Form $form)
     {
         $this->form = $form;
+        dd($this->form->organization);
     }
 
     /**
@@ -35,7 +36,7 @@ class SendFormCreatedJob implements ShouldQueue
     public function handle()
     {
         $admins = User::whereHas('roles', function ($query) {
-            $query->where('id',2);
+            $query->whereIn('id',[1,2]);
         })->get();
 
         if($admins) {
