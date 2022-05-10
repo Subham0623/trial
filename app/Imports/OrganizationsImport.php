@@ -84,6 +84,7 @@ class OrganizationsImport implements ToModel, WithValidation, WithHeadingRow
         return [
             'name' => [
                 'required',
+                'unique:organizations'
             ],
             'address' => [
                 'required',

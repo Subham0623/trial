@@ -44,7 +44,8 @@ class OrganizationController extends Controller
         abort_if(Gate::denies('organization_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $provinces = Province::all();
-        $districts = District::all();
+        // $districts = District::all();
+        $districts = [];
         $types = Type::all();
 
         return view('admin.organizations.create',compact('provinces','districts','types'));
