@@ -30,7 +30,7 @@ class UpdateUserRequest extends FormRequest
                 'required',
                 'array'],
             'token' =>[
-                'unique:users'],
+                'unique:users,token,' . request()->route('user')->id],
 
         ];
 
