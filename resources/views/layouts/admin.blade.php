@@ -123,7 +123,7 @@
           </li>
         </ul>
         <div class="dropdown d-flex">
-          <div class="align">
+          <div class="align d-flex align-items-center">
             <span class="admin-name">Hi, {{Auth::user()->name}}</span>
             <a href="javascript:void(0)" class="chip ml-3" data-toggle="dropdown" aria-expanded="false">
               <span class="avatar" style="
@@ -157,7 +157,7 @@
         <main class="main">
 
 
-            <div style="padding-top: 20px" class="container-fluid">
+            <div style="padding-top: 20px; background: #f5f9fc !important" class="container-fluid">
                 @if(session('message'))
                     <div class="row mb-2">
                         <div class="col-lg-12" id="message">

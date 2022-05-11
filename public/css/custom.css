@@ -11,11 +11,11 @@ textarea {
 .dataTables_filter,
 .dt-buttons {
     margin-bottom: 0.333em;
-    margin-top: .2rem;
+    margin-top: 0.2rem;
 }
 
 .dataTables_filter {
-    margin-right: .2rem;
+    margin-right: 0.2rem;
 }
 
 .dt-buttons .btn {
@@ -72,7 +72,7 @@ table.dataTable thead .sorting_desc {
 
 .btn-default.focus,
 .btn-default:focus {
-    box-shadow: 0 0 0 .2rem rgba(209, 213, 215, .5);
+    box-shadow: 0 0 0 0.2rem rgba(209, 213, 215, 0.5);
 }
 
 .btn-default:hover {
@@ -93,12 +93,12 @@ table.dataTable thead .sorting_desc {
     font-weight: bold;
 }
 .searchable-fields {
-    padding-left:5px;
+    padding-left: 5px;
 }
 .searchable-link {
-    padding:0 5px 0 5px;
+    padding: 0 5px 0 5px;
 }
-.searchable-link:hover   {
+.searchable-link:hover {
     cursor: pointer;
     background: #eaeaea;
 }
@@ -116,10 +116,28 @@ table.dataTable thead .sorting_desc {
     display: block;
 }
 
-.my-custom__table thead tr th:first-child{
+.my-custom__table thead tr th:first-child {
     width: 30px;
 }
 
-.fam{
+.fam {
+    width: 100%;
+}
+
+.card {
+    box-shadow: 0px 3px 3px -1px rgb(10 22 70 / 10%),
+        0px 0px 1px 0px rgb(10 22 70 / 6%) !important;
+    border: none;
+}
+
+.custom__table-alignment {
+    flex-wrap: nowrap;
+}
+
+.custom__table-alignment-first {
+    margin-right: 16px;
+}
+
+.custom__table-alignment > * {
     width: 100%;
 }
