@@ -39,7 +39,7 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.type_helper') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group active-field">
                 <label class="required" for="organization">{{ trans('cruds.organization.fields.organization') }}</label>
                 <select class="form-control select2 {{ $errors->has('organization') ? 'is-invalid' : '' }}" name="organization" id="organization" >
                     <option value="">Select organization</option>
@@ -75,7 +75,7 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.province_helper') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group district-select">
                 <label class="required" for="district">{{ trans('cruds.organization.fields.district') }}</label>
                 <select class="form-control select2 {{ $errors->has('district') ? 'is-invalid' : '' }}" name="district" id="district" >
                     <option value="">Select District</option>
@@ -156,7 +156,15 @@ $('#name').change(function(e) {
      $('#type').change(function() {
     
     var type = $("#type").val();
-    console.log(type);
+    
+    if(type == 1 || !type){
+        document.querySelector('.active-field').style.display = 'none';
+    }else{
+        document.querySelector('.active-field').style.display = 'block';
+
+    }
+
+    
     if(type .length > 0)
     {
         $.ajax({
@@ -181,11 +189,27 @@ $('#name').change(function(e) {
   });
 </script>
 <script>
+    let pending = true;
+    var spinner = `<div class="block text-center">
+    
+    <div class="spinner-border" role="status" style="width: 1rem; height: 1rem">
+                         <span class="sr-only">Loading...</span>
+                    </div> Please Wait
+    
+    <div/>
+                    
+                    `
+                    ;
      $('#province').change(function() {
     
     var province = $("#province").val();
-    console.log(province);
-    if(province .length > 0)
+    console.log(province.length, 'province');
+    document.querySelector('#select2-province-container').addEventListener('click', function(){
+        $('#select2-district-container').html(spinner);
+
+    })
+    if(!province) province = 0;
+    if(province)
     {
         $.ajax({
                type:'GET',
@@ -194,17 +218,34 @@ $('#name').change(function(e) {
                 
                    province: province,
                },
+               cache: true,
                success:function(data) {
+                   console.log(data, 'sss')
                 $("#district").empty();
                 $("#district").append("<option value=''>Select District</option>");
                 $.each(data, function (index, value) {
                             $("#district").append("<option value=" + index + ">" +
                                 value + "</option>");
                         });
-                    
+                },
+                error: function(err){
+                    $("#district").empty();
                 }
+                
+
                 });
     }
+
+    // if(pending){
+    //     console.log(document.querySelector('#select2-district-container'))
+
+    //     document.querySelector('#select2-district-container').style.pointerEvents = 'none';
+    //     document.querySelector('#select2-district-container').style.cursor = 'progress';
+    // }else{
+    //     document.querySelector('#select2-district-container').style.pointerEvents = 'auto';
+    //     document.querySelector('#select2-district-container').style.cursor = 'pointer';
+
+    // }
     
   });
 </script>

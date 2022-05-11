@@ -184,7 +184,11 @@ $('#name').change(function(e) {
     
     var province = $("#province").val();
     console.log(province);
-    if(province .length > 0)
+
+    })
+    if(!province) province = 0;
+    if(province)
+    
     {
         $.ajax({
                type:'GET',
@@ -193,7 +197,10 @@ $('#name').change(function(e) {
                 
                    province: province,
                },
+               cache: true,
+
                success:function(data) {
+                console.log(data, 'sss')
                 $("#district").empty();
                 $("#district").append("<option value=''>Select District</option>");
                 $.each(data, function (index, value) {
@@ -201,7 +208,10 @@ $('#name').change(function(e) {
                                 value + "</option>");
                         });
                     
-                }
+                },
+                error: function(err){
+                    $("#district").empty();
+                } 
                 });
     }
     
