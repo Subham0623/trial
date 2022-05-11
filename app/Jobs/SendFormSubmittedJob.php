@@ -37,7 +37,8 @@ class SendFormSubmittedJob implements ShouldQueue
             $query->whereIn('id',[1,2]);
         })->get();
 
-        $this->form->organization;
+        // merge other related users of the organization
+        $admins = $admins->merge($this->form->organization->users()->get());
 
         if($admins) {
             Notification::send($admins, new FormSubmittedNotification($this->form, route('admin.forms')));

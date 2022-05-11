@@ -43,7 +43,7 @@ class FormUpdatedNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Form is being updated by organization ' . $this->form->organization->name . ' for year '. $this->form->year)
+                    ->line('Form is being updated by organization : <b>' . $this->form->organization->name . '</b> for year '. $this->form->year)
                     ->action('Click me to view', url($this->redirect_url))  
                     ->line('Thank you for using our application!');
     }
@@ -61,28 +61,28 @@ class FormUpdatedNotification extends Notification
         // if auth user has role User
         if($roles->contains(3)){
             return [
-                'message' => 'Form is being updated by organization ' . $this->form->organization->name . ' for year '. $this->form->year,
+                'message' => 'Form is being updated by organization : <b>' . $this->form->organization->name . '</b> for year '. $this->form->year,
                 'url' => $this->redirect_url,
             ];
         }
         // if auth user has role Auditor
         elseif($roles->contains(4)){
             return [
-                'message' => 'Form is being audited of organization ' . $this->form->organization->name . ' for year '. $this->form->year,
+                'message' => 'Form is being audited of organization : <b>' . $this->form->organization->name . '</b> for year '. $this->form->year,
                 'url' => $this->redirect_url,
             ];
         }
         // if auth user has role OrgAdmin
         elseif($roles->contains(5)){
             return [
-                'message' => 'Form is being updated by organization ' . $this->form->organization->name . ' for year '. $this->form->year,
+                'message' => 'Form is being updated by organization : <b>' . $this->form->organization->name . '</b> for year '. $this->form->year,
                 'url' => $this->redirect_url,
             ];
         }
         // if auth user has role FinalVerifier
         elseif($roles->contains(6)){
             return [
-                'message' => 'Form is being verified of organization ' . $this->form->organization->name . ' for year '. $this->form->year,
+                'message' => 'Form is being verified of organization : <b>' . $this->form->organization->name . '</b> for year '. $this->form->year,
                 'url' => $this->redirect_url,
             ];
         }

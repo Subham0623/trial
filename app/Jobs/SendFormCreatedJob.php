@@ -25,7 +25,6 @@ class SendFormCreatedJob implements ShouldQueue
     public function __construct(Form $form)
     {
         $this->form = $form;
-        dd($this->form->organization);
     }
 
     /**
@@ -39,6 +38,7 @@ class SendFormCreatedJob implements ShouldQueue
             $query->whereIn('id',[1,2]);
         })->get();
 
+        
         if($admins) {
             Notification::send($admins, new FormCreatedNotification($this->form, route('admin.forms')));
         }
