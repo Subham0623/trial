@@ -103,7 +103,7 @@ class OrganizationController extends Controller
         $provinces = Province::all();
         $districts = District::where('province_id',$organization->province_id)->get();
         $types = Type::all();
-        $organizations = Organization::where('type_id',$organization->type->type_id)->get();
+        $organizations = Organization::where('type_id',(($organization->type) ? $organization->type->type_id : ''))->get();
 
         return view('admin.organizations.edit',compact('provinces','districts','organization','types','organizations'));
     }

@@ -40,7 +40,7 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
-        
+       
         $user = Auth::user();
         $roles = $user->roles()->pluck('id');
         $user_organization = $user->organizations->first();
@@ -57,7 +57,7 @@ class HomeApiController extends Controller
                 ];
 
                 $form = Form::create($data);
-                // dd($form);
+                
                 $form_subject_area = FormSubjectArea::create([
                     'form_id' => $form->id,
                     'subject_area_id' => $request->subject_area,
@@ -352,6 +352,7 @@ class HomeApiController extends Controller
                                             $form_detail->update([
                                                 'option_id' => $opt->id,
                                                 'marksByAuditor' => $opt->points,
+                                                'reassign' => $parameter['reassign'],
                                             ]); 
                                             $form->update([
                                                 'audited_by'=>$user->id
@@ -362,6 +363,7 @@ class HomeApiController extends Controller
                                             $form_detail->update([
                                                 'option_id' => $opt->id,
                                                 'marksByFinalVerifier' => $opt->points,
+                                                'reassign' => $parameter['reassign'],
                                             ]); 
                                             $form->update([
                                                 'final_verified_by'=>$user->id
@@ -486,6 +488,8 @@ class HomeApiController extends Controller
                             }
                         }
                     }
+
+                    $count = $form_subject_area->selected_subjectareas()->where('reassign',1)->count();
         
                     $total = $form_subject_area->parameters->sum('pivot.marks');
                     $totalByVerifier = $form_subject_area->parameters->sum('pivot.marksByVerifier');
@@ -498,8 +502,8 @@ class HomeApiController extends Controller
                         'marksByAuditor'=> $totalByAuditor,
                         'marksbyFinalVerifier'=> $totalByFinalVerifier,
                         'status_verifier'=> ($roles->contains(5) ? 1 : $form_subject_area->status_verifier),
-                        'status_auditor' => ($roles->contains(4) ? 1 : $form_subject_area->status_auditor),
-                        'status_final_verifier' => ($roles->contains(6) ? 1 : $form_subject_area->status_final_verifier),
+                        'status_auditor' => ($roles->contains(4) ? (($count>0)?2 : 1):$form_subject_area->status_auditor),
+                        'status_final_verifier' => ($roles->contains(6) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
                     ]);
         
                     $total_marks = $form->form_subjectareas->sum('marks');
