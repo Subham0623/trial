@@ -21,7 +21,7 @@ class StoreSubjectAreaRequest extends FormRequest
     {
         return [
             'title'         => [
-                'required'],
+                'required',],
             'sort'   =>[
                 'required'],
             

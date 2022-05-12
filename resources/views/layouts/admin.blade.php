@@ -365,7 +365,7 @@
                   $.each(data,function(i,ele){
                       $('.notification-menu').append(`
                               <a href="${"{{ route('admin.show_notifications','temp_id') }}".replace('temp_id',ele.id)}" class="dropdown-item notification">
-                                  <p><i class="fas fa-trophy mr-2"></i>${ele.data.message}</p>
+                                  <p><i class="fas fa-envelop mr-2"></i>${ele.data.message}</p>
                                   <span class="float-right text-muted text-sm">${moment(ele.created_at).fromNow()}</span>
                               </a>
                           <div class="dropdown-divider"></div>

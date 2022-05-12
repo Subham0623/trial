@@ -37,6 +37,9 @@ class SendFormVerifiedJob implements ShouldQueue
             $query->whereIn('id',[1,2]);
         })->get();
 
+        // merge other related users of the organization
+        $admins = $admins->merge($this->form->organization->users()->get());
+
         if($admins) {
             Notification::send($admins, new FormVerfiedNotification($this->form, route('admin.forms')));
         }

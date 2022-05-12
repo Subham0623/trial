@@ -146,7 +146,7 @@
                                 <tbody>
                                     @if($form !== null)
                                     @foreach($form_subject_area as $subjectArea)
-                                    @foreach($subjectArea->activeParameters as $key => $parameter)
+                                    @foreach($subjectArea->parameters as $key => $parameter)
                                     <tr>
                                         <th scope="row">{{$i++}}</th>
                                         <td style="min-width: 180px;">{{$parameter->title}}</td>

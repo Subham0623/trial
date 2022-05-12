@@ -31,7 +31,7 @@ class LoginApiController extends Controller
                 if(filter_var($request->username, FILTER_VALIDATE_EMAIL))    
                 {
                     if(!Auth::attempt(['email' => $request->username, 'password'=>$request->password])){
-                        return response(['message'=>'invalid login credentials']);
+                        return response(['message'=>'invalid login credentials'],400);
                     }
                     else
                     {
@@ -43,7 +43,7 @@ class LoginApiController extends Controller
                 else
                 {
                     if(!Auth::attempt(['token' => $request->username, 'password'=>$request->password])){
-                        return response(['message'=>'invalid login credentials']);
+                        return response(['message'=>'invalid login credentials'],400);
                     }
                     else
                     {
@@ -54,12 +54,12 @@ class LoginApiController extends Controller
             }
             else
             {
-                return response(['message'=> 'User is deactivated']);
+                return response(['message'=> 'User is deactivated'],400);
             }
         }
         else
         {
-            return response(['message'=> 'invalid login credentials']);
+            return response(['message'=> 'invalid login credentials'],400);
         }
     }
     

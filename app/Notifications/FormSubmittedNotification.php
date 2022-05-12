@@ -43,7 +43,7 @@ class FormSubmittedNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('New form was submitted for verification by organization ' . $this->form->organization->name . ' for year '. $this->form->year)
+                    ->line('New form was submitted for verification by organization : <b>' . $this->form->organization->name . '</b> for year '. $this->form->year)
                     ->action('Click me to view', url($this->redirect_url))  
                     ->line('Thank you for using our application!');
     }
@@ -57,7 +57,7 @@ class FormSubmittedNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'New form was submitted for verification by organization ' . $this->form->organization->name . ' for year '. $this->form->year,
+            'message' => 'New form was submitted for verification by organization : <b>' . $this->form->organization->name . '</b> for year '. $this->form->year,
             'url' => $this->redirect_url,
         ];
     }

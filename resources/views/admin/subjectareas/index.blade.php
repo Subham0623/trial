@@ -29,9 +29,6 @@
                             {{ trans('cruds.subjectarea.fields.title') }}
                         </th>
                         <th>
-                            {{ trans('cruds.subjectarea.fields.sort') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.subjectarea.fields.status') }}
                         </th>
                         <th>
@@ -50,9 +47,6 @@
                             </td>
                             <td>
                                 {{ $subject->title ?? '' }}
-                            </td>
-                            <td>
-                                {{ $subject->sort ?? '' }}
                             </td>
                             <td>
                                 <input data-id="{{$subject->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="InActive" {{ $subject->status ? 'checked' : '' }}>
