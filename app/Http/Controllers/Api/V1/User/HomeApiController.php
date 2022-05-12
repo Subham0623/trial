@@ -141,12 +141,12 @@ class HomeApiController extends Controller
                             //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
                             // }
                             $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
-                                foreach ($subject_parameter->documents as $media) {
-                                
-                                    if (!in_array($media->file_name, $request->input('resource', []))) {
-                                        $media->delete();
-                                    }
-                                }
+                                // foreach ($subject_parameter->documents as $media) {
+                                //     dd($document->getClientOriginalName());
+                                //     if (!in_array($media->file_name, $request->input('resource', []))) {
+                                //         $media->delete();
+                                //     }
+                                // }
                                 
                                 $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
                                 $media->document_id = $document_details->id;
