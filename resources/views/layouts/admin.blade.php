@@ -38,6 +38,36 @@
         gap: .4rem;
       }
 
+      .chip.ml-3{
+        display: none;
+      }
+
+      .custom__align{
+          margin-right: 8px
+        }
+
+      @media (max-width: 400px){
+        .view__site-container{
+          position: absolute !important;
+          right: 8px;
+          bottom: 6px;
+        }
+
+        .app-header{
+          height: 120px;
+        }
+
+        .app-header .navbar-nav .dropdown-menu-right{
+          right: -77px;
+        }
+
+        .app-body{
+          margin-top: 120px;
+        }
+
+
+      }
+
       .view-site i {
         font-size: .8rem;
       }
@@ -53,7 +83,7 @@
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed pace-done sidebar-lg-show">
     <header class="app-header navbar">
-        <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
+        <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show" style="margin-right: 0 !important">
             <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand" href="#">
@@ -65,15 +95,15 @@
             <span class="navbar-brand-minimized">{{ trans('panel.site_title') }}</span>
           @endif
         </a>
-        <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
+        <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show" >
             <span class="navbar-toggler-icon"></span>
         </button>
         
         <ul class="nav navbar-nav ml-2">
-          <li class="nav-item">
+          <li class="nav-item view__site-container">
               <a class="nav-link view-site" href="{{config('panel.homepage')}}" role="button" target="_blank">
                   View Site 
-                  <i class="fas fa-arrow-right"></i>
+                  <i class="fas fa-share"></i>
               </a>
           </li>
         </ul>
@@ -98,7 +128,8 @@
           <!-- Notifications Dropdown Menu -->
           <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-              <img src="{{asset('bell.png')}}" style="width: 1.6rem;"><span class="badge badge-danger navbar-badge notification-count"></span>
+              <!-- <img src="{{asset('bell.png')}}" style="width: 1.6rem;"><span class="badge badge-danger navbar-badge notification-count"></span> -->
+              <i class="fas fa-bell"></i>
             </a>
             <div class="dropdown-menu notification-menu dropdown-menu-lg dropdown-menu-right">
               <span class="dropdown-item dropdown-header">15 Notifications</span>
@@ -122,7 +153,7 @@
             </div>
           </li>
         </ul>
-        <div class="dropdown d-flex">
+        <div class="dropdown d-flex custom__align">
           <div class="align d-flex align-items-center">
             <span class="admin-name">Hi, {{Auth::user()->name}}</span>
             <a href="javascript:void(0)" class="chip ml-3" data-toggle="dropdown" aria-expanded="false">
