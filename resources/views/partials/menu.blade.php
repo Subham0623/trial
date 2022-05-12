@@ -77,7 +77,6 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     @can('product_category_access')
-                    <li class="nav-item nav-dropdown">
                         <li class="nav-item {{ request()->is('admins/product-categories') || request()->is('admins/product-categories/*') ? 'active' : '' }}">
                             <a href="{{ route("admin.product-categories.index") }}"
                                 class="nav-link ">
@@ -87,7 +86,6 @@
                                 {{ trans('cruds.productCategory.title') }}
                             </a>
                         </li>
-                    </li>
                     @endcan
                 </ul>
             </li>
@@ -178,7 +176,6 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     @can('slider_access')
-                    <li class="nav-item nav-dropdown">
                         <li class="nav-item">
                             <a href="{{ route("admin.sliders.index") }}" class="nav-link {{ request()->is('admins/sliders') || request()->is('admins/sliders/*') ? 'active' : '' }}">
                                 <i class="fa-fw fas fa-plus nav-icon">
@@ -187,11 +184,9 @@
                                 {{ trans('cruds.slider.title') }}
                             </a>
                         </li>
-                    </li>
                     @endcan
 
                     @can('popup_access')
-                    <li class="nav-item nav-dropdown">
                         <li class="nav-item">
                             <a href="{{ route("admin.popups.index") }}" class="nav-link {{ request()->is('admins/popups') || request()->is('admins/popups/*') ? 'active' : '' }}">
                                 <i class="fa-fw fas fa-plus nav-icon">
@@ -200,7 +195,6 @@
                                 {{ trans('cruds.popup.title') }}
                             </a>
                         </li>
-                    </li>
                     @endcan
                 </ul>
             </li>
