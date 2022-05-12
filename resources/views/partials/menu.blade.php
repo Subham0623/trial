@@ -20,9 +20,9 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     @can('group_access')
-                    <li class="nav-item">
+                    <li class="nav-item {{ request()->is('admins/groups') || request()->is('admins/groups/*') ? 'active' : '' }}">
                         <a href="{{ route("admin.groups.index") }}"
-                            class="nav-link {{ request()->is('admins/groups') || request()->is('admins/groups/*') ? 'active' : '' }}">
+                            class="nav-link ">
                             <i class="fa-fw fas fa-unlock-alt nav-icon">
 
                             </i>
@@ -31,9 +31,9 @@
                     </li>
                     @endcan
                     @can('permission_access')
-                    <li class="nav-item">
+                    <li class="nav-item {{ request()->is('admins/permissions') || request()->is('admins/permissions/*') ? 'active' : '' }}">
                         <a href="{{ route("admin.permissions.index") }}"
-                            class="nav-link {{ request()->is('admins/permissions') || request()->is('admins/permissions/*') ? 'active' : '' }}">
+                            class="nav-link ">
                             <i class="fa-fw fas fa-unlock-alt nav-icon">
 
                             </i>
@@ -42,9 +42,9 @@
                     </li>
                     @endcan
                     @can('role_access')
-                    <li class="nav-item">
+                    <li class="nav-item {{ request()->is('admins/roles') || request()->is('admins/roles/*') ? 'active' : '' }}">
                         <a href="{{ route("admin.roles.index") }}"
-                            class="nav-link {{ request()->is('admins/roles') || request()->is('admins/roles/*') ? 'active' : '' }}">
+                            class="nav-link ">
                             <i class="fa-fw fas fa-briefcase nav-icon">
 
                             </i>
@@ -53,9 +53,9 @@
                     </li>
                     @endcan
                     @can('user_access')
-                    <li class="nav-item">
+                    <li class="nav-item {{ request()->is('admins/users') || request()->is('admins/users/*') ? 'active' : '' }}">
                         <a href="{{ route("admin.users.index") }}"
-                            class="nav-link {{ request()->is('admins/users') || request()->is('admins/users/*') ? 'active' : '' }}">
+                            class="nav-link ">
                             <i class="fa-fw fas fa-user nav-icon">
 
                             </i>
@@ -78,9 +78,9 @@
                 <ul class="nav-dropdown-items">
                     @can('product_category_access')
                     <li class="nav-item nav-dropdown">
-                        <li class="nav-item">
+                        <li class="nav-item {{ request()->is('admins/product-categories') || request()->is('admins/product-categories/*') ? 'active' : '' }}">
                             <a href="{{ route("admin.product-categories.index") }}"
-                                class="nav-link {{ request()->is('admins/product-categories') || request()->is('admins/product-categories/*') ? 'active' : '' }}">
+                                class="nav-link ">
                                 <i class="fa-fw fas fa-list nav-icon">
 
                                 </i>
@@ -94,9 +94,9 @@
             @endcan
 
             @can('province_access')
-            <li class="nav-item">
+            <li class="nav-item {{ request()->is('admin/provinces') || request()->is('admin/provinces/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.provinces.index') }}"
-                    class="nav-link {{ request()->is('admin/provinces') || request()->is('admin/provinces/*') ? 'active' : '' }}">
+                    class="nav-link ">
                     <i class=" nav-icon fa fa-gear"></i>
                     {{ trans('cruds.province.title') }}
                 </a>
@@ -104,9 +104,9 @@
             @endcan
 
             @can('type_access')
-            <li class="nav-item">
+            <li class="nav-item {{ request()->is('admin/types') || request()->is('admin/types/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.types.index') }}"
-                    class="nav-link {{ request()->is('admin/types') || request()->is('admin/types/*') ? 'active' : '' }}">
+                    class="nav-link ">
                     <i class=" nav-icon fa fa-gear"></i>
                     {{ trans('cruds.type.title') }}
                 </a>
@@ -114,9 +114,9 @@
             @endcan
 
             @can('organization_access')
-            <li class="nav-item">
+            <li class="nav-item {{ request()->is('admin/organizations') || request()->is('admin/organizations/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.organizations.index') }}"
-                    class="nav-link {{ request()->is('admin/organizations') || request()->is('admin/organizations/*') ? 'active' : '' }}">
+                    class="nav-link ">
                     <i class=" nav-icon fa fa-gear"></i>
                     {{ trans('cruds.organization.title') }}
                 </a>
@@ -124,9 +124,9 @@
             @endcan
             
             @can('subject_area_access')
-            <li class="nav-item">
+            <li class="nav-item {{ request()->is('admin/subject-areas') || request()->is('admin/subject-areas/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.subject-areas.index') }}"
-                    class="nav-link {{ request()->is('admin/subject-areas') || request()->is('admin/subject-areas/*') ? 'active' : '' }}">
+                    class="nav-link ">
                     <i class=" nav-icon fa fa-gear"></i>
                     {{ trans('cruds.subjectarea.title') }}
                 </a>
@@ -134,9 +134,9 @@
             @endcan
 
             @can('parameter_access')
-            <li class="nav-item">
+            <li class="nav-item {{ request()->is('admin/parameters') || request()->is('admin/parameters/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.parameters.index') }}"
-                    class="nav-link {{ request()->is('admin/parameters') || request()->is('admin/parameters/*') ? 'active' : '' }}">
+                    class="nav-link ">
                     <i class=" nav-icon fa fa-gear"></i>
                     {{ trans('cruds.parameter.title') }}
                 </a>
@@ -144,9 +144,9 @@
             @endcan
 
             @can('form_access')
-            <li class="nav-item">
+            <li class="nav-item {{ request()->is('admin/forms') || request()->is('admin/forms/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.forms') }}"
-                    class="nav-link {{ request()->is('admin/forms') || request()->is('admin/forms/*') ? 'active' : '' }}">
+                    class="nav-link ">
                     <i class=" nav-icon fa fa-gear"></i>
                     {{ trans('cruds.form.title') }}
                 </a>

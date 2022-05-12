@@ -8,7 +8,7 @@
                     Dashboard
                 </div>
 
-                <div class="card-body">
+                <div class="card-body" style="display: none">
                     @if(session('status'))
                     <div class="alert alert-success" role="alert" id="messageId">
                         {{ session('status') }}
@@ -17,7 +17,7 @@
                     <!-- you are logged in -->
                 </div>
                 <div id="messageId" class="container-fluid"></div>
-                <div class="row container-fluid" style="padding: 0; margin: 0 auto">
+                <div class="row container-fluid section__seperator" style="padding: 0; margin: 0 auto">
                     <!-- <div class="col-sm-3">
                         <div class="home-title"><span class="">PLGSP|</span><span class=""
                                 style="font-size: 18px; font-weight: bold; color: black; margin-left: 5px;">Home</span>
@@ -54,8 +54,7 @@
                                 @endforeach
                             </select></div>
                     </div>
-                    <div class="col-sm-3">
-
+                    <div class="col-sm-3" >
                         <a class="btn btn-primary" id="search" style="color: #fff">Search</a>
                     </div>
                     <!-- <div class="col-sm-2">
@@ -66,7 +65,7 @@
                     </div> -->
                 </div>
 
-                <div class="row container-fluid" style="padding: 0; margin: 0 auto">
+                <div class="row container-fluid first__custom-section" style="padding: 0; margin: 0 auto">
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
@@ -123,7 +122,7 @@
                     </div>
                 </div>
 
-                <div class="card-layout container-fluid">
+                <div class="card-layout container-fluid mt-5">
                     <div class="row custom__table-alignment">
                         <div class="card shadow border-0 text-center overflow-hidden custom__table-alignment-first"
                             style="padding:0">
@@ -248,7 +247,7 @@
 
                     </div>
                 </div>
-                <div class="card-layout container-fluid">
+                <div class="card-layout container-fluid mt-3">
                     <div class="row custom__table-alignment">
                         <div class="card shadow border-0 text-center overflow-hidden custom__table-alignment-first"
                             style="padding:0">
