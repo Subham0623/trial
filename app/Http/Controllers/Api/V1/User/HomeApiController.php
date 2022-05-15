@@ -107,7 +107,8 @@ class HomeApiController extends Controller
 
                 $total_marks = $form->subjectAreas->sum('pivot.marks');
                 $form->total_marks = $total_marks;
-                $form->save();
+                $form->status = ($roles->contains(5) ? 1 : 0);
+                $form->save();  
             }
 
             if($request->mode == 'documents') {
@@ -314,7 +315,7 @@ class HomeApiController extends Controller
                                         }
                                         elseif($roles->contains(5))
                                         {
-                                            if($form->user_id == $user->id && ($form->status == 0))
+                                            if($form->user_id == $user->id)
                                             {
                                                 $form_detail->update([
                                                     'remarks' => $parameter['remarks'],
@@ -376,7 +377,7 @@ class HomeApiController extends Controller
                                 }
                                 else
                                 {
-                                    if($form->user_id == $user->id && ($form->status == 0))
+                                    if($form->user_id == $user->id)
                                     {
                                         // dd($parameter);
                                         $form_detail = FormDetail::updateOrCreate([
@@ -404,7 +405,7 @@ class HomeApiController extends Controller
                             }
                             else
                             {
-                                if($form->user_id == $user->id && ($form->status == 0))
+                                if($form->user_id == $user->id)
                                 {
                                     if($parameter['is_applicable'] == 0)
                                     {
@@ -448,7 +449,7 @@ class HomeApiController extends Controller
                         }
                         else
                         {
-                            if($form->user_id == $user->id && ($form->status == 0))
+                            if($form->user_id == $user->id)
                             {
 
                                 if($parameter['is_applicable'] == 0)
