@@ -678,9 +678,64 @@ class HomeApiController extends Controller
 
     public function show()
     {
-        $user = Auth::user()->organizations()->pluck('id');
-        $forms = Form::whereIn('organization_id',$user)->with('user')->get();
+        $roles = Auth::user()->roles()->pluck('id');
+        $orgs = Auth::user()->organizations()->pluck('id');
+
+        if($roles->contains(5))
+        {
+            $verified_forms = Auth::user()->verifiedForms()->get();
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',0)->get();
+
+            $forms = $forms->merge($verified_forms)->all();
+            // dd($forms);
+            
+        }
+        elseif($roles->contains(4))
+        {
+            $audited_forms = Auth::user()->auditedForms()->get();
+            
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',1)
+            ->where('is_audited',0)->get();
+
+            $forms = $forms->merge($audited_forms)->all();
+
+            // dd($forms);
+
+        }
+        elseif($roles->contains(6))
+        {
+            $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
+            
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',1)
+            ->where('is_audited',1)
+            ->where('final_verified',0)
+            ->get();
+
+            $forms = $forms->merge($final_verified_forms)->all();
+
+            // dd($forms);
+
+        }
+        elseif($roles->contains(3))
+        {
+            $forms = Form::whereIn('organization_id',$orgs)->with('user')->get();
+        }
+        elseif($roles->contains(1) || $roles->contains(2))
+        {
+            $forms = Form::all();
+        }
+        else
+        {
+            $forms = [];
+        }
         return response()->json(['forms'=> $forms]);
+
     }
 
     public function feedback(Request $request)
