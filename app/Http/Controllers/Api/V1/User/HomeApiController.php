@@ -353,7 +353,8 @@ class HomeApiController extends Controller
                                                 'reassign' => $parameter['reassign'],
                                             ]); 
                                             $form->update([
-                                                'audited_by'=>$user->id
+                                                'audited_by'=>$user->id,
+                                                'is_verified' => ($parameter['reassign'] == 1 ? 2 : $form->is_verified),
                                             ]);
                                         }
                                         elseif($roles->contains(6) && $form->final_verified == 0)
@@ -364,7 +365,8 @@ class HomeApiController extends Controller
                                                 'reassign' => $parameter['reassign'],
                                             ]); 
                                             $form->update([
-                                                'final_verified_by'=>$user->id
+                                                'final_verified_by'=>$user->id,
+                                                'is_audited' => ($parameter['reassign'] == 1 ? 2 : $form->is_audited),
                                             ]);
                                         }
                                         else

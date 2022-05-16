@@ -93,7 +93,6 @@ class FormController extends Controller
         
         $roles = Auth::user()->roles()->pluck('id');
 
-
         if($roles->contains(1) || $roles->contains(2))
         {
             $organizations = Organization::all();
@@ -108,6 +107,7 @@ class FormController extends Controller
         if((isset($request->organization)) && (isset($request->year)))
         {
             $forms = Form::where('organization_id',$request->organization)->where('year',$request->year)->get();
+            
         }
         elseif((isset($request->organization)) && ($request->year == null))
         {
@@ -140,6 +140,8 @@ class FormController extends Controller
         return response()->json(['success'=>'Publish status changed successfully.']);
     }
 
+
+    
     /**
      * Show the form for creating a new resource.
      *
