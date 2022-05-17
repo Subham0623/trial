@@ -298,7 +298,7 @@ class HomeApiController extends Controller
                                     if(isset($parameter['option']['id'])) {
                                         $opt = Option::findorFail($parameter['option']['id']);
                 
-                                        if($roles->contains(3) && ($user->id == $form->user_id) )
+                                        if($roles->contains(3) && ($user->id == $form->user_id) && ($form->status == 0 || $form->status == 2))
                                         {
                                             $form_detail->update([
                                                 'remarks' => $parameter['remarks'],
@@ -315,7 +315,7 @@ class HomeApiController extends Controller
                                         }
                                         elseif($roles->contains(5))
                                         {
-                                            if($form->user_id == $user->id )
+                                            if(($form->user_id == $user->id) )
                                             {
                                                 $form_detail->update([
                                                     'remarks' => $parameter['remarks'],
@@ -331,7 +331,7 @@ class HomeApiController extends Controller
                                             }
                                             else
                                             {
-                                                if($form->is_verified == 0)
+                                                if($form->is_verified == 0 || $form->is_verified == 2)
                                                 {
 
                                                     $form_detail->update([
@@ -345,7 +345,7 @@ class HomeApiController extends Controller
                                             }
                                             
                                         }
-                                        elseif($roles->contains(4) && $form->is_audited == 0)
+                                        elseif($roles->contains(4) && ($form->is_audited == 0 || $form->is_audited == 2) )
                                         {
                                             $form_detail->update([
                                                 'option_id' => $opt->id,
@@ -591,7 +591,7 @@ class HomeApiController extends Controller
         {
             if($roles->contains(6))
             {
-                if($form->status == 1 && $form->is_verified == 1 && $form->is_audited == 1)
+                if($form->is_audited == 1 || $form->is_audited == 2)
                 {
                     $form->update([
                         
@@ -610,7 +610,7 @@ class HomeApiController extends Controller
             }
             elseif($roles->contains(4))
             {
-                if($form->status == 1 && $form->is_verified == 1)
+                if($form->is_verified == 1 || $form->is_verified == 2)
                 {
                     $form->update([
 
@@ -629,7 +629,7 @@ class HomeApiController extends Controller
             }
             elseif($roles->contains(5))
             {
-                if($form->status == 1)
+                if(($form->status == 1 || $form->status == 2) && ($form->user_id !== $user))
                 {
                     $form->update([
 
@@ -640,7 +640,7 @@ class HomeApiController extends Controller
 
                     return response(['message'=>'Form verified successfully'],200);
                 }
-                elseif($form->status == 0 && $form->user_id == $user)
+                elseif($form->user_id == $user)
                 {
                     $form->update([
                         'status' => 1,
@@ -688,7 +688,7 @@ class HomeApiController extends Controller
             $verified_forms = Auth::user()->verifiedForms()->get();
             $forms = Form::whereIn('organization_id',$orgs)
             ->where('status',1)
-            ->where('is_verified',0)->get();
+            ->where('verified_by',NULL)->get();
 
             $forms = $forms->merge($verified_forms)->all();
             // dd($forms);
@@ -699,9 +699,9 @@ class HomeApiController extends Controller
             $audited_forms = Auth::user()->auditedForms()->get();
             
             $forms = Form::whereIn('organization_id',$orgs)
-            ->where('status',1)
+            // ->where('status',1)
             ->where('is_verified',1)
-            ->where('is_audited',0)->get();
+            ->where('audited_by',NULL)->get();
 
             $forms = $forms->merge($audited_forms)->all();
 
@@ -713,10 +713,10 @@ class HomeApiController extends Controller
             $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
             
             $forms = Form::whereIn('organization_id',$orgs)
-            ->where('status',1)
-            ->where('is_verified',1)
+            // ->where('status',1)
+            // ->where('is_verified',1)
             ->where('is_audited',1)
-            ->where('final_verified',0)
+            ->where('final_verified_by',NULL)
             ->get();
 
             $forms = $forms->merge($final_verified_forms)->all();
