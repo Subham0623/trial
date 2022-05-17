@@ -20,6 +20,7 @@ class FormDetail extends Model implements HasMedia
         'parameter_id',
         'remarks',
         'is_applicable',
+        'reassign',
         'marks',
         'marksByVerifier',
         'marksByAuditor',

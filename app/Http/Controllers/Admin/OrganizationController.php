@@ -103,7 +103,7 @@ class OrganizationController extends Controller
         $provinces = Province::all();
         $districts = District::where('province_id',$organization->province_id)->get();
         $types = Type::all();
-        $organizations = Organization::where('type_id',$organization->type->type_id)->get();
+        $organizations = Organization::where('type_id',(($organization->type) ? $organization->type->type_id : ''))->get();
 
         return view('admin.organizations.edit',compact('provinces','districts','organization','types','organizations'));
     }
@@ -178,7 +178,26 @@ class OrganizationController extends Controller
         $request->validate([
                 'file'=>'required|mimes:xlsx'
             ]);
-        Excel::import(new OrganizationsImport,request()->file('file'));
+
+            Excel::import(new OrganizationsImport,request()->file('file'));
+        // try{
+
+        // }catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        //     $failures = $e->failures();
+        //     // dd($failures);
+             
+        //       foreach ($failures as $key => $failure) { 
+        //         $failure->row(); // row that went wrong
+        //          $failure->attribute(); // 
+        //         // $failure->errors() = $failure->errors()[0];
+        //         // dd($failure);
+        //         $new_error = $failure->errors();
+                
+        //          $failure->values(); // The values of the row that has failed.
+        //          throw new \Maatwebsite\Excel\Validators\ValidationException($failure->getMessage()); 
+                 
+        //     }
+        // }
 
         
            

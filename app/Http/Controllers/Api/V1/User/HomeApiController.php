@@ -39,7 +39,7 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
-        
+       
         $user = Auth::user();
         $roles = $user->roles()->pluck('id');
         $user_organization = $user->organizations->first();
@@ -47,8 +47,8 @@ class HomeApiController extends Controller
         
         $forms = Form::where('year',$request->year)->pluck('organization_id');
 
-        if(!$forms->contains($user_organization->id)) {
-            if($request->mode == 'options') {
+        if($request->mode == 'options') {
+            if(!$forms->contains($user_organization->id)) {
                 $data = [
                     'user_id' => $user->id,
                     'year' => $request->year,
@@ -56,7 +56,7 @@ class HomeApiController extends Controller
                 ];
 
                 $form = Form::create($data);
-                // dd($form);
+                
                 $form_subject_area = FormSubjectArea::create([
                     'form_id' => $form->id,
                     'subject_area_id' => $request->subject_area,
@@ -107,61 +107,62 @@ class HomeApiController extends Controller
 
                 $total_marks = $form->subjectAreas->sum('pivot.marks');
                 $form->total_marks = $total_marks;
+                $form->status = ($roles->contains(5) ? 1 : 0);
                 $form->save();
             }
-
-            if($request->mode == 'documents') {
-            
-                $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
-                
-                if($form) {
-                    if($request->documents) {
-                        foreach($request->documents as $id => $document) {
-                            $document_details = Document::find($id);
-                            
-                            $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
-                                    $query->where('parameter_id', $document_details->parameter_id);
-                                })
-                                ->with(['selected_subjectareas' => function($query) use ($document_details) {
-                                    $query->where('parameter_id', $document_details->parameter_id);
-                                }])
-                                ->first();
-                                
-                            if($form_subject_area) {
-                                $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-                                // foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
-                                    
-                                //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                                // }
-                                $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
-                                    foreach ($subject_parameter->documents as $media) {
-                                    
-                                        if (!in_array($media->file_name, $request->input('resource', []))) {
-                                            $media->delete();
-                                        }
-                                    }
-                                    
-                                    $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                                    $media->document_id = $document_details->id;
-                                    // $media->setCustomProperty('document_id',$document_details->id);
-                                    $media->save();
-                                });
-                            }
-                        }
-
-                    }
-                } else {
-                    return response([
-                        'message'=> 'Form not found',
-                    ]);
-                }
+            else
+            {
+                return response([
+                    'message'=> 'Your organization has already submitted the form'
+                ]);
             }
         }
-        else
-        {
-            return response([
-                'message'=> 'Your organization has already submitted the form'
-            ]);
+
+        if($request->mode == 'documents') {
+            
+            $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
+            
+            if($form) {
+                if($request->documents) {
+                    foreach($request->documents as $id => $document) {
+                        $document_details = Document::find($id);
+                        
+                        $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            })
+                            ->with(['selected_subjectareas' => function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            }])
+                            ->first();
+                            
+                        if($form_subject_area) {
+                            $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+                            // foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+                                
+                            //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                            // }
+                            $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
+                                // foreach ($subject_parameter->documents as $media) {
+                                //     dd($document->getClientOriginalName());
+                                //     if (!in_array($media->file_name, $request->input('resource', []))) {
+                                //         $media->delete();
+                                //     }
+                                // }
+                                
+                                $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                                $media->document_id = $document_details->id;
+                                // $media->setCustomProperty('document_id',$document_details->id);
+                                $media->save();
+                            });
+                        }
+                    }
+
+                }
+            } else {
+                return response([
+                    'message'=> 'Form not found',
+                ]);
+            }
         }
 
         return response([
@@ -297,7 +298,7 @@ class HomeApiController extends Controller
                                     if(isset($parameter['option']['id'])) {
                                         $opt = Option::findorFail($parameter['option']['id']);
                 
-                                        if($roles->contains(3) && ($user->id == $form->user_id) && ($form->status == 0))
+                                        if($roles->contains(3) && ($user->id == $form->user_id) )
                                         {
                                             $form_detail->update([
                                                 'remarks' => $parameter['remarks'],
@@ -314,7 +315,7 @@ class HomeApiController extends Controller
                                         }
                                         elseif($roles->contains(5))
                                         {
-                                            if($form->user_id == $user->id && ($form->status == 0))
+                                            if($form->user_id == $user->id )
                                             {
                                                 $form_detail->update([
                                                     'remarks' => $parameter['remarks'],
@@ -349,6 +350,7 @@ class HomeApiController extends Controller
                                             $form_detail->update([
                                                 'option_id' => $opt->id,
                                                 'marksByAuditor' => $opt->points,
+                                                'reassign' => $parameter['reassign'],
                                             ]); 
                                             $form->update([
                                                 'audited_by'=>$user->id
@@ -359,6 +361,7 @@ class HomeApiController extends Controller
                                             $form_detail->update([
                                                 'option_id' => $opt->id,
                                                 'marksByFinalVerifier' => $opt->points,
+                                                'reassign' => $parameter['reassign'],
                                             ]); 
                                             $form->update([
                                                 'final_verified_by'=>$user->id
@@ -374,7 +377,7 @@ class HomeApiController extends Controller
                                 }
                                 else
                                 {
-                                    if($form->user_id == $user->id && ($form->status == 0))
+                                    if($form->user_id == $user->id )
                                     {
                                         // dd($parameter);
                                         $form_detail = FormDetail::updateOrCreate([
@@ -402,7 +405,7 @@ class HomeApiController extends Controller
                             }
                             else
                             {
-                                if($form->user_id == $user->id && ($form->status == 0))
+                                if($form->user_id == $user->id )
                                 {
                                     if($parameter['is_applicable'] == 0)
                                     {
@@ -446,7 +449,7 @@ class HomeApiController extends Controller
                         }
                         else
                         {
-                            if($form->user_id == $user->id && ($form->status == 0))
+                            if($form->user_id == $user->id )
                             {
 
                                 if($parameter['is_applicable'] == 0)
@@ -483,6 +486,8 @@ class HomeApiController extends Controller
                             }
                         }
                     }
+
+                    $count = $form_subject_area->selected_subjectareas()->where('reassign',1)->count();
         
                     $total = $form_subject_area->parameters->sum('pivot.marks');
                     $totalByVerifier = $form_subject_area->parameters->sum('pivot.marksByVerifier');
@@ -495,8 +500,8 @@ class HomeApiController extends Controller
                         'marksByAuditor'=> $totalByAuditor,
                         'marksbyFinalVerifier'=> $totalByFinalVerifier,
                         'status_verifier'=> ($roles->contains(5) ? 1 : $form_subject_area->status_verifier),
-                        'status_auditor' => ($roles->contains(4) ? 1 : $form_subject_area->status_auditor),
-                        'status_final_verifier' => ($roles->contains(6) ? 1 : $form_subject_area->status_final_verifier),
+                        'status_auditor' => ($roles->contains(4) ? (($count>0)?2 : 1):$form_subject_area->status_auditor),
+                        'status_final_verifier' => ($roles->contains(6) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
                     ]);
         
                     $total_marks = $form->form_subjectareas->sum('marks');
@@ -511,14 +516,6 @@ class HomeApiController extends Controller
                         'total_marks_finalVerifier' => $total_marks_finalVerifier,
                     ]);
         
-                    
-                    $selected_options = $this->selectedOptions($form);
-                    return response([
-                        'message'=>'Form updated successfully',
-                        'form_details' => $form->load('organization','form_subjectareas'),
-                        'subject_areas' => $subject_areas,
-                        'selected_options' => $selected_options,
-                    ],201);
                     
                 }
                 else{
@@ -563,14 +560,6 @@ class HomeApiController extends Controller
 
                 }
 
-                $selected_options = $this->selectedOptions($form);
-
-                return response([
-                    'message'=>'Document updated successfully',
-                    'form_details' => $form->load('organization','form_subjectareas'),
-                    'subject_areas' => $subject_areas,
-                    'selected_options' => $selected_options,
-                ],201);
             }
         }
         else
@@ -579,6 +568,15 @@ class HomeApiController extends Controller
                 'message'=>'Form not found',
             ],422);
         }
+        
+        $selected_options = $this->selectedOptions($form);
+        return response([
+            'message'=>'Form updated successfully',
+            'form_details' => $form->load('organization','form_subjectareas'),
+            'subject_areas' => $subject_areas,
+            'selected_options' => $selected_options,
+        ],201);
+        
         
     }
 
@@ -680,9 +678,64 @@ class HomeApiController extends Controller
 
     public function show()
     {
-        $user = Auth::user()->organizations()->pluck('id');
-        $forms = Form::whereIn('organization_id',$user)->with('user')->get();
+        $roles = Auth::user()->roles()->pluck('id');
+        $orgs = Auth::user()->organizations()->pluck('id');
+
+        if($roles->contains(5))
+        {
+            $verified_forms = Auth::user()->verifiedForms()->get();
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',0)->get();
+
+            $forms = $forms->merge($verified_forms)->all();
+            // dd($forms);
+            
+        }
+        elseif($roles->contains(4))
+        {
+            $audited_forms = Auth::user()->auditedForms()->get();
+            
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',1)
+            ->where('is_audited',0)->get();
+
+            $forms = $forms->merge($audited_forms)->all();
+
+            // dd($forms);
+
+        }
+        elseif($roles->contains(6))
+        {
+            $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
+            
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('is_verified',1)
+            ->where('is_audited',1)
+            ->where('final_verified',0)
+            ->get();
+
+            $forms = $forms->merge($final_verified_forms)->all();
+
+            // dd($forms);
+
+        }
+        elseif($roles->contains(3))
+        {
+            $forms = Form::whereIn('organization_id',$orgs)->with('user')->get();
+        }
+        elseif($roles->contains(1) || $roles->contains(2))
+        {
+            $forms = Form::all();
+        }
+        else
+        {
+            $forms = [];
+        }
         return response()->json(['forms'=> $forms]);
+
     }
 
     public function feedback(Request $request)

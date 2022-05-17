@@ -29,7 +29,7 @@ class FormSubjectArea extends Model
 
     public function parameters()
     {
-        return $this->belongsToMany(Parameter::class)->where('status',1)->withPivot('marks','remarks','option_id','marksByVerifier','marksByAuditor','marksByFinalVerifier','is_applicable');
+        return $this->belongsToMany(Parameter::class)->where('status',1)->withPivot('marks','remarks','option_id','marksByVerifier','marksByAuditor','marksByFinalVerifier','is_applicable','reassign');
     }
 
     public function selected_subjectareas()
