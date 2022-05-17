@@ -77,6 +77,15 @@
         color: blue !important;
       }
 
+      .dropdown-menu .notification{
+        overflow: hidden;
+        white-space: inherit;
+      }
+
+    .dropdown-divider{
+      display: none;
+    }
+
     </style>
     @yield('styles')
 </head>
@@ -188,7 +197,7 @@
         <main class="main">
 
 
-            <div style="padding-top: 20px; background: #f5f9fc !important" class="container-fluid">
+            <div style="padding-top: 20px; background: #f5f9fc !important; height: 100%" class="container-fluid">
                 @if(session('message'))
                     <div class="row mb-2">
                         <div class="col-lg-12" id="message">
@@ -365,7 +374,7 @@
                   $.each(data,function(i,ele){
                       $('.notification-menu').append(`
                               <a href="${"{{ route('admin.show_notifications','temp_id') }}".replace('temp_id',ele.id)}" class="dropdown-item notification">
-                                  <p><i class="fas fa-envelop mr-2"></i>${ele.data.message}</p>
+                                  <p><i class="fas fa-envelope mr-2"></i>${ele.data.message}</p>
                                   <span class="float-right text-muted text-sm">${moment(ele.created_at).fromNow()}</span>
                               </a>
                           <div class="dropdown-divider"></div>
