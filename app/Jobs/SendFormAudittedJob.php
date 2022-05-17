@@ -16,6 +16,7 @@ class SendFormAudittedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private $form;
     /**
      * Create a new job instance.
      *

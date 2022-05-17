@@ -16,6 +16,7 @@ class SendFormUpdatedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private $form;
     /**
      * Create a new job instance.
      *
@@ -33,6 +34,7 @@ class SendFormUpdatedJob implements ShouldQueue
      */
     public function handle()
     {
+        // dd($this->form);
         $admins = User::whereHas('roles', function ($query) {
             $query->whereIn('id',[1,2]);
         })->get();

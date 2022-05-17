@@ -17,7 +17,12 @@ use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 use App\Jobs\SendFormCreatedJob;
+use App\Jobs\SendFormUpdatedJob;
+use App\Jobs\SendFormVerifiedJob;
+use App\Jobs\SendFormAudittedJob;
+use App\Jobs\SendFormSubmittedJob;
 use App\Document;
+
 
 class HomeApiController extends Controller
 {
@@ -48,8 +53,8 @@ class HomeApiController extends Controller
         
         $forms = Form::where('year',$request->year)->pluck('organization_id');
 
-        if(!$forms->contains($user_organization->id)) {
-            if($request->mode == 'options') {
+        if($request->mode == 'options') {
+            if(!$forms->contains($user_organization->id)) {
                 $data = [
                     'user_id' => $user->id,
                     'year' => $request->year,
@@ -108,61 +113,62 @@ class HomeApiController extends Controller
 
                 $total_marks = $form->subjectAreas->sum('pivot.marks');
                 $form->total_marks = $total_marks;
+                $form->status = ($roles->contains(5) ? 1 : 0);
                 $form->save();
             }
-
-            if($request->mode == 'documents') {
-            
-                $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
-                
-                if($form) {
-                    if($request->documents) {
-                        foreach($request->documents as $id => $document) {
-                            $document_details = Document::find($id);
-                            
-                            $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
-                                    $query->where('parameter_id', $document_details->parameter_id);
-                                })
-                                ->with(['selected_subjectareas' => function($query) use ($document_details) {
-                                    $query->where('parameter_id', $document_details->parameter_id);
-                                }])
-                                ->first();
-                                
-                            if($form_subject_area) {
-                                $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
-                                // foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
-                                    
-                                //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                                // }
-                                $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
-                                    foreach ($subject_parameter->documents as $media) {
-                                    
-                                        if (!in_array($media->file_name, $request->input('resource', []))) {
-                                            $media->delete();
-                                        }
-                                    }
-                                    
-                                    $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
-                                    $media->document_id = $document_details->id;
-                                    // $media->setCustomProperty('document_id',$document_details->id);
-                                    $media->save();
-                                });
-                            }
-                        }
-
-                    }
-                } else {
-                    return response([
-                        'message'=> 'Form not found',
-                    ]);
-                }
+            else
+            {
+                return response([
+                    'message'=> 'Your organization has already submitted the form'
+                ]);
             }
         }
-        else
-        {
-            return response([
-                'message'=> 'Your organization has already submitted the form'
-            ]);
+
+        if($request->mode == 'documents') {
+            
+            $form = Form::where('organization_id', $user_organization->id)->where('year', $request->year)->with('subjectAreas')->first();
+            
+            if($form) {
+                if($request->documents) {
+                    foreach($request->documents as $id => $document) {
+                        $document_details = Document::find($id);
+                        
+                        $form_subject_area = $form->form_subjectareas()->whereHas('selected_subjectareas', function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            })
+                            ->with(['selected_subjectareas' => function($query) use ($document_details) {
+                                $query->where('parameter_id', $document_details->parameter_id);
+                            }])
+                            ->first();
+                            
+                        if($form_subject_area) {
+                            $filename = md5($document->getClientOriginalName()) . '.' . $document->getClientOriginalExtension();
+                            // foreach($form_subject_area->selected_subjectareas as $subject_parameter) {
+                                
+                            //     $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                            // }
+                            $form_subject_area->selected_subjectareas->each(function ($subject_parameter) use ($document, $filename, $document_details) {
+                                // foreach ($subject_parameter->documents as $media) {
+                                //     dd($document->getClientOriginalName());
+                                //     if (!in_array($media->file_name, $request->input('resource', []))) {
+                                //         $media->delete();
+                                //     }
+                                // }
+                                
+                                $media = $subject_parameter->addMedia($document)->setFileName($filename)->toMediaCollection('documents');
+                                $media->document_id = $document_details->id;
+                                // $media->setCustomProperty('document_id',$document_details->id);
+                                $media->save();
+                            });
+                        }
+                    }
+
+                }
+            } else {
+                return response([
+                    'message'=> 'Form not found',
+                ]);
+            }
         }
 
         dispatch(new SendFormCreatedJob($form));
@@ -300,7 +306,7 @@ class HomeApiController extends Controller
                                     if(isset($parameter['option']['id'])) {
                                         $opt = Option::findorFail($parameter['option']['id']);
                 
-                                        if($roles->contains(3) && ($user->id == $form->user_id) && ($form->status == 0))
+                                        if($roles->contains(3) && ($user->id == $form->user_id) && ($form->status == 0 || $form->status == 2))
                                         {
                                             $form_detail->update([
                                                 'remarks' => $parameter['remarks'],
@@ -317,7 +323,7 @@ class HomeApiController extends Controller
                                         }
                                         elseif($roles->contains(5))
                                         {
-                                            if($form->user_id == $user->id && ($form->status == 0))
+                                            if(($form->user_id == $user->id) )
                                             {
                                                 $form_detail->update([
                                                     'remarks' => $parameter['remarks'],
@@ -333,7 +339,7 @@ class HomeApiController extends Controller
                                             }
                                             else
                                             {
-                                                if($form->is_verified == 0)
+                                                if($form->is_verified == 0 || $form->is_verified == 2)
                                                 {
 
                                                     $form_detail->update([
@@ -347,7 +353,7 @@ class HomeApiController extends Controller
                                             }
                                             
                                         }
-                                        elseif($roles->contains(4) && $form->is_audited == 0)
+                                        elseif($roles->contains(4) && ($form->is_audited == 0 || $form->is_audited == 2) )
                                         {
                                             $form_detail->update([
                                                 'option_id' => $opt->id,
@@ -355,7 +361,8 @@ class HomeApiController extends Controller
                                                 'reassign' => $parameter['reassign'],
                                             ]); 
                                             $form->update([
-                                                'audited_by'=>$user->id
+                                                'audited_by'=>$user->id,
+                                                'is_verified' => ($parameter['reassign'] == 1 ? 2 : $form->is_verified),
                                             ]);
                                         }
                                         elseif($roles->contains(6) && $form->final_verified == 0)
@@ -366,7 +373,8 @@ class HomeApiController extends Controller
                                                 'reassign' => $parameter['reassign'],
                                             ]); 
                                             $form->update([
-                                                'final_verified_by'=>$user->id
+                                                'final_verified_by'=>$user->id,
+                                                'is_audited' => ($parameter['reassign'] == 1 ? 2 : $form->is_audited),
                                             ]);
                                         }
                                         else
@@ -379,7 +387,7 @@ class HomeApiController extends Controller
                                 }
                                 else
                                 {
-                                    if($form->user_id == $user->id && ($form->status == 0))
+                                    if($form->user_id == $user->id )
                                     {
                                         // dd($parameter);
                                         $form_detail = FormDetail::updateOrCreate([
@@ -407,7 +415,7 @@ class HomeApiController extends Controller
                             }
                             else
                             {
-                                if($form->user_id == $user->id && ($form->status == 0))
+                                if($form->user_id == $user->id )
                                 {
                                     if($parameter['is_applicable'] == 0)
                                     {
@@ -451,7 +459,7 @@ class HomeApiController extends Controller
                         }
                         else
                         {
-                            if($form->user_id == $user->id && ($form->status == 0))
+                            if($form->user_id == $user->id )
                             {
 
                                 if($parameter['is_applicable'] == 0)
@@ -516,7 +524,9 @@ class HomeApiController extends Controller
                         'total_marks_verifier' => $total_marks_verifier,
                         'total_marks_auditor' => $total_marks_auditor,
                         'total_marks_finalVerifier' => $total_marks_finalVerifier,
-                    ]);                    
+                    ]);
+        
+                    
                 }
                 else{
                     return response([
@@ -579,6 +589,15 @@ class HomeApiController extends Controller
             ],422);
         }
         
+        $selected_options = $this->selectedOptions($form);
+        return response([
+            'message'=>'Form updated successfully',
+            'form_details' => $form->load('organization','form_subjectareas'),
+            'subject_areas' => $subject_areas,
+            'selected_options' => $selected_options,
+        ],201);
+        
+        
     }
 
     public function submit(Form $form)
@@ -590,7 +609,7 @@ class HomeApiController extends Controller
         {
             if($roles->contains(6))
             {
-                if($form->status == 1 && $form->is_verified == 1 && $form->is_audited == 1)
+                if($form->is_audited == 1 || $form->is_audited == 2)
                 {
                     $form->update([
                         
@@ -609,7 +628,7 @@ class HomeApiController extends Controller
             }
             elseif($roles->contains(4))
             {
-                if($form->status == 1 && $form->is_verified == 1)
+                if($form->is_verified == 1 || $form->is_verified == 2)
                 {
                     $form->update([
 
@@ -628,7 +647,7 @@ class HomeApiController extends Controller
             }
             elseif($roles->contains(5))
             {
-                if($form->status == 1)
+                if(($form->status == 1 || $form->status == 2) && ($form->user_id !== $user))
                 {
                     $form->update([
 
@@ -639,7 +658,7 @@ class HomeApiController extends Controller
                     dispatch(new SendFormSubmittedJob($form));
                     return response(['message'=>'Form submitted successfully'],200);
                 }
-                elseif($form->status == 0 && $form->user_id == $user)
+                elseif($form->user_id == $user)
                 {
                     $form->update([
                         'status' => 1,
@@ -680,9 +699,64 @@ class HomeApiController extends Controller
 
     public function show()
     {
-        $user = Auth::user()->organizations()->pluck('id');
-        $forms = Form::whereIn('organization_id',$user)->with('user')->get();
+        $roles = Auth::user()->roles()->pluck('id');
+        $orgs = Auth::user()->organizations()->pluck('id');
+
+        if($roles->contains(5))
+        {
+            $verified_forms = Auth::user()->verifiedForms()->get();
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('verified_by',NULL)->get();
+
+            $forms = $forms->merge($verified_forms)->all();
+            // dd($forms);
+            
+        }
+        elseif($roles->contains(4))
+        {
+            $audited_forms = Auth::user()->auditedForms()->get();
+            
+            $forms = Form::whereIn('organization_id',$orgs)
+            // ->where('status',1)
+            ->where('is_verified',1)
+            ->where('audited_by',NULL)->get();
+
+            $forms = $forms->merge($audited_forms)->all();
+
+            // dd($forms);
+
+        }
+        elseif($roles->contains(6))
+        {
+            $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
+            
+            $forms = Form::whereIn('organization_id',$orgs)
+            // ->where('status',1)
+            // ->where('is_verified',1)
+            ->where('is_audited',1)
+            ->where('final_verified_by',NULL)
+            ->get();
+
+            $forms = $forms->merge($final_verified_forms)->all();
+
+            // dd($forms);
+
+        }
+        elseif($roles->contains(3))
+        {
+            $forms = Form::whereIn('organization_id',$orgs)->with('user')->get();
+        }
+        elseif($roles->contains(1) || $roles->contains(2))
+        {
+            $forms = Form::all();
+        }
+        else
+        {
+            $forms = [];
+        }
         return response()->json(['forms'=> $forms]);
+
     }
 
     public function feedback(Request $request)
