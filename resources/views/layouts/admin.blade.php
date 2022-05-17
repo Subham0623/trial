@@ -86,6 +86,10 @@
       display: none;
     }
 
+    .dropdown-footer{
+      background-color: #f0f3f5;
+    }
+
     </style>
     @yield('styles')
 </head>
@@ -137,7 +141,7 @@
           <!-- Notifications Dropdown Menu -->
           <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-              <!-- <img src="{{asset('bell.png')}}" style="width: 1.6rem;"><span class="badge badge-danger navbar-badge notification-count"></span> -->
+              <span class="badge badge-danger navbar-badge notification-count">9+</span>
               <i class="fas fa-bell"></i>
             </a>
             <div class="dropdown-menu notification-menu dropdown-menu-lg dropdown-menu-right">
