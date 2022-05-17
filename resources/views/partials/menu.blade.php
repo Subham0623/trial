@@ -95,7 +95,7 @@
             <li class="nav-item {{ request()->is('admin/provinces') || request()->is('admin/provinces/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.provinces.index') }}"
                     class="nav-link ">
-                    <i class=" nav-icon fa fa-gear"></i>
+                    <i class=" nav-icon fa fa-plus"></i>
                     {{ trans('cruds.province.title') }}
                 </a>
             </li>
@@ -105,7 +105,7 @@
             <li class="nav-item {{ request()->is('admin/types') || request()->is('admin/types/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.types.index') }}"
                     class="nav-link ">
-                    <i class=" nav-icon fa fa-gear"></i>
+                    <i class=" nav-icon fa fa-plus"></i>
                     {{ trans('cruds.type.title') }}
                 </a>
             </li>
@@ -115,7 +115,7 @@
             <li class="nav-item {{ request()->is('admin/organizations') || request()->is('admin/organizations/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.organizations.index') }}"
                     class="nav-link ">
-                    <i class=" nav-icon fa fa-gear"></i>
+                    <i class=" nav-icon fa fa-plus"></i>
                     {{ trans('cruds.organization.title') }}
                 </a>
             </li>
@@ -125,7 +125,7 @@
             <li class="nav-item {{ request()->is('admin/subject-areas') || request()->is('admin/subject-areas/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.subject-areas.index') }}"
                     class="nav-link ">
-                    <i class=" nav-icon fa fa-gear"></i>
+                    <i class=" nav-icon fa fa-plus"></i>
                     {{ trans('cruds.subjectarea.title') }}
                 </a>
             </li>
@@ -135,7 +135,7 @@
             <li class="nav-item {{ request()->is('admin/parameters') || request()->is('admin/parameters/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.parameters.index') }}"
                     class="nav-link ">
-                    <i class=" nav-icon fa fa-gear"></i>
+                    <i class=" nav-icon fa fa-plus"></i>
                     {{ trans('cruds.parameter.title') }}
                 </a>
             </li>
@@ -145,7 +145,7 @@
             <li class="nav-item {{ request()->is('admin/forms') || request()->is('admin/forms/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.forms') }}"
                     class="nav-link ">
-                    <i class=" nav-icon fa fa-gear"></i>
+                    <i class=" nav-icon fa fa-plus"></i>
                     {{ trans('cruds.form.title') }}
                 </a>
             </li>
