@@ -22,7 +22,7 @@ class UpdateProvinceRequest extends FormRequest
         return [
             'name' => [
                 'required',
-            'unique:provinces'],
+            'unique:provinces,name,' . request()->route('province')->id],
         ];
 
     }
