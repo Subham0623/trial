@@ -21,7 +21,7 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.name_helper') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group type-element">
                 <label class="required" for="type">{{ trans('cruds.organization.fields.type') }}</label>
                 <select class="form-control select2 {{ $errors->has('type') ? 'is-invalid' : '' }}" name="type" id="type" >
                     <option value="">Select Type</option>
@@ -39,7 +39,7 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.type_helper') }}</span>
             </div>
 
-            <div class="form-group active-field">
+            <div class="form-group active-field organization-element">
                 <label class="required" for="organization">{{ trans('cruds.organization.fields.organization') }}</label>
                 <select class="form-control select2 {{ $errors->has('organization') ? 'is-invalid' : '' }}" name="organization" id="organization" >
                     <option value="">Select organization</option>
@@ -57,7 +57,7 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.organization_helper') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group province-element">
                 <label class="required" for="province">{{ trans('cruds.organization.fields.province') }}</label>
                 <select class="form-control select2 {{ $errors->has('province') ? 'is-invalid' : '' }}" name="province" id="province" >
                     <option value="">Select Province</option>
@@ -153,6 +153,26 @@ $('#name').change(function(e) {
 });
 </script>
 <script>
+    var spinner = `<div class="block text-center custom__spinner">
+    
+    <div class="spinner-border" role="status" style="width: 1rem; height: 1rem">
+                         <span class="sr-only">Loading...</span>
+                    </div> Please Wait
+    
+    <div/>
+                    
+                    `
+                    ;
+        document.querySelector('.type-element').addEventListener('click', function(e){
+
+        $('#select2-organization-container').html(spinner);
+
+    })
+
+  
+
+    
+
      $('#type').change(function() {
     
     var type = $("#type").val();
@@ -165,7 +185,7 @@ $('#name').change(function(e) {
     }
 
     
-    if(type .length > 0)
+    if(type.length > 0)
     {
         $.ajax({
                type:'GET',
@@ -181,7 +201,11 @@ $('#name').change(function(e) {
                             $("#organization").append("<option value=" + index + ">" +
                                 value + "</option>");
                         });
-                    
+
+                        if(document.querySelector('.custom__spinner')){
+
+document.querySelector('.custom__spinner').style.display = 'none';
+}
                 }
                 });
     }
@@ -190,7 +214,7 @@ $('#name').change(function(e) {
 </script>
 <script>
     let pending = true;
-    var spinner = `<div class="block text-center">
+    var spinner = `<div class="block text-center custom__spinner">
     
     <div class="spinner-border" role="status" style="width: 1rem; height: 1rem">
                          <span class="sr-only">Loading...</span>
@@ -200,16 +224,16 @@ $('#name').change(function(e) {
                     
                     `
                     ;
+        document.querySelector('.province-element').addEventListener('click', function(e){
+
+        $('#select2-organization-container').html(spinner);
+
+    })
      $('#province').change(function() {
     
     var province = $("#province").val();
-    console.log(province.length, 'province');
-    document.querySelector('#select2-province-container').addEventListener('click', function(){
-        $('#select2-district-container').html(spinner);
-
-    })
-    if(!province) province = 0;
-    if(province)
+    
+    if(province.length >= 0)
     {
         $.ajax({
                type:'GET',
@@ -220,19 +244,22 @@ $('#name').change(function(e) {
                },
                cache: true,
                success:function(data) {
-                   console.log(data, 'sss')
                 $("#district").empty();
                 $("#district").append("<option value=''>Select District</option>");
                 $.each(data, function (index, value) {
                             $("#district").append("<option value=" + index + ">" +
                                 value + "</option>");
                         });
+                        if(document.querySelector('.custom__spinner')){
+
+                            document.querySelector('.custom__spinner').style.display = 'none';
+                        }
+
                 },
                 error: function(err){
                     $("#district").empty();
                 }
                 
-
                 });
     }
 
