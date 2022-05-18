@@ -14,9 +14,12 @@
             <li class="nav-item nav-dropdown {{ request()->is('admins/permissions/*') || request()->is('admins/roles/*') || request()->is('admins/users/*') || request()->is('admins/groups/*') ? 'open' : '' }}">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
                     <i class="fa-fw fas fa-users nav-icon">
-
                     </i>
-                    {{ trans('cruds.userManagement.title') }}
+                    <span>
+
+                        {{ trans('cruds.userManagement.title') }}
+                    </span>
+                    <i class="fa-solid fa-chevron-left"></i>
                 </a>
                 <ul class="nav-dropdown-items">
                     @can('group_access')
@@ -73,7 +76,12 @@
                     <i class="fa-fw fas fa-users nav-icon">
 
                     </i>
-                    {{ trans('cruds.productManagement.title') }}
+                    <span>
+
+                        {{ trans('cruds.productManagement.title') }}
+                    </span>
+                    <i class="fa-solid fa-chevron-left"></i>
+
                 </a>
                 <ul class="nav-dropdown-items">
                     @can('product_category_access')
@@ -172,7 +180,12 @@
                     <i class="fa-fw fas fa-users nav-icon">
 
                     </i>
-                    {{ trans('cruds.cms.title') }}
+                    <span>
+
+                        {{ trans('cruds.cms.title') }}
+                    </span>
+                    <i class="fa-solid fa-chevron-left"></i>
+
                 </a>
                 <ul class="nav-dropdown-items">
                     @can('slider_access')

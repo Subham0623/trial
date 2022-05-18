@@ -25,6 +25,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/4194655f1d.js" crossorigin="anonymous"></script>
 
     <style>
       img[data-dz-thumbnail] {
@@ -90,6 +91,32 @@
       background-color: #f0f3f5;
     }
 
+
+    .sidebar .nav-dropdown-toggle::before{
+      display: none !important;
+    }
+
+    .sidebar .nav-dropdown-toggle{
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .sidebar .nav-dropdown-toggle .fa-chevron-left{
+      transition: all .3s;
+      font-size: .8rem !important;
+    }
+
+    .sidebar .nav-dropdown-toggle span{
+      flex: 1 !important;
+      height: 15px;
+      display: flex; 
+    align-items: center;
+    }
+
+    .nav-dropdown-toggle.open .fa-chevron-left{
+      transform: rotate(-90deg);
+      transition: transform .3s;
+    }
     </style>
     @yield('styles')
 </head>
@@ -254,6 +281,7 @@
 
 
     <script src="{{ asset('js/main.js') }}"></script>
+    
     <script>
         $(function() {
           let copyButtonTrans = '{{ trans('global.datatables.copy') }}'
@@ -397,6 +425,27 @@
     @yield('scripts')
     <script>
       $('#message').delay(5000).slideUp(300);
+     
+    </script>
+    <script defer>
+      console.log('woorkings');
+      const navElements =  document.querySelectorAll('.nav-dropdown');
+      navElements.forEach((element) => {
+        element.addEventListener('click', function(e){
+          const dropDownElement = e.target.closest('.nav-item');
+           // console.log(dropDownElement, 'test');
+
+          if (!dropDownElement) return;
+
+          if(dropDownElement.classList.contains('open')){
+
+            dropDownElement.classList.remove('open');
+          } else{
+            dropDownElement.classList.add('open');
+          }
+
+        });
+      })
     </script>
 </body>
 
