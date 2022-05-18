@@ -141,8 +141,8 @@
           <!-- Notifications Dropdown Menu -->
           <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-              <span class="badge badge-danger navbar-badge notification-count">9+</span>
-              <i class="fas fa-bell"></i>
+              <!-- <img src="{{asset('bell.png')}}" style="width: 1.6rem;"><span class="badge badge-danger navbar-badge notification-count"></span> -->
+              <i class="fas fa-bell"></i><span class="badge badge-danger navbar-badge notification-count"></span>
             </a>
             <div class="dropdown-menu notification-menu dropdown-menu-lg dropdown-menu-right">
               <span class="dropdown-item dropdown-header">15 Notifications</span>
