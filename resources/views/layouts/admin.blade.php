@@ -384,7 +384,7 @@
                           <div class="dropdown-divider"></div>
                       `);
                   });
-                  $('.notification-menu').append('<div class="dropdown-divider"></div><a href="{{ route("admin.read_all_notifications") }}" class="dropdown-item read-notification dropdown-footer">Mark as Read</a>');
+                  $('.notification-menu').append('<div class="dropdown-divider"></div><a href="{{ route("admin.read_all_notifications") }}" class="dropdown-item read-notification dropdown-footer">Mark all as read</a>');
                 }
               }
             });
