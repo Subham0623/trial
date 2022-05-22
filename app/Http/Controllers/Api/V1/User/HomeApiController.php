@@ -368,6 +368,7 @@ class HomeApiController extends Controller
                                                 'final_verified_by'=>$user->id,
                                                 'is_audited' => ($parameter['reassign'] == 1 ? 2 : $form->is_audited),
                                             ]);
+                                            
                                         }
                                         else
                                         {
@@ -495,17 +496,17 @@ class HomeApiController extends Controller
                     $totalByVerifier = $form_subject_area->parameters->sum('pivot.marksByVerifier');
                     $totalByAuditor = $form_subject_area->parameters->sum('pivot.marksByAuditor');
                     $totalByFinalVerifier = $form_subject_area->parameters->sum('pivot.marksByFinalVerifier');
-        
+       
                     $form_subject_area->update([
                         'marks'=> $total,
                         'marksByVerifier'=> $totalByVerifier,
                         'marksByAuditor'=> $totalByAuditor,
-                        'marksbyFinalVerifier'=> $totalByFinalVerifier,
+                        'marksByFinalVerifier'=> $totalByFinalVerifier,
                         'status_verifier'=> ($roles->contains(5) ? 1 : $form_subject_area->status_verifier),
                         'status_auditor' => ($roles->contains(4) ? (($count>0)?2 : 1):$form_subject_area->status_auditor),
                         'status_final_verifier' => ($roles->contains(6) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
                     ]);
-        
+                    
                     $total_marks = $form->form_subjectareas->sum('marks');
                     $total_marks_verifier = $form->form_subjectareas->sum('marksByVerifier');
                     $total_marks_auditor = $form->form_subjectareas->sum('marksByAuditor');
