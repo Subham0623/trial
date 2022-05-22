@@ -47,6 +47,10 @@ Route::middleware(['IsInstalled'])->group(function () {
             'middleware' => ['auth', 'admin']
         ], function () {
             Route::get('/', 'HomeController@index')->name('home');
+            Route::get('/notification', 'HomeController@get_notifications')->name('get_notifications');
+            Route::get('/notification/show/{id}', 'HomeController@show_notifications')->name('show_notifications');
+            Route::get('/notification/readall', 'HomeController@read_all_notifications')->name('read_all_notifications');
+
             Route::get('/organization/detail/{organization}','HomeController@organizationDetail')->name('organization-detail');
             Route::get('/filter','HomeController@filterOrg')->name('filter');
             Route::get('/index/filter','HomeController@filter')->name('filter-index');

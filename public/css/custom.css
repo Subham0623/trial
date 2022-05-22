@@ -11,11 +11,11 @@ textarea {
 .dataTables_filter,
 .dt-buttons {
     margin-bottom: 0.333em;
-    margin-top: .2rem;
+    margin-top: 0.2rem;
 }
 
 .dataTables_filter {
-    margin-right: .2rem;
+    margin-right: 0.2rem;
 }
 
 .dt-buttons .btn {
@@ -72,7 +72,7 @@ table.dataTable thead .sorting_desc {
 
 .btn-default.focus,
 .btn-default:focus {
-    box-shadow: 0 0 0 .2rem rgba(209, 213, 215, .5);
+    box-shadow: 0 0 0 0.2rem rgba(209, 213, 215, 0.5);
 }
 
 .btn-default:hover {
@@ -93,12 +93,12 @@ table.dataTable thead .sorting_desc {
     font-weight: bold;
 }
 .searchable-fields {
-    padding-left:5px;
+    padding-left: 5px;
 }
 .searchable-link {
-    padding:0 5px 0 5px;
+    padding: 0 5px 0 5px;
 }
-.searchable-link:hover   {
+.searchable-link:hover {
     cursor: pointer;
     background: #eaeaea;
 }
@@ -116,10 +116,181 @@ table.dataTable thead .sorting_desc {
     display: block;
 }
 
-.my-custom__table thead tr th:first-child{
+.my-custom__table thead tr th:first-child {
     width: 30px;
 }
 
-.fam{
+.fam {
     width: 100%;
+}
+
+.card {
+    box-shadow: 0px 3px 3px -1px rgb(10 22 70 / 10%),
+        0px 0px 1px 0px rgb(10 22 70 / 6%) !important;
+    border: none;
+}
+
+.custom__table-alignment {
+    flex-wrap: nowrap;
+}
+
+.custom__table-alignment-first {
+    margin-right: 16px;
+}
+
+.custom__table-alignment > * {
+    width: 100%;
+}
+
+.section__seperator {
+    padding: 0;
+    padding-top: 3rem !important;
+    position: relative;
+}
+
+.section__seperator::before {
+    content: "";
+    width: 100%;
+    background: rgba(80, 181, 255, 0.1);
+    top: 0px;
+    margin: 0 auto;
+    position: absolute;
+    height: 156px;
+    /* align-items: center; */
+}
+
+@media (max-width: 578px) {
+    .section__seperator::before {
+        height: 300px;
+    }
+}
+
+.first__custom-section {
+    margin-top: 30px !important;
+}
+
+/* sidebar */
+
+.sidebar .sidebar-nav {
+    width: 256px;
+    background-color: #fff;
+    padding-top: 20px;
+}
+
+.sidebar-nav .nav .nav-item .nav-link {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 0;
+    color: #777d74;
+    padding: 0;
+}
+
+.sidebar .nav-link.active {
+    background: transparent;
+}
+.sidebar .nav-item.active {
+    background: rgba(80, 181, 255, 0.1);
+}
+.sidebar .nav-item.active > a {
+    /* background: rgba(80, 181, 255, 0.1); */
+    color: #50b5ff;
+}
+
+.sidebar .nav {
+    margin: 0 0.938rem;
+    width: auto;
+}
+
+.sidebar .nav .nav-item {
+    padding: 0.938rem;
+    white-space: nowrap;
+}
+
+.sidebar .nav-link:hover {
+    background: transparent;
+}
+
+.sidebar .nav .nav-item:hover,
+.sidebar .nav .nav-item:active {
+    background: rgba(80, 181, 255, 0.1);
+    border-radius: 5px;
+}
+.sidebar .nav-dropdown.open,
+.sidebar .nav-item.open {
+    background: rgba(80, 181, 255, 0.1);
+    border-radius: 5px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: rgba(222, 222, 222, 0.75);
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 7px;
+    background-color: #f5f5f5;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    width: 7px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+html:not([dir="rtl"]) .sidebar {
+    margin-left: -256px;
+}
+
+@media (min-width: 992px) {
+    html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed .app-footer,
+    html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed .main,
+    html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .app-footer,
+    html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .main {
+        margin-left: 256px;
+    }
+}
+
+@media (min-width: 768px) {
+    html:not([dir="rtl"]) .sidebar-md-show.sidebar-fixed .app-footer,
+    html:not([dir="rtl"]) .sidebar-md-show.sidebar-fixed .main,
+    html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .app-footer,
+    html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .main {
+        margin-left: 256px;
+    }
+}
+
+@media (min-width: 576px) {
+    html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .app-footer,
+    html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .main,
+    html:not([dir="rtl"]) .sidebar-sm-show.sidebar-fixed .app-footer,
+    html:not([dir="rtl"]) .sidebar-sm-show.sidebar-fixed .main {
+        margin-left: 256px;
+    }
+}
+
+.sidebar .nav-dropdown-toggle::before {
+    right: 0;
+}
+
+.sidebar-minimized .sidebar .nav {
+    margin-left: -1rem;
+}
+
+.sidebar-minimizer {
+    display: none;
+}
+
+.sidebar .nav-link:hover .nav-icon {
+    color: #20a8d8;
+}
+
+.sidebar .nav-dropdown.open > .nav-dropdown-items {
+    margin-top: 15px;
+}
+
+.sidebar .nav-dropdown.open > .nav-dropdown-items li {
+    margin-bottom: 8px;
+}
+
+.nav .nav-item {
+    margin-bottom: 5px;
 }

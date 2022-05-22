@@ -16,7 +16,13 @@ use App\FormSubjectArea;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use App\Jobs\SendFormCreatedJob;
+use App\Jobs\SendFormUpdatedJob;
+use App\Jobs\SendFormVerifiedJob;
+use App\Jobs\SendFormAudittedJob;
+use App\Jobs\SendFormSubmittedJob;
 use App\Document;
+
 
 class HomeApiController extends Controller
 {
@@ -164,6 +170,8 @@ class HomeApiController extends Controller
                 ]);
             }
         }
+
+        dispatch(new SendFormCreatedJob($form));
 
         return response([
             'message'=>'Form saved successfully',
@@ -562,8 +570,18 @@ class HomeApiController extends Controller
                     }
 
                 }
-
             }
+
+            $selected_options = $this->selectedOptions($form);
+
+            dispatch(new SendFormUpdatedJob($form));
+
+            return response([
+                'message'=>'Form updated successfully',
+                'form_details' => $form->load('organization'),
+                'subject_areas' => $subject_areas,
+                'selected_options' => $selected_options,
+            ],201);
         }
         else
         {
@@ -601,7 +619,7 @@ class HomeApiController extends Controller
                         'final_verified_at' => Carbon::now()->toDateTimeString(),
 
                     ]);
-
+                    dispatch(new SendFormVerifiedJob($form));
                     return response(['message'=>'Form verified successfully'],200);
                 }
                 else
@@ -620,7 +638,7 @@ class HomeApiController extends Controller
                         'audited_at' => Carbon::now()->toDateTimeString(),
 
                     ]);
-
+                    dispatch(new SendFormAudittedJob($form));
                     return response(['message'=>'Form audited successfully'],200);
                 }
                 else
@@ -638,8 +656,8 @@ class HomeApiController extends Controller
                         'verified_by' => $user,
                         'verified_at' => Carbon::now()->toDateTimeString(),
                     ]);
-
-                    return response(['message'=>'Form verified successfully'],200);
+                    dispatch(new SendFormSubmittedJob($form));
+                    return response(['message'=>'Form submitted successfully'],200);
                 }
                 elseif($form->user_id == $user)
                 {
@@ -650,6 +668,7 @@ class HomeApiController extends Controller
                         'verified_by' => $user,
                         'verified_at' => Carbon::now()->toDateTimeString(),
                     ]);
+                    dispatch(new SendFormSubmittedJob($form));
                     return response(['message'=>'Form submitted successfully'],200);
                 }
                 else
@@ -664,7 +683,7 @@ class HomeApiController extends Controller
                     'status' => 1,
                     'user_id' => $user
                 ]);
-                
+                dispatch(new SendFormSubmittedJob($form));
                 return response(['message'=>'Form submitted successfully'],200);
             }
             else
