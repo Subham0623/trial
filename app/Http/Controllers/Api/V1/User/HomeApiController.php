@@ -169,9 +169,9 @@ class HomeApiController extends Controller
                     'message'=> 'Form not found',
                 ]);
             }
-        }
 
-        dispatch(new SendFormCreatedJob($form));
+            dispatch(new SendFormCreatedJob($form));
+        }
 
         return response([
             'message'=>'Form saved successfully',
@@ -570,18 +570,18 @@ class HomeApiController extends Controller
                     }
 
                 }
+                
+                dispatch(new SendFormUpdatedJob($form));
             }
 
-            $selected_options = $this->selectedOptions($form);
+            // $selected_options = $this->selectedOptions($form);
 
-            dispatch(new SendFormUpdatedJob($form));
-
-            return response([
-                'message'=>'Form updated successfully',
-                'form_details' => $form->load('organization'),
-                'subject_areas' => $subject_areas,
-                'selected_options' => $selected_options,
-            ],201);
+            // return response([
+            //     'message'=>'Form updated successfully',
+            //     'form_details' => $form->load('organization','form_subjectareas'),
+            //     'subject_areas' => $subject_areas,
+            //     'selected_options' => $selected_options,
+            // ],201);
         }
         else
         {
