@@ -119,7 +119,7 @@ class FormController extends Controller
         {
             $final_forms = $this->forms($roles,$organizations);
             $forms = Form::whereIn('id',$final_forms)->where('year',$request->year)->get();
-    }
+        }
 
         $years = Form::groupBy('year')->pluck('year')->filter();
 
@@ -187,8 +187,16 @@ class FormController extends Controller
             $forms = $forms->merge($final_verified_forms)->pluck('id');
             return $forms;
 
-            // dd($forms);
-
+        }
+        elseif($roles->contains(1) || $roles->contains(2))
+        {
+             $forms = Form::pluck('id');
+             return $forms;
+            
+        }
+        else
+        {
+            return $forms = null;
         }
     }
     
