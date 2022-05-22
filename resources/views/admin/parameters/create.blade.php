@@ -89,7 +89,7 @@
             <tr>  
                 
                 <td><textarea name="addmore[0][title]" placeholder="Enter title" class="input form-control" required>{{old('addmore')[0]['title'] ?? ''}}</textarea></td>
-                <td><input type="text" name="addmore[0][points]" placeholder="Enter points" class="form-control" value="{{old('addmore')[0]['points'] ?? ''}}" required/></td>
+                <td><input type="number" step="0.01" min="0" max="1" name="addmore[0][points]" placeholder="Enter points" class="form-control" value="{{old('addmore')[0]['points'] ?? ''}}" required/></td>
                 <td>
                     <input type="radio" name="addmore[0][status]" value="1" checked> Active<br>
                     <input type="radio" name="addmore[0][status]" value="0" > Inactive<br>
@@ -173,7 +173,7 @@ $('#title').change(function(e) {
             <textarea name="addmore[${i}][title]" placeholder="Enter title" class="input form-control" required></textarea>
         </td>
         <td>
-            <input type="text" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" required/>
+            <input type="number" step="0.01" min="0" max="1" name="addmore[${i}][points]" placeholder="Enter points" class="form-control" required/>
         </td>
         <td>
             <input type="radio" name="addmore[${i}][status]" value="1" checked> Active<br>
@@ -202,7 +202,7 @@ $('#title').change(function(e) {
         </td>
         <td>
             <input type="radio" name="addmore1[${i}][status]" value="1" checked> Active<br>
-            <input type="radio" name="addmore[${i}][status]" value="0" > Inactive<br>
+            <input type="radio" name="addmore1[${i}][status]" value="0"> Inactive<br>
         </td>
         <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td>
         </tr>`);
