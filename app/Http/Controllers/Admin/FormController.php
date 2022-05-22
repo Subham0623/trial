@@ -34,7 +34,7 @@ class FormController extends Controller
 
             $forms = Form::whereIn('organization_id',$orgs)
             ->where('status',1)
-            ->where('is_verified',0)->get();
+            ->where('verified_by',NULL)->get();
 
             $forms = $forms->merge($verified_forms)->all();
             $organizations = Auth::user()->organizations()->get();
@@ -46,14 +46,14 @@ class FormController extends Controller
             $audited_forms = Auth::user()->auditedForms()->get();
             
             $forms = Form::whereIn('organization_id',$orgs)
-            ->where('status',1)
+            // ->where('status',1)
             ->where('is_verified',1)
-            ->where('is_audited',0)->get();
+            ->where('audited_by',NULL)->get();
 
             $forms = $forms->merge($audited_forms)->all();
             $organizations = Auth::user()->organizations()->get();
 
-            // dd($forms);
+            // dd($forms);  
 
         }
         elseif($roles->contains(6))
@@ -61,10 +61,10 @@ class FormController extends Controller
             $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
             
             $forms = Form::whereIn('organization_id',$orgs)
-            ->where('status',1)
-            ->where('is_verified',1)
+            // ->where('status',1)
+            // ->where('is_verified',1)
             ->where('is_audited',1)
-            ->where('final_verified',0)
+            ->where('final_verified_by',NULL)
             ->get();
 
             $forms = $forms->merge($final_verified_forms)->all();
@@ -84,7 +84,7 @@ class FormController extends Controller
             $forms = [];
             $organizations = Organization::all();
         }
-        return view('admin.forms.index',compact('forms','organizations','years','org','yr'));
+        return view('admin.forms.index',compact('forms','organizations','years','org','yr','roles'));
     }
 
    
@@ -92,9 +92,8 @@ class FormController extends Controller
     {
         // dd('here');
         // dd($request->organization);
-        
+        // dd(Auth::user());
         $roles = Auth::user()->roles()->pluck('id');
-
 
         if($roles->contains(1) || $roles->contains(2))
         {
@@ -109,20 +108,24 @@ class FormController extends Controller
         $yr = $request->year;
         if((isset($request->organization)) && (isset($request->year)))
         {
-            $forms = Form::where('organization_id',$request->organization)->where('year',$request->year)->get();
+            $final_forms = $this->forms($roles,$organizations);
+            $forms = Form::whereIn('id',$final_forms)->where('organization_id',$request->organization)->where('year',$request->year)->get();
+            // dd($forms);
         }
         elseif((isset($request->organization)) && ($request->year == null))
         {
-            $forms = Form::where('organization_id',$request->organization)->get();
+            $final_forms = $this->forms($roles,$organizations);
+            $forms = Form::whereIn('id',$final_forms)->where('organization_id',$request->organization)->get();
         }
         else
         {
-            $forms=Form::where('year',$request->year)->get();
-    }
+            $final_forms = $this->forms($roles,$organizations);
+            $forms = Form::whereIn('id',$final_forms)->where('year',$request->year)->get();
+        }
 
         $years = Form::groupBy('year')->pluck('year')->filter();
 
-        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org'))->render();
+        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles'))->render();
         // dd($html);
         return response()->json(array(
             'success' => true,
@@ -142,6 +145,63 @@ class FormController extends Controller
         return response()->json(['success'=>'Publish status changed successfully.']);
     }
 
+    public function forms($roles,$organizations)
+    {
+        $orgs = $organizations->pluck('id');
+        if($roles->contains(5))
+        {
+            $verified_forms = Auth::user()->verifiedForms()->get();
+
+            $forms = Form::whereIn('organization_id',$orgs)
+            ->where('status',1)
+            ->where('verified_by',NULL)->get();
+
+            $forms = $forms->merge($verified_forms)->pluck('id');
+            return $forms;
+            
+        }
+        elseif($roles->contains(4))
+        {
+            $audited_forms = Auth::user()->auditedForms()->get();
+            
+            $forms = Form::whereIn('organization_id',$orgs)
+            // ->where('status',1)
+            ->where('is_verified',1)
+            ->where('audited_by',NULL)->get();
+
+            $forms = $forms->merge($audited_forms)->pluck('id');
+            return $forms;
+
+            // dd($forms);  
+
+        }
+        elseif($roles->contains(6))
+        {
+            $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
+            
+            $forms = Form::whereIn('organization_id',$orgs)
+            // ->where('status',1)
+            // ->where('is_verified',1)
+            ->where('is_audited',1)
+            ->where('final_verified_by',NULL)
+            ->get();
+
+            $forms = $forms->merge($final_verified_forms)->pluck('id');
+            return $forms;
+
+        }
+        elseif($roles->contains(1) || $roles->contains(2))
+        {
+             $forms = Form::pluck('id');
+             return $forms;
+            
+        }
+        else
+        {
+            return $forms = null;
+        }
+    }
+    
     /**
      * Show the form for creating a new resource.
      *

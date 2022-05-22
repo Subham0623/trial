@@ -73,6 +73,6 @@ class Parameter extends Model
 
     public function formSubjectAreas()
     {
-        return $this->belongsToMany(FormSubjectArea::class)->withPivot('marks','remarks','option_id','marksByVerifier','marksByAuditor','marksByfinalVerifier','is_applicable','reassign');
+        return $this->belongsToMany(FormSubjectArea::class)->withPivot('marks','remarks','option_id','marksByVerifier','marksByAuditor','marksByFinalVerifier','is_applicable','reassign');
     }
 }

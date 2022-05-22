@@ -88,7 +88,7 @@
                 <tr class = "old_options">
                     
                     <td><textarea name="addmore[{{$key}}][title]" class="input form-control" required>{{ $option->title }}</textarea></td> 
-                    <td><input type="text" name="addmore[{{$key}}][points]"  class="form-control" value="{{$option->points}}" required/></td> 
+                    <td><input type="number" step="0.01" min="0" max="1" name="addmore[{{$key}}][points]"  class="form-control" value="{{$option->points}}" required/></td> 
                     <td>
                         <input type="radio" name="addmore[{{$key}}][status]" value="1" {{$option->status == 1 ? 'checked' : ''}}> Active<br>
                         <input type="radio" name="addmore[{{$key}}][status]" value="0" {{$option->status == 0 ? 'checked' : ''}}> Inactive<br>
@@ -174,7 +174,7 @@ $('#title').change(function(e) {
             <textarea name="addmore[${index}][title]" placeholder="Enter title" class="input form-control" required></textarea>
         </td>
         <td>
-            <input type="text" name="addmore[${index}][points]" placeholder="Enter points" class="form-control" required/>
+            <input type="number" step="0.01" min="0" max="1" name="addmore[${index}][points]" placeholder="Enter points" class="form-control" required/>
         </td>
         <td>
             <input type="radio" name="addmore[${index}][status]" value="1" checked> Active<br>

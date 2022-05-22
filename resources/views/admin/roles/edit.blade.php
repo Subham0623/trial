@@ -75,15 +75,15 @@
                         <div class="check__box-container">
                             @foreach($groups as $key => $group)
                                 @if($group->group_permission->count())
-                                <div class="check__box-container-{{$key}}">
+                                <div class="check__box-container-{{$key}}" data-container-id="{{$key}}">
                                     <div class="check__all-design">
-                                        <label for="checkAll-{{$key}}">{{$group->title}}</label>
                                         <input
                                         type="checkbox"
                                         class="check__all"
                                         id="checkAll-{{$key}}"
                                         data-checkall-trigger="group{{$key}}"
                                         />
+                                        <label for="checkAll-{{$key}}">{{$group->title}}</label>
                                         <label class="check__all-box" for="checkAll-{{$key}}">
                                         <div class="state unchecked active-state"></div>
                                         <div class="state checked">

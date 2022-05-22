@@ -3,12 +3,12 @@
 <div class="content">
     <div class="row">
         <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header">
+            <div class="card" style="background: #f5f9fc !important">
+                <div class="card-header" style="background: #ffff; border-bottom: 1px solid #e7eaf0; font-size: 27px">
                     Dashboard
                 </div>
 
-                <div class="card-body">
+                <div class="card-body" style="display: none">
                     @if(session('status'))
                     <div class="alert alert-success" role="alert" id="messageId">
                         {{ session('status') }}
@@ -16,8 +16,8 @@
                     @endif
                     <!-- you are logged in -->
                 </div>
-                <div id = "messageId" class="container"></div>
-                <div class="row container">
+                <div id="messageId" class="container-fluid"></div>
+                <div class="row container-fluid section__seperator" style="padding: 0; margin: 0 auto">
                     <!-- <div class="col-sm-3">
                         <div class="home-title"><span class="">PLGSP|</span><span class=""
                                 style="font-size: 18px; font-weight: bold; color: black; margin-left: 5px;">Home</span>
@@ -54,9 +54,8 @@
                                 @endforeach
                             </select></div>
                     </div>
-                    <div class="col-sm-3">
-
-                        <a class="btn btn-primary" id="search">Search</a>
+                    <div class="col-sm-3" >
+                        <a class="btn btn-primary" id="search" style="color: #fff">Search</a>
                     </div>
                     <!-- <div class="col-sm-2">
                         <div class="position-relative form-group"><select placeholder="पालिका चयन गर्नुहोस"
@@ -66,7 +65,7 @@
                     </div> -->
                 </div>
 
-                <div class="row container">
+                <div class="row container-fluid first__custom-section" style="padding: 0; margin: 0 auto">
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
@@ -123,34 +122,80 @@
                     </div>
                 </div>
 
-                <div class="card-layout container">
-                    <div class="row">
-                        <div class="col mb-3 col-6 text-center">
-                            <div class="row table-heading">
-                                <div class="col-md-6">
+                <div class="card-layout container-fluid mt-5">
+                    <div class="row custom__table-alignment">
+                        <div class="card shadow border-0 text-center overflow-hidden custom__table-alignment-first"
+                            style="padding:0">
+                            <div class="row table-heading w-100" style="transform: translateX(15px);">
+                                <div class="card-header" style="width: 100%; background: #fff">
                                     <h6 class="sub-heading">10 organizations with highest score</h6>
                                 </div>
                             </div>
-                            <div class="row container">
-
-                                <table class="table table-responsive table-bordered my-custom__table">
-                                    <thead>
+                            <div class="row table-responsive" style="transform: translateX(15px); height: 100%">
+                                <table class="table table-hover table-nowrap"
+                                    style="flex: 1; margin-bottom: 0; height:100%">
+                                    <thead class="thead-light">
                                         <tr>
-                                            <th class="toplevel">S.N. </th>
-                                            <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
-                                            <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
-                                                प्राप्तांक (औसत)</th> -->
+                                            <th scope="col" style="border:none">S.N</th>
+                                            <th scope="col" style="border:none">Organizations</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if(count($topOrgs)>0)
                                         @foreach($topOrgs as $key => $top)
-
                                         <tr>
-                                            <th scope="row">{{$key+1}}</th>
-                                            <td style="min-width: 180px;"><a
-                                                    href="{{route('admin.organization-detail',[$top->id])}}">{{$top->name}}</a>
+                                            <td>
+                                                <img alt="..."
+                                                    src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=256&amp;h=256&amp;q=80"
+                                                    class="avatar avatar-sm rounded-circle me-2">
+                                                <a class="text-heading font-semibold" href="#">
+                                                    Robert Fox
+                                                </a>
                                             </td>
+                                            <td>
+                                                Feb 15, 2021
+                                            </td>
+
+                                        </tr>
+                                        @endforeach
+                                        @else
+                                        <tr>
+                                            <th colspan="2">No data found</th>
+                                        </tr>
+
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card shadow border-0 text-center overflow-hidden" style="padding:0">
+                            <div class="row table-heading w-100" style="transform: translateX(15px);">
+                                <div class="card-header" style="width: 100%; background: #fff">
+                                    <h6 class="sub-heading">10 organizations with highest score</h6>
+                                </div>
+                            </div>
+                            <div class="row table-responsive" style="transform: translateX(15px); height: 100%">
+                                <table class="table table-hover table-nowrap"
+                                    style="flex: 1; margin-bottom: 0; height:100%">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col" style="border:none">S.N</th>
+                                            <th scope="col" style="border:none">Organizations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(count($lowOrgs)>0)
+                                        @foreach($lowOrgs as $key => $low)
+                                        <tr>
+                                            <td>
+                                                {{$key+1}}
+                                            </td>
+                                            <td>
+                                                <a class="text-heading font-semibold"
+                                                    href="{{route('admin.organization-detail',[$low->id])}}">{{$low->name}}
+                                                </a>
+                                            </td>
+
                                         </tr>
                                         @endforeach
                                         @else
@@ -164,7 +209,7 @@
                             </div>
                         </div>
 
-                        <div class="col mb-3 col-6 text-center">
+                        <!-- <div class="col mb-3 col-6 text-center">
                             <div class="row table-heading">
                                 <div class="col-md-6">
                                     <h6 class="sub-heading">10 organizations with lowest score</h6>
@@ -176,8 +221,7 @@
                                         <tr>
                                             <th class="toplevel">S.N. </th>
                                             <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
-                                            <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
-                                                प्राप्तांक (औसत)</th> -->
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -199,32 +243,28 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>
-
-
-                <div class="card-layout container">
-                    <div class="row">
-
-
-                        <div class="col mb-3 col-12 text-center">
-                            <div class="row table-heading">
-                                <div class="col-md-12">
+                <div class="card-layout container-fluid mt-3">
+                    <div class="row custom__table-alignment">
+                        <div class="card shadow border-0 text-center overflow-hidden custom__table-alignment-first"
+                            style="padding:0">
+                            <div class="row table-heading w-100" style="transform: translateX(15px);">
+                                <div class="card-header" style="width: 100%; background: #fff">
                                     <h6 class="sub-heading">Total Marks of all the organizations based on subject areas
                                     </h6>
                                 </div>
                             </div>
-                            <div class="row container table-responsive">
-                                <table class="table  table-bordered">
-                                    <thead>
+                            <div class="row table-responsive" style="transform: translateX(15px); height: 100%">
+                                <table class="table table-hover table-nowrap"
+                                    style="flex: 1; margin-bottom: 0; height:100%">
+                                    <thead class="thead-light">
                                         <tr>
-                                            <th id="fam" class="toplevel">S.N. </th>
-                                            <th id="fam" class="toplevel">Subject Areas</th>
-                                            <th>Total Marks</th>
-                                            <!-- <th id="rmc" class="toplevel"  style="border-bottom: none;">कुल
-                                                प्राप्तांक (औसत)</th> -->
+                                            <th scope="col" style="border:none">S.N</th>
+                                            <th scope="col" style="border:none">Subject Areas</th>
+                                            <th scope="col" style="border:none">Total Marks</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -243,7 +283,8 @@
 
                                         foreach($subjectArea->activeParameters as $parameter)
                                         {
-                                        $subjectAreaTotal = $parameter->activeOptions()->max('points') + $subjectAreaTotal;
+                                        $subjectAreaTotal = $parameter->activeOptions()->max('points') +
+                                        $subjectAreaTotal;
                                         }
                                         }
 
@@ -259,15 +300,59 @@
                                         @endphp
 
                                         <tr>
-                                            <th scope="row">{{$key+1}}</th>
-                                            <td style="min-width: 180px;">{{$subjectArea->title}}</td>
-                                            <td style="min-width: 180px;">{{$percentage}}%</td>
+                                            <td>
+                                                {{$key+1}}
+                                            </td>
+                                            <td>
+                                                {{$subjectArea->title}}
+                                            </td>
+                                            <td>
+                                                {{$percentage}}%
+                                            </td>
+
                                         </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        
+
+                        <!-- <div class="col mb-3 col-6 text-center">
+                            <div class="row table-heading">
+                                <div class="col-md-6">
+                                    <h6 class="sub-heading">10 organizations with lowest score</h6>
+                                </div>
+                            </div>
+                            <div class="row container">
+                                <table class="table table-responsive table-bordered my-custom__table">
+                                    <thead>
+                                        <tr>
+                                            <th class="toplevel">S.N. </th>
+                                            <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(count($lowOrgs)>0)
+                                        @foreach($lowOrgs as $key => $low)
+
+                                        <tr>
+                                            <td scope="row">{{$key+1}}</td>
+                                            <td><a
+                                                    href="{{route('admin.organization-detail',[$low->id])}}">{{$low->name}}</a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        @else
+                                        <tr>
+                                            <th colspan="2">No data found</th>
+                                        </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> -->
 
                     </div>
                 </div>
@@ -280,33 +365,33 @@
 @endsection
 @section('scripts')
 <script>
-     $('#provinceId').change(function() {
-    
-    var province = $('#provinceId').find(':selected').val();
-    console.log(province);
-    if(province .length > 0)
-    {
-        $.ajax({
-               type:'GET',
-               url:'/admins/province/districts',
-               data:{
-                
-                   province: province,
-               },
-               success:function(data) {
-                $("#districtId").empty();
-                $("#districtId").append("<option value=''>Select District</option>");
-                $.each(data, function (index, value) {
-                            $("#districtId").append("<option value=" + index + ">" +
-                                value + "</option>");
-                        });
-                    
+    $('#provinceId').change(function () {
+
+        var province = $('#provinceId').find(':selected').val();
+        console.log(province);
+        if (province.length > 0) {
+            $.ajax({
+                type: 'GET',
+                url: '/admins/province/districts',
+                data: {
+
+                    province: province,
+                },
+                success: function (data) {
+                    $("#districtId").empty();
+                    $("#districtId").append("<option value=''>Select District</option>");
+                    $.each(data, function (index, value) {
+                        $("#districtId").append("<option value=" + index + ">" +
+                            value + "</option>");
+                    });
+
                 }
-                });
-    }
-    
-    
-  });
+            });
+        }
+
+
+    });
+
 </script>
 <script>
     $(document).ready(function () {
@@ -340,9 +425,7 @@
 
                     }
                 });
-            }
-            else
-            {
+            } else {
                 $("#messageId").append("<b>No form has been verified.</b>");
             }
         });
