@@ -115,6 +115,10 @@ class HomeApiController extends Controller
                 $form->total_marks = $total_marks;
                 $form->status = ($roles->contains(5) ? 1 : 0);
                 $form->save();
+
+                return response([
+                    'message'=>'Form saved successfully'
+                ],201);
             }
             else
             {
@@ -164,19 +168,21 @@ class HomeApiController extends Controller
                     }
 
                 }
+                
+                dispatch(new SendFormCreatedJob($form));
+
+                return response([
+                    'message'=>'Form saved successfully',
+                    'form_id'=>$form->id
+                ],201);
+
             } else {
                 return response([
                     'message'=> 'Form not found',
                 ]);
             }
 
-            dispatch(new SendFormCreatedJob($form));
         }
-
-        return response([
-            'message'=>'Form saved successfully',
-            'form_id'=>$form->id
-        ],201);
 
     }
 
@@ -527,7 +533,9 @@ class HomeApiController extends Controller
                         'total_marks_finalVerifier' => $total_marks_finalVerifier,
                     ]);
         
-                    
+                    return response([
+                        'message'=>'Form updated successfully'
+                    ],201);
                 }
                 else{
                     return response([
@@ -572,32 +580,24 @@ class HomeApiController extends Controller
                 }
                 
                 dispatch(new SendFormUpdatedJob($form));
+                
+                $selected_options = $this->selectedOptions($form);
+                
+                return response([
+                    'message'=>'Form updated successfully',
+                    'form_details' => $form->load('organization','form_subjectareas'),
+                    'subject_areas' => $subject_areas,
+                    'selected_options' => $selected_options,
+                ],201);
             }
 
-            // $selected_options = $this->selectedOptions($form);
-
-            // return response([
-            //     'message'=>'Form updated successfully',
-            //     'form_details' => $form->load('organization','form_subjectareas'),
-            //     'subject_areas' => $subject_areas,
-            //     'selected_options' => $selected_options,
-            // ],201);
         }
         else
         {
             return response([
                 'message'=>'Form not found',
             ],422);
-        }
-        
-        $selected_options = $this->selectedOptions($form);
-        return response([
-            'message'=>'Form updated successfully',
-            'form_details' => $form->load('organization','form_subjectareas'),
-            'subject_areas' => $subject_areas,
-            'selected_options' => $selected_options,
-        ],201);
-        
+        }        
         
     }
 
@@ -790,7 +790,7 @@ class HomeApiController extends Controller
                 'message'=>'Thank you for your feedback',
                 'subject_areas' => $subject_areas,
                 'selected_options' => $selected_options,
-                'form_details' => $form->load('organization'),
+                'form_details' => $form->load('organization','form_subjectareas'),
             ],201);
         }
         else
@@ -823,7 +823,7 @@ class HomeApiController extends Controller
                 return response(
                     [
                         'message' => 'Feedback status updated successfully',
-                        'form_details' => $form->load('organization'),
+                        'form_details' => $form->load('organization','form_subjectareas'),
                         'subject_areas' => $subject_areas,
                         'selected_options' => $selected_options,
                     ],200
