@@ -31,19 +31,19 @@ class UpdateProvinceRequest extends FormRequest
         ];
         // dd($request->addmore);
         // here loop through the staff array to add the ignore
-        foreach($request->addmore as $key => $item) {
-            // dd($item['name']);
-            $district = District::where('name',$item['name'])->first();
-            // dd($district);
-            if ($district !== NULL) { // if have an id, means an update, so add the id to ignore
-                $rules = array_merge($rules, ['addmore.'.$key.'.name' => ['unique:districts,name,'.$district->id]],);
-            }
-            else
-            {
-                $rules = array_merge($rules, ['addmore.'.$key.'.name' => ['unique:districts,name']]);
-            }
-        }
-// dd($rules);
+//         foreach($request->addmore as $key => $item) {
+//             // dd($item['name']);
+//             $district = District::where('name',$item['name'])->first();
+//             // dd($district);
+//             if ($district !== NULL) { // if have an id, means an update, so add the id to ignore
+//                 $rules = array_merge($rules, ['addmore.'.$key.'.name' => ['unique:districts,name,'.$district->id]],);
+//             }
+//             else
+//             {
+//                 $rules = array_merge($rules, ['addmore.'.$key.'.name' => ['unique:districts,name']]);
+//             }
+//         }
+// // dd($rules);
          return $rules;
     }
 }
