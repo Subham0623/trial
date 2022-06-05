@@ -265,6 +265,10 @@ class HomeApiController extends Controller
             }
             elseif($roles->contains(2) || $roles->contains(1))
             {
+                $selected_options = $this->selectedOptions($form);
+                
+                $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
+                
                 return response([
                     'subject_areas' => $subject_areas,
                     'selected_options' => $selected_options,
