@@ -45,7 +45,7 @@ class HomeApiController extends Controller
 
     public function store(Request $request)
     {
-       
+    //    dd($request->all());
         $user = Auth::user();
         $roles = $user->roles()->pluck('id');
         $user_organization = $user->organizations->first();
@@ -105,10 +105,13 @@ class HomeApiController extends Controller
                         }
                     }
                 }
-        
+                
+                $c1 = SubjectArea::where('id',$request->subject_area)->first()->activeParameters->count();
+                $c2 = $form_subject_area->parameters->count();
                 $total = $form_subject_area->parameters->sum('pivot.marks');
                 $form_subject_area->update([
-                    'marks'=> $total
+                    'marks'=> $total,
+                    'status_verifier' => (($c1 == $c2) ? 1 : $form_subject_area->status_verifier),
                 ]);
 
                 $total_marks = $form->subjectAreas->sum('pivot.marks');
@@ -237,11 +240,13 @@ class HomeApiController extends Controller
 
     public function edit(Form $form)
     {
+        // dd($form);
         $organizations = Organization::whereHas('users',function($query){
             $query->where('id',Auth::user()->id);
         })->pluck('id');
 
-        
+        $user = Auth::user();
+        $roles = $user->roles->pluck('id');
         $selected_options = [];
         
         if($form) 
@@ -252,6 +257,14 @@ class HomeApiController extends Controller
                 
                 $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
                 
+                return response([
+                    'subject_areas' => $subject_areas,
+                    'selected_options' => $selected_options,
+                    'form_details' => $form->load('organization','form_subjectareas'),
+                ]);
+            }
+            elseif($roles->contains(2) || $roles->contains(1))
+            {
                 return response([
                     'subject_areas' => $subject_areas,
                     'selected_options' => $selected_options,
@@ -506,6 +519,9 @@ class HomeApiController extends Controller
 
                     $count = $form_subject_area->selected_subjectareas()->where('reassign',1)->count();
         
+                    $c1 = SubjectArea::where('id',$request->subject_area)->first()->activeParameters->count();
+                    $c2 = $form_subject_area->parameters->count();
+
                     $total = $form_subject_area->parameters->sum('pivot.marks');
                     $totalByVerifier = $form_subject_area->parameters->sum('pivot.marksByVerifier');
                     $totalByAuditor = $form_subject_area->parameters->sum('pivot.marksByAuditor');
@@ -516,7 +532,7 @@ class HomeApiController extends Controller
                         'marksByVerifier'=> $totalByVerifier,
                         'marksByAuditor'=> $totalByAuditor,
                         'marksByFinalVerifier'=> $totalByFinalVerifier,
-                        'status_verifier'=> ($roles->contains(5) ? 1 : $form_subject_area->status_verifier),
+                        'status_verifier'=> ((($roles->contains(5)) && ($c1 == $c2)) ? 1 : $form_subject_area->status_verifier),
                         'status_auditor' => ($roles->contains(4) ? (($count>0)?2 : 1):$form_subject_area->status_auditor),
                         'status_final_verifier' => ($roles->contains(6) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
                     ]);
