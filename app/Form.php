@@ -31,6 +31,8 @@ class Form extends Model
         'total_marks_verifier',
         'total_marks_auditor',
         'total_marks_finalVerifier',
+        'grade',
+        'remarks',
         'created_at',
         'updated_at',
         'verified_at',
@@ -46,6 +48,8 @@ class Form extends Model
         'final_verified',
         'deleted_at',
     ];
+
+    protected $casts = ['total_marks_finalVerifier' => 'float'];
 
     protected function serializeDate(DateTimeInterface $date)
     {
