@@ -945,29 +945,29 @@ class HomeApiController extends Controller
         if(isset($form))
         {
             // dd($form->total_marks_finalVerifier);
-            if($form->total_marks_finalVerifier > 90)
+            if($form->total_marks_finalVerifier >= 90)
             {
-                return ['grade'=>"A+",'remarks'=>'Excellent'];
+                return ['grade'=>"A+",'remarks'=>'अति उत्कृष्ट'];
             }
-            elseif(($form->total_marks_finalVerifier >75) && ($form->total_marks_finalVerifier <= 90))
+            elseif(($form->total_marks_finalVerifier >=75) && ($form->total_marks_finalVerifier < 90))
             {
-                return "A";
+                return ['grade'=>"A",'remarks'=>'उत्कृष्ट'];
             }
-            elseif(($form->total_marks_finalVerifier > 60) && ($form->total_marks_finalVerifier <= 75))
+            elseif(($form->total_marks_finalVerifier >= 60) && ($form->total_marks_finalVerifier < 75))
             {
-                return "B+";
+                return ['grade'=>"B+",'remarks'=>'राम्रो'];
             }
-            elseif(($form->total_marks_finalVerifier > 45) && ($form->total_marks_finalVerifier <= 60))
+            elseif(($form->total_marks_finalVerifier >= 45) && ($form->total_marks_finalVerifier < 60))
             {
-                return "B";
+                return ['grade'=>"B",'remarks'=>'सन्तोषजनक'];
             }
-            elseif(($form->total_marks_finalVerifier > 30) && ($form->total_marks_finalVerifier <= 45))
+            elseif(($form->total_marks_finalVerifier >= 30) && ($form->total_marks_finalVerifier < 45))
             {
-                return "C+";
+                return ['grade'=>"C+",'remarks'=>'कमजोर'];
             }
             else
             {
-                return ['grade'=>"C",'remarks'=>"thik cha"];
+                return ['grade'=>"C",'remarks'=>"खराब"];
             }
         }
         
