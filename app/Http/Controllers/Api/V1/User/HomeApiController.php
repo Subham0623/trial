@@ -724,18 +724,22 @@ class HomeApiController extends Controller
     {
         $user = Auth::user()->id;
         $roles = Auth::user()->roles->pluck('id');
-
+        // dd($grades['grade']);
         if(isset($form))
         {
+            
             if($roles->contains(6))
             {
                 if($form->is_audited == 1 || $form->is_audited == 2)
                 {
+                    $grades = $this->grade($form);
                     $form->update([
                         
                         'final_verified' => 1,
                         'final_verified_by' => $user,
                         'final_verified_at' => Carbon::now()->toDateTimeString(),
+                        'grade' => $grades['grade'],
+                        'remarks' => $grades['remarks'],
 
                     ]);
                     dispatch(new SendFormVerifiedJob($form));
@@ -1031,5 +1035,40 @@ class HomeApiController extends Controller
         $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','feedbacks.user','feedbacks.user.roles','selected_subjectarea','media')->get();
                 
         return $selected_options;
+    }
+
+    public function grade($form)
+    {
+        // dd($user,$roles,$form);
+        
+        if(isset($form))
+        {
+            // dd($form->total_marks_finalVerifier);
+            if($form->total_marks_finalVerifier >= 90)
+            {
+                return ['grade'=>"A+",'remarks'=>'अति उत्कृष्ट'];
+            }
+            elseif(($form->total_marks_finalVerifier >=75) && ($form->total_marks_finalVerifier < 90))
+            {
+                return ['grade'=>"A",'remarks'=>'उत्कृष्ट'];
+            }
+            elseif(($form->total_marks_finalVerifier >= 60) && ($form->total_marks_finalVerifier < 75))
+            {
+                return ['grade'=>"B+",'remarks'=>'राम्रो'];
+            }
+            elseif(($form->total_marks_finalVerifier >= 45) && ($form->total_marks_finalVerifier < 60))
+            {
+                return ['grade'=>"B",'remarks'=>'सन्तोषजनक'];
+            }
+            elseif(($form->total_marks_finalVerifier >= 30) && ($form->total_marks_finalVerifier < 45))
+            {
+                return ['grade'=>"C+",'remarks'=>'कमजोर'];
+            }
+            else
+            {
+                return ['grade'=>"C",'remarks'=>"खराब"];
+            }
+        }
+        
     }
 }
