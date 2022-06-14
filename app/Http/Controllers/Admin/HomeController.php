@@ -500,7 +500,7 @@ class HomeController
 
         $form_subject_area = $this->fiscalYear($fiscal_year,$organization,$form);
         // dd($form_subject_area);
-        
+        // dd($form);
         return view('admin.organizations.detail',compact('years','form','form_subject_area','organization','fiscal_year'));
         
     }
