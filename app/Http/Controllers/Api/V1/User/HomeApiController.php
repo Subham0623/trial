@@ -457,7 +457,13 @@ class HomeApiController extends Controller
                                         }
                                         else
                                         {
-                                            if($roles->contains(4) && (($form->is_audited == 0) || ($form->is_audited == 2)))
+                                            return response(['message'=>'access denied'],403);
+                                        }
+                                        
+                                    }
+                                    else
+                                    {
+                                        if($roles->contains(4) && (($form->is_audited == 0) || ($form->is_audited == 2)))
                                             {
                                                 $form_detail->update([
                                                     'reassign' => $parameter['reassign'],
@@ -479,15 +485,10 @@ class HomeApiController extends Controller
                                             }
                                             else
                                             {
-
+                                            
                                                 return response(['message'=>'access denied'],403);
                                             }
-                                        }
                                         
-                                    }
-                                    else
-                                    {
-                                        return response(['message'=>'access denied']);
                                     }
                                 }
                             }
@@ -636,7 +637,7 @@ class HomeApiController extends Controller
                         'marksByFinalVerifier'=> $totalByFinalVerifier,
                         'status_verifier'=> ((($roles->contains(5)) && ($c1 == $c2)) ? 1 : $form_subject_area->status_verifier),
                         'status_auditor' => ($roles->contains(4) ? (($count>0)?2 : 1):$form_subject_area->status_auditor),
-                        'status_final_verifier' => ($roles->contains(6) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
+                        'status_final_verifier' => (($roles->contains(6) || $roles->contains(4)) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
                     ]);
                     
                     $total_marks = $form->form_subjectareas->sum('marks');
