@@ -268,7 +268,7 @@ class HomeApiController extends Controller
                 $selected_options = $this->selectedOptions($form);
                 
                 $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
-                
+
                 return response([
                     'subject_areas' => $subject_areas,
                     'selected_options' => $selected_options,
@@ -348,17 +348,21 @@ class HomeApiController extends Controller
                                         {
                                             if(($form->user_id == $user->id) )
                                             {
-                                                $form_detail->update([
-                                                    'remarks' => $parameter['remarks'],
-                                                    'is_applicable' => $parameter['is_applicable'],
-                                                    'option_id' => $opt->id,
-                                                    'marksByVerifier' => $opt->points,
-                                                    'marks' => $opt->points,
-                                                ]); 
-                                                $form->update([
-                                                    'updated_by'=>$user->id,
-                                                    'verified_by' => $user->id
-                                                ]);
+                                                if($form->is_verified == 0 || $form->is_verified == 2)
+                                                {
+
+                                                    $form_detail->update([
+                                                        'remarks' => $parameter['remarks'],
+                                                        'is_applicable' => $parameter['is_applicable'],
+                                                        'option_id' => $opt->id,
+                                                        'marksByVerifier' => $opt->points,
+                                                        'marks' => $opt->points,
+                                                    ]); 
+                                                    $form->update([
+                                                        'updated_by'=>$user->id,
+                                                        'verified_by' => $user->id
+                                                    ]);
+                                                }
                                             }
                                             else
                                             {
@@ -414,27 +418,78 @@ class HomeApiController extends Controller
                                     if($form->user_id == $user->id )
                                     {
                                         // dd($parameter);
-                                        $form_detail = FormDetail::updateOrCreate([
-                                            'form_subject_area_id' => $form_subject_area->id,
-                                            'parameter_id' => $parameter['id'],
-                                        ],
-                                        [
-                                            'remarks' => $parameter['remarks'],
-                                            'option_id' => null,
-                                            'marks' => $max_points,
-                                            'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
-                                            'is_applicable' => $parameter['is_applicable'],
-                                        ]); 
-                                        $form->update([
-                                            'updated_by'=>$user->id,
-                                            'verified_by' => ($roles->contains(5) ? $user->id : null)
-                                        ]);
+                                        if($roles->contains(3) && (($form->status == 0) || $form->status == 2))
+                                        {
+                                            $form_detail = FormDetail::updateOrCreate([
+                                                'form_subject_area_id' => $form_subject_area->id,
+                                                'parameter_id' => $parameter['id'],
+                                            ],
+                                            [
+                                                'remarks' => $parameter['remarks'],
+                                                'option_id' => null,
+                                                'marks' => $max_points,
+                                                // 'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
+                                                'is_applicable' => $parameter['is_applicable'],
+                                            ]); 
+                                            $form->update([
+                                                'updated_by'=>$user->id,
+                                                // 'verified_by' => ($roles->contains(5) ? $user->id : null)
+                                            ]);
+                                        }
+                                        elseif(($form->is_verified == 0) || ($form->is_verified == 2))
+                                        {
+
+                                            $form_detail = FormDetail::updateOrCreate([
+                                                'form_subject_area_id' => $form_subject_area->id,
+                                                'parameter_id' => $parameter['id'],
+                                            ],
+                                            [
+                                                'remarks' => $parameter['remarks'],
+                                                'option_id' => null,
+                                                'marks' => $max_points,
+                                                'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
+                                                'is_applicable' => $parameter['is_applicable'],
+                                            ]); 
+                                            $form->update([
+                                                'updated_by'=>$user->id,
+                                                'verified_by' => ($roles->contains(5) ? $user->id : null)
+                                            ]);
+                                        }
+                                        else
+                                        {
+                                            return response(['message'=>'access denied'],403);
+                                        }
                                         
                                     }
-                                    // else
-                                    // {
-                                    //     return response(['message'=>'access denied']);
-                                    // }
+                                    else
+                                    {
+                                        if($roles->contains(4) && (($form->is_audited == 0) || ($form->is_audited == 2)))
+                                            {
+                                                $form_detail->update([
+                                                    'reassign' => $parameter['reassign'],
+                                                ]);
+                                                $form->update([
+                                                    'audited_by' => $user->id,
+                                                    'is_verified' => ($parameter['reassign'] == 1 ? 2 : $form->is_verified),
+                                                ]);
+                                            }
+                                            elseif($roles->contains(6) && $form->is_final_verified == 0)
+                                            {
+                                                $form_detail->update([
+                                                    'reassign' => $parameter['reassign'],
+                                                ]);
+                                                $form->update([
+                                                    'final_verified_by'=>$user->id,
+                                                    'is_audited' => ($parameter['reassign'] == 1 ? 2 : $form->is_audited),
+                                                ]);
+                                            }
+                                            else
+                                            {
+                                            
+                                                return response(['message'=>'access denied'],403);
+                                            }
+                                        
+                                    }
                                 }
                             }
                             else
@@ -447,32 +502,76 @@ class HomeApiController extends Controller
                                         {
                                             $opt = Option::findorFail($parameter['option']['id']);
             
+                                            if($roles->contains(3) && (($form->status == 0) || ($form->status == 2)))
+                                            {
+                                                $form_detail->update([
+                                                    'remarks' => $parameter['remarks'],
+                                                    'is_applicable' => $parameter['is_applicable'],
+                                                    'option_id' => $opt->id,
+                                                    // 'marksByVerifier' => ($roles->contains(5) ? $opt->id : ''),
+                                                    'marks' => $opt->points,
+                                                ]);
+                                                $form->update([
+                                                    'updated_by' => $user->id, 
+                                                    // 'verified_by' => ($roles->contains(5) ? $user->id : null),
+                                                ]);
+                                            }
+                                            elseif(($roles ->contains(5)) && (($form->is_verified ==0) || $form->is_verified == 2))
+                                            {
+
+                                                $form_detail->update([
+                                                    'remarks' => $parameter['remarks'],
+                                                    'is_applicable' => $parameter['is_applicable'],
+                                                    'option_id' => $opt->id,
+                                                    'marksByVerifier' => ($roles->contains(5) ? $opt->id : ''),
+                                                    'marks' => $opt->points,
+                                                ]);
+                                                $form->update([
+                                                    'updated_by' => $user->id, 
+                                                    'verified_by' => ($roles->contains(5) ? $user->id : null),
+                                                ]);
+                                            }
+                                            else
+                                            {
+                                                return response(['message'=>'access denied'],403);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if($roles->contains(3) && (($form->status == 0) || ($form->status == 2)))
+                                        {
+
                                             $form_detail->update([
                                                 'remarks' => $parameter['remarks'],
+                                                'option_id' => null,
+                                                'marks' => $max_points,
+                                                // 'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
                                                 'is_applicable' => $parameter['is_applicable'],
-                                                'option_id' => $opt->id,
-                                                'marksByVerifier' => ($roles->contains(5) ? $opt->id : ''),
-                                                'marks' => $opt->points,
+                                            ]);
+                                            $form->update([
+                                                'updated_by' => $user->id, 
+                                                // 'verified_by' => ($roles->contains(5) ? $user->id : null),
+                                            ]);
+                                        }
+                                        elseif($roles->contains(5) && (($form->is_verified == 0) || ($form->is_verified == 2)))
+                                        {
+                                            $form_detail->update([
+                                                'remarks' => $parameter['remarks'],
+                                                'option_id' => null,
+                                                'marks' => $max_points,
+                                                'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
+                                                'is_applicable' => $parameter['is_applicable'],
                                             ]);
                                             $form->update([
                                                 'updated_by' => $user->id, 
                                                 'verified_by' => ($roles->contains(5) ? $user->id : null),
                                             ]);
                                         }
-                                    }
-                                    else
-                                    {
-                                        $form_detail->update([
-                                            'remarks' => $parameter['remarks'],
-                                            'option_id' => null,
-                                            'marks' => $max_points,
-                                            'marksByVerifier' => ($roles->contains(5) ? $max_points : ''),
-                                            'is_applicable' => $parameter['is_applicable'],
-                                        ]);
-                                        $form->update([
-                                            'updated_by' => $user->id, 
-                                            'verified_by' => ($roles->contains(5) ? $user->id : null),
-                                        ]);
+                                        else
+                                        {
+                                            return response(['message'=>'access denied'],403);
+                                        }
                                     }
                                 }
                                 else
@@ -538,7 +637,7 @@ class HomeApiController extends Controller
                         'marksByFinalVerifier'=> $totalByFinalVerifier,
                         'status_verifier'=> ((($roles->contains(5)) && ($c1 == $c2)) ? 1 : $form_subject_area->status_verifier),
                         'status_auditor' => ($roles->contains(4) ? (($count>0)?2 : 1):$form_subject_area->status_auditor),
-                        'status_final_verifier' => ($roles->contains(6) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
+                        'status_final_verifier' => (($roles->contains(6) || $roles->contains(4)) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
                     ]);
                     
                     $total_marks = $form->form_subjectareas->sum('marks');
@@ -625,18 +724,22 @@ class HomeApiController extends Controller
     {
         $user = Auth::user()->id;
         $roles = Auth::user()->roles->pluck('id');
-
+        // dd($grades['grade']);
         if(isset($form))
         {
+            
             if($roles->contains(6))
             {
                 if($form->is_audited == 1 || $form->is_audited == 2)
                 {
+                    $grades = $this->grade($form);
                     $form->update([
                         
                         'final_verified' => 1,
                         'final_verified_by' => $user,
                         'final_verified_at' => Carbon::now()->toDateTimeString(),
+                        'grade' => $grades['grade'],
+                        'remarks' => $grades['remarks'],
 
                     ]);
                     dispatch(new SendFormVerifiedJob($form));
@@ -932,5 +1035,40 @@ class HomeApiController extends Controller
         $selected_options = FormDetail::whereIn('form_subject_area_id', $selected_subjectareas_id)->with('feedbacks','feedbacks.user','feedbacks.user.roles','selected_subjectarea','media')->get();
                 
         return $selected_options;
+    }
+
+    public function grade($form)
+    {
+        // dd($user,$roles,$form);
+        
+        if(isset($form))
+        {
+            // dd($form->total_marks_finalVerifier);
+            if($form->total_marks_finalVerifier >= 90)
+            {
+                return ['grade'=>"A+",'remarks'=>'अति उत्कृष्ट'];
+            }
+            elseif(($form->total_marks_finalVerifier >=75) && ($form->total_marks_finalVerifier < 90))
+            {
+                return ['grade'=>"A",'remarks'=>'उत्कृष्ट'];
+            }
+            elseif(($form->total_marks_finalVerifier >= 60) && ($form->total_marks_finalVerifier < 75))
+            {
+                return ['grade'=>"B+",'remarks'=>'राम्रो'];
+            }
+            elseif(($form->total_marks_finalVerifier >= 45) && ($form->total_marks_finalVerifier < 60))
+            {
+                return ['grade'=>"B",'remarks'=>'सन्तोषजनक'];
+            }
+            elseif(($form->total_marks_finalVerifier >= 30) && ($form->total_marks_finalVerifier < 45))
+            {
+                return ['grade'=>"C+",'remarks'=>'कमजोर'];
+            }
+            else
+            {
+                return ['grade'=>"C",'remarks'=>"खराब"];
+            }
+        }
+        
     }
 }
