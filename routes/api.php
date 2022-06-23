@@ -37,21 +37,24 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\User', 'm
 
 
 
+Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1'], function () {
 
-Route::get('/index', 'Api\V1\HomeApiController@index')->name('index');
-Route::get('/index/filter','Api\V1\HomeApiController@filter')->name('filter-index');
-// Route::get('/filter/{organization}','Api\V1\HomeApiController@organizationDetail');
-Route::get('organization/detail/{organization}','Api\V1\HomeApiController@organizationDetail')->name('organization-details');
+Route::get('/index', 'HomeApiController@index')->name('index');
+Route::get('/index/filter','HomeApiController@filter')->name('filter-index');
+// Route::get('/filter/{organization}','HomeApiController@organizationDetail');
+Route::get('organization/detail/{organization}','HomeApiController@organizationDetail')->name('organization-details');
 
-Route::get('/province','Api\V1\HomeApiController@province')->name('province');
+Route::get('/province','HomeApiController@province')->name('province');
 
-Route::post('/login','Api\V1\LoginApiController@login');
-Route::post('/reset','Api\V1\ResetPasswordApiController@reset');
-Route::post('/password/forget','Api\V1\ForgetPasswordApiController@forget');
-Route::middleware('auth:api')->post('/logout','Api\V1\LoginApiController@logout');
+Route::post('/login','LoginApiController@login');
+Route::post('/reset','ResetPasswordApiController@reset');
+Route::post('/password/forget','ForgetPasswordApiController@forget');
+Route::middleware('auth:api')->post('/logout','LoginApiController@logout');
 
 
-Route::post('/register','Api\V1\RegisterApiController@register');
-Route::post('/password/reset','Api\V1\ResetPasswordController@reset');
-// Route::post('/password/email','Api\V1\ForgetPasswordController@sendResetLinkResponse');
+Route::post('/register','RegisterApiController@register');
+Route::post('/password/reset','ResetPasswordController@reset');
+});
+
+// Route::post('/password/email','ForgetPasswordController@sendResetLinkResponse');
 // Route::get('/usercart', 'CartApiController@usercart');

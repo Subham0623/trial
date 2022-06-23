@@ -35,7 +35,7 @@
 
             <div class="form-group">
                 <label class="required" for="description">{{ trans('cruds.parameter.fields.description') }}</label>
-                <textarea required name="description" id="description" placeholder="Enter description" class="input form-control">{{ old('description','') }}</textarea>
+                <textarea name="description" id="description" placeholder="Enter description" class="input form-control">{{ old('description','') }}</textarea>
                 
                 @if($errors->has('description'))
                     <div class="invalid-feedback">
