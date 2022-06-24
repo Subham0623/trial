@@ -1,5 +1,5 @@
 <?php
-// dd((config('app.env') == 'local')?config('app.url'):'http://mangosoftsolution.com:3930');
+
 return [
     'date_format'         => 'Y-m-d',
     'time_format'         => 'H:i:s',
@@ -7,5 +7,5 @@ return [
     'available_languages' => [
         'en' => 'English',
     ],
-    'homepage' => (config('app.env') == 'local')?config('app.url'):'http://mangosoftsolution.com:3930',
+    'homepage' => (config('app.env') == 'production')?config('app.production'):((config('app.env') == 'staging')?config('app.staging'):config('app.url')),
 ];
