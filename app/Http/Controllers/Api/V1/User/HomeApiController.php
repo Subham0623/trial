@@ -698,7 +698,7 @@ class HomeApiController extends Controller
 
                 }
                 
-                dispatch(new SendFormUpdatedJob($form));
+                // dispatch(new SendFormUpdatedJob($form));
                 
                 $selected_options = $this->selectedOptions($form);
                 
