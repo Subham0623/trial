@@ -145,15 +145,12 @@
                                         @foreach($topOrgs as $key => $top)
                                         <tr>
                                             <td>
-                                                <img alt="..."
-                                                    src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=256&amp;h=256&amp;q=80"
-                                                    class="avatar avatar-sm rounded-circle me-2">
-                                                <a class="text-heading font-semibold" href="#">
-                                                    Robert Fox
-                                                </a>
+                                                {{$key+1}}
                                             </td>
                                             <td>
-                                                Feb 15, 2021
+                                                <a class="text-heading font-semibold"
+                                                    href="{{route('admin.organization-detail',[$top->id])}}">{{$top->name}}
+                                                </a>
                                             </td>
 
                                         </tr>
@@ -171,7 +168,7 @@
                         <div class="card shadow border-0 text-center overflow-hidden" style="padding:0">
                             <div class="row table-heading w-100" style="transform: translateX(15px);">
                                 <div class="card-header" style="width: 100%; background: #fff">
-                                    <h6 class="sub-heading">10 organizations with highest score</h6>
+                                    <h6 class="sub-heading">10 organizations with lowest score</h6>
                                 </div>
                             </div>
                             <div class="row table-responsive" style="transform: translateX(15px); height: 100%">

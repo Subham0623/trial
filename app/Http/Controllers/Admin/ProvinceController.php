@@ -104,8 +104,9 @@ class ProvinceController extends Controller
      */
     public function update(UpdateProvinceRequest $request,Province $province)
     {
+        // dd($request->all());
         $request->validate([
-            'addmore.*.name' => 'required|unique:districts',
+            'addmore.*.name' => 'required',
         ]);
         
         $data = [
