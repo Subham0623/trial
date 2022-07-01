@@ -166,7 +166,11 @@ $('#name').change(function(e) {
     
     if(type .length > 0)
     {
-        document.querySelector('#organization-div').style.display = 'block';
+        if(type != '1'){
+
+            document.querySelector('#organization-div').style.display = 'block';
+        }
+
         $.ajax({
                type:'GET',
                url:'/admins/type/organizations',
@@ -175,6 +179,7 @@ $('#name').change(function(e) {
                    type: type,
                },
                success:function(data) {
+                
                    $('#organization-div').html(
                 `<div class="form-group organization-element">
                 <label class="required" for="organization">{{ trans('cruds.organization.fields.organization') }}</label>
@@ -193,6 +198,14 @@ $('#name').change(function(e) {
                             $("#organization").append("<option value=" + index + ">" +
                                 value + "</option>");
                         });
+
+                        if(type == '1'){
+                            document.querySelector('#organization-div').style.display = 'none';
+
+                        }else{
+
+                            document.querySelector('#organization-div').style.display = 'block';
+                        }
 
                         if(document.querySelector('.custom__spinner')){
 
