@@ -53,6 +53,12 @@
                             {{ trans('cruds.form.fields.status') }}
                         </th>
                         <th>
+                            {{ trans('cruds.form.fields.audit_status') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.form.fields.final_verified_status') }}
+                        </th>
+                        <th>
                             {{ trans('cruds.form.fields.created_by') }}
                         </th>
                         <th>
@@ -94,38 +100,13 @@
                                 {{ $form->year ?? '' }}
                             </td>
                             <td>
-                                @if($roles->contains(6))
-                                    @if($form->final_verified == 0)
-                                        <span class="badge badge-info">Draft</span>
-                                    @else
-                                        <span class="badge badge-info">Submitted</span>
-                                    @endif
-                                @elseif($roles->contains(4))
-                                    @if($form->is_audited == 0)
-                                        <span class="badge badge-info">Draft</span>
-                                    @elseif($form->is_audited == 1)
-                                        <span class="badge badge-info">Submitted</span>
-                                    @else
-                                        <span class="badge badge-info">Reassigned</span>
-                                    @endif
-                                @elseif($roles->contains(5))
-                                    @if($form->is_verified == 0)
-                                        <span class="badge badge-info">Draft</span>
-                                    @elseif($form->is_verified == 1)
-                                        <span class="badge badge-info">Submitted</span>
-                                    @else
-                                        <span class="badge badge-info">Reassigned</span>
-                                    @endif
-                                @else
-                                    @if($form->status == 0)
-                                    <span class="badge badge-info">Draft</span>
-                                    @elseif($form->is_verified == 1)
-                                        <span class="badge badge-info">Submitted</span>
-                                    @else
-                                        <span class="badge badge-info">Reassigned</span>
-                                    @endif
-                                @endif
-
+                                {!! ($form->is_verified == 1) ? '<span class="badge badge-success">Submitted</span>' : ($form->is_verified == 0 ? '<span class="badge badge-info">Draft</span>' : '<span class="badge badge-danger">Reassigned</span>') !!}
+                            </td>
+                            <td>
+                            {!! ($form->is_audited == 1) ? '<span class="badge badge-success">Submitted</span>' : ($form->is_audited == 0 ? '<span class="badge badge-info">Draft</span>' : '<span class="badge badge-danger">Reassigned</span>') !!}
+                            </td>
+                            <td>
+                                {!! ($form->final_verified == 1) ? '<span class="badge badge-success">Submitted</span>' : '<span class="badge badge-info">Draft</span>' !!}</span>
                             </td>
                             <td>
                                 {{ $form->user ? $form->user->name : '' }}
