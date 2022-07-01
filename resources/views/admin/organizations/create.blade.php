@@ -146,22 +146,27 @@ $('#name').change(function(e) {
                          <span class="sr-only">Loading...</span>
                     </div> Please Wait
     
-    <div/>
-                    
-                    `
-                    ;
-        document.querySelector('.type-element').addEventListener('click', function(e){
+    <div/>`;
+    //     document.querySelector('.type-element').addEventListener('click', function(e){
 
-        $('#organization').html(spinner);
+    //     $('#organization').html(spinner);
 
-    })
-
+    // })
 
      $('#type').change(function() {
     
     var type = $("#type").val();
+
+    console.log(type);
+
+    if(!type){
+        document.querySelector('#organization-div').style.display = 'none';
+        return;
+    }
+    
     if(type .length > 0)
     {
+        document.querySelector('#organization-div').style.display = 'block';
         $.ajax({
                type:'GET',
                url:'/admins/type/organizations',
@@ -192,9 +197,7 @@ $('#name').change(function(e) {
                         if(document.querySelector('.custom__spinner')){
 
 // document.querySelector('.custom__spinner').style.display = 'none';
-}
-                }
-                });
+}}});
     }
     
   });
@@ -207,23 +210,18 @@ $('#name').change(function(e) {
                          <span class="sr-only">Loading...</span>
                     </div> Please Wait
     
-    <div/>
-                    
-                    `
-                    ;
-        document.querySelector('.province-element').addEventListener('click', function(e){
-
-        $('#select2-district-container').html(spinner);
-
-    })
+    <div/>`;
      $('#province').change(function() {
     
-    var province = $("#province").val();
-
-    
-    if(province.length >= 0)
-    
-    {
+    var province = $("#province").val();        
+        if(!province) {
+            console.log('enetered')
+            $("#district").html(`$<option value="Select District">Select District</option>`);
+            return;
+        };
+        
+        if(province.length >= 0)   {
+        $('#select2-district-container').html(spinner);
         $.ajax({
                type:'GET',
                url:'/admins/organizations/organization-province',
@@ -241,9 +239,8 @@ $('#name').change(function(e) {
                         });
 
                         if(document.querySelector('.custom__spinner')){
-
-document.querySelector('.custom__spinner').style.display = 'none';
-}
+                document.querySelector('.custom__spinner').style.display = 'none';
+            }
                     
                 } ,
                 error: function(err){

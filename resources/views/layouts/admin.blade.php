@@ -428,7 +428,6 @@
      
     </script>
     <script defer>
-      console.log('woorkings');
       const navElements =  document.querySelectorAll('.nav-dropdown');
       navElements.forEach((element) => {
         element.addEventListener('click', function(e){
