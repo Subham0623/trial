@@ -49,7 +49,7 @@
                                 {{ $type->title ?? '' }}
                             </td>
                             <td>
-                                {{ $type->parentType ? $type->parentType->title : '' }}
+                                <span class="badge badge-info">{{ $type->parentType ? $type->parentType->title : '' }}</span>
                             </td>
                             <td>
                                 @can('type_show')

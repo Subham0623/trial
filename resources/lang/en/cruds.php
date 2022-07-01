@@ -356,7 +356,9 @@ return [
             'status'                    => 'Status',
             'status_helper'             => '',
             'total_marks'               => 'Total Marks',
-            'total_marks_helper'        => ''
+            'total_marks_helper'        => '',
+            'audit_status'               => 'Audit Status',
+            'final_verified_status'     => 'Final Verified Status',
             
         ],
     ],
