@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             RoleUserTableSeeder::class,
             // ProductCategoriesTableSeeder::class,
             SettingsTableSeeder::class,
+            ProvinceTableSeeder::class,
+            DistrictTableSeeder::class,
         ]);
 
     }

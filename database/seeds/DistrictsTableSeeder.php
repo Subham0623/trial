@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\District;
 
-class DistrictTableSeeder extends Seeder
+class DistrictsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

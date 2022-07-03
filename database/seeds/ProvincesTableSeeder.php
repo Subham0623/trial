@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Province;
 
-class ProvinceTableSeeder extends Seeder
+class ProvincesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
