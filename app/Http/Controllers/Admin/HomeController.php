@@ -11,19 +11,27 @@ use App\Form;
 use App\FormDetail;
 use App\SubjectArea;
 use App\FormSubjectArea;
+use Carbon\Carbon;
+use Pratiksh\Nepalidate\Facades\NepaliDate;
 
 
 class HomeController
 {
     public function index(){
-        // dd('here');
+        // dd($mytime = Carbon::now()->toArray());
         $organizations = Organization::with('province','district')->get();
         $total_orgs = $organizations->count();
 
         $districts = [];
 
+        // $fiscal_year = Form::finalVerified()->latest()->pluck('year')->first();
+        $fiscal_year = $this->currentFiscalYear(); 
+
+        //If no forms are submitted in the fiscal year then the fiscal year that we calculated will not be included in the dropdown so we added the $fiscal_year to $years in the code below
         $years = Form::finalVerified()->distinct()->pluck('year');
-        $fiscal_year = Form::finalVerified()->latest()->pluck('year')->first();
+        if(!$years->contains($fiscal_year)){
+            $years = $years->merge($fiscal_year);
+        }
 
         $provinces = Province::with('districts')->get();
         $province = null;
@@ -551,6 +559,24 @@ class HomeController
         }
         
     return $form_subject_area;
+    }
+
+    public function currentFiscalYear()
+    {
+        $date = toBS(Carbon::now());
+        $arr = explode("-", $date);
+        if($arr[1] <= 3)
+        {
+            $y = $arr[0]-1;
+            $fiscal_year = $y.'/'.(substr($arr[0],-2));
+        }
+        else
+        {
+            $y = (substr($arr[0], -2))+1;
+            $fiscal_year = $arr[0].'/'.$y;
+
+        }
+        return $fiscal_year;
     }
 
     
