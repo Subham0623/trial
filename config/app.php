@@ -136,6 +136,31 @@ return [
 
     'is_installed' => env('IS_INSTALLED'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Application PRODUCTION URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used by the console to properly generate PRODUCTION URLs when using
+    | the Artisan command line tool. You should set this to the root of
+    | your application so that it is used when running Artisan tasks.
+    |
+    */
+
+    'production' => env('APP_PRODUCTION', 'http://localhost'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application STAGING URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used by the console to properly generate STAGING URLs when using
+    | the Artisan command line tool. You should set this to the root of
+    | your application so that it is used when running Artisan tasks.
+    |
+    */
+
+    'staging' => env('APP_STAGING', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
