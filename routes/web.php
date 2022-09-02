@@ -88,6 +88,16 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('/province/organizations','HomeController@list')->name('list');
             Route::get('/district/organizations','HomeController@district');
 
+            //Governance
+            Route::delete('governances/destroy', 'GovernanceController@massDestroy')->name('governances.massDestroy');
+            Route::get('governances/check-slug', 'GovernanceController@checkSlug')->name('governances.checkSlug');
+            Route::resource('governances','GovernanceController');
+
+            //Level
+            Route::delete('levels/destroy', 'LevelController@massDestroy')->name('levels.massDestroy');
+            Route::get('levels/check-slug', 'LevelController@checkSlug')->name('levels.checkSlug');
+            Route::resource('levels','LevelController');
+
             // Route::get('/province-select/{id}','HomeController@provinceDistrict');
             Route::get('/search-organizations','HomeController@search');
 

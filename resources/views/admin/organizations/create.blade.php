@@ -37,11 +37,47 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.organization.fields.type_helper') }}</span>
             </div>
+
             <div id="organization-div"></div>
 
-            
+            <div class="form-group">
+                <label class="required" for="governance">{{ trans('cruds.organization.fields.governance') }}</label>
+                <select class="form-control select2 {{ $errors->has('governance') ? 'is-invalid' : '' }}" name="governance" id="governance" >
+                    <option value="">Select governance</option>
+                    @foreach($governances as $governance)
+                    
+                        <option value="{{ $governance->id }}" {{ old('governance') == $governance->id ? 'selected' : '' }}>{{ $governance->title }}</option>
 
-            <div class="form-group province-element">
+                    @endforeach
+                </select>
+                @if($errors->has('governance'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('governance') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.organization.fields.governance_helper') }}</span>
+            </div>
+
+            <div class="form-group">
+                <label class="required" for="levels">{{ trans('cruds.organization.fields.level') }}</label>
+                <div style="padding-bottom: 4px">
+                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                </div>
+                <select class="form-control select2 {{ $errors->has('levels') ? 'is-invalid' : '' }}" name="levels[]" id="levels" multiple required>
+                    @foreach($levels as $id => $levels)
+                        <option value="{{ $id }}" {{ in_array($id, old('levels', [])) ? 'selected' : '' }}>{{ $levels }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('levels'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('levels') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.organization.fields.level_helper') }}</span>
+            </div>
+
+            <div class="form-group province-element" id="div-province">
                 <label class="required" for="province">{{ trans('cruds.organization.fields.province') }}</label>
                 <select class="form-control select2 {{ $errors->has('province') ? 'is-invalid' : '' }}" name="province" id="province" >
                     <option value="">Select Province</option>
@@ -59,7 +95,7 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.province_helper') }}</span>
             </div>
 
-            <div class="form-group district-select">
+            <div class="form-group district-select" id="div-district">
                 <label class="required" for="district">{{ trans('cruds.organization.fields.district') }}</label>
                 <select class="form-control select2 {{ $errors->has('district') ? 'is-invalid' : '' }}" name="district" id="district" >
                     <option value="">Select District</option>
@@ -129,6 +165,12 @@
 
 @section('scripts')
 <script>
+    $('#div-province').hide();
+    $('#province').prop('disabled', 'disabled');
+    $('#div-district').hide();
+    $('#district').prop('disabled', 'disabled');
+</script>
+<script>
 $('#name').change(function(e) {
     $.get('{{ route('admin.organizations.checkSlug') }}',
         { 'name': $(this).val() },
@@ -167,9 +209,13 @@ $('#name').change(function(e) {
     if(type .length > 0)
     {
         if(type != '1'){
-
+            $('#div-province').show();
+            $('#province').prop('disabled', false);
+            $('#div-district').show();
+            $('#district').prop('disabled', false);
             document.querySelector('#organization-div').style.display = 'block';
         }
+
 
         $.ajax({
                type:'GET',
@@ -263,6 +309,8 @@ $('#name').change(function(e) {
     }
     
   });
+
+
 </script>
 
 <!-- <script>

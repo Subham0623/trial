@@ -36,7 +36,12 @@ class FormController extends Controller
             ->where('status',1)
             ->where('verified_by',NULL)->get();
 
-            $forms = $forms->merge($verified_forms)->all();
+            $userOrg = auth::user()->organizations()->get()->first();
+            $childOrgs = $userOrg->childOrganizations()->pluck('id');
+
+            $orgForms = Form::whereIn('organization_id',$childOrgs)->get();
+
+            $forms = $forms->merge($verified_forms)->merge($orgForms)->all();
             $organizations = Auth::user()->organizations()->get();
             // dd($forms);
             

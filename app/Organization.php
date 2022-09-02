@@ -28,6 +28,7 @@ class Organization extends Model
         'district_id',
         'type_id',
         'organization_id',
+        'governance_id',
         'audit_type',
         'contact',
         'created_at',
@@ -94,5 +95,15 @@ class Organization extends Model
     public function childOrganizations()
     {
         return $this->hasMany(Organization::class, 'organization_id');
+    }
+
+    public function governance()
+    {
+        return $this->belongsTo(Governance::class);
+    }
+
+    public function levels()
+    {
+        return $this->belongsToMany(Level::class);
     }
 }
