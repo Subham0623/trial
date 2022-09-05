@@ -11,7 +11,9 @@ use App\Organization;
 use App\Province;
 use App\District;
 use App\Type;
+use App\Level;
 use Gate;
+use App\Governance;
 use App\Imports\OrganizationsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,8 +49,10 @@ class OrganizationController extends Controller
         // $districts = District::all();
         $districts = [];
         $types = Type::all();
+        $governances = Governance::all();
+        $levels = Level::all()->pluck('title','id');
 
-        return view('admin.organizations.create',compact('provinces','districts','types'));
+        return view('admin.organizations.create',compact('provinces','districts','types','governances','levels'));
     }
 
     /**
@@ -68,10 +72,12 @@ class OrganizationController extends Controller
             'address'           => $request->address,
             'type_id'           => $request->type,
             'organization_id'   => $request->organization, 
+            'governance_id'     => $request->governance
         ];
         // dd($data);
 
         $organization = Organization::create($data);
+        $organization->levels()->sync($request->input('levels', []));
 
         return redirect()->route('admin.organizations.index')->with('message','New Organization added successfully!');
         
@@ -104,8 +110,10 @@ class OrganizationController extends Controller
         $districts = District::where('province_id',$organization->province_id)->get();
         $types = Type::all();
         $organizations = Organization::where('type_id',(($organization->type) ? $organization->type->type_id : ''))->get();
+        $governances = Governance::all();
+        $levels = Level::all()->pluck('title','id');
 
-        return view('admin.organizations.edit',compact('provinces','districts','organization','types','organizations'));
+        return view('admin.organizations.edit',compact('provinces','districts','organization','types','organizations','governances','levels'));
     }
 
     /**
@@ -126,10 +134,11 @@ class OrganizationController extends Controller
             'address'           => $request->address,
             'type_id'           => $request->type,
             'organization_id'   => $request->organization,
+            'governance_id'     => $request->governance
         ];
 
         $organization->update($data);
-
+        $organization->levels()->sync($request->input('levels', []));
         return redirect()->route('admin.organizations.index')->with('message','Organization details edited successfully!');
 
     }

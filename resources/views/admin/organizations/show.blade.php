@@ -25,6 +25,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.organization.fields.type') }}
+                        </th>
+                        <td>
+                            {{ $organization->type ? $organization->type->title : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.organization.fields.province') }}
                         </th>
                         <td>

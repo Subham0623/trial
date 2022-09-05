@@ -324,9 +324,13 @@ return [
             'address_helper'        => '',
             'slug'                  => 'Slug',
             'slug_helper'           => '',
-            'type'                  =>  'Type',
+            'type'                  =>  'Level',
             'type_helper'           => '',
-            'organization'          => 'Organizations',
+            'level'                 => 'Type',
+            'level_helper'              => '',
+            'governance'            => 'Governance',
+            'governance_helper'     => '', 
+            'organization'          => 'Higher Authority',
             'organization_helper'   => '',
         ],
     ],
@@ -364,6 +368,37 @@ return [
     ],
 
     'type'           => [
+        'title'          => 'Levels',
+        'title_singular' => 'Level',
+        'fields'         => [
+            'id'                    => 'ID',
+            'id_helper'             => '',
+            'sn'                    => 'S.N',
+            'sn_helper'             => '',
+            'title'                 => 'Title',
+            'title_helper'          => '',
+            'type'                  => 'Higher authority',
+            'type_helper'           => '',
+            'slug'                  =>'Slug',
+            'slug_helper'           =>''
+        ],
+    ],
+
+    'governance'           => [
+        'title'          => 'Governances',
+        'title_singular' => 'Governance',
+        'fields'         => [
+            'id'                    => 'ID',
+            'id_helper'             => '',
+            'sn'                    => 'S.N',
+            'sn_helper'             => '',
+            'title'                 => 'Title',
+            'title_helper'          => '',
+            
+        ],
+    ],
+
+    'level'           => [
         'title'          => 'Types',
         'title_singular' => 'Type',
         'fields'         => [
@@ -373,10 +408,7 @@ return [
             'sn_helper'             => '',
             'title'                 => 'Title',
             'title_helper'          => '',
-            'type'                  => 'Type',
-            'type_helper'           => '',
-            'slug'                  =>'Slug',
-            'slug_helper'           =>''
+            
         ],
     ],
 ];
