@@ -23,6 +23,14 @@
                             {{ $permission->title }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.permission.fields.display_name') }}
+                        </th>
+                        <td>
+                            {{ $permission->display_name ?? ''}}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">
