@@ -216,8 +216,10 @@ class HomeController
 
     public function filter(Request $request)
     {
+        $current_fiscal_year = $this->currentFiscalYear(); 
 
-        $fiscal_year = ($request->fiscal_year ? $request->fiscal_year : Form::finalVerified()->latest()->pluck('year')->first());
+        
+        $fiscal_year = ($request->fiscal_year ? $request->fiscal_year : $current_fiscal_year);
         $province = $request->province;
         $district = $request->district;
 
@@ -226,7 +228,14 @@ class HomeController
 
         // dd($request->province);
 
+        // $years = Form::finalVerified()->distinct()->pluck('year');
+
+        //If no forms are submitted in the fiscal year then the fiscal year that we calculated will not be included in the dropdown so we added the $fiscal_year to $years in the code below
         $years = Form::finalVerified()->distinct()->pluck('year');
+        if(!$years->contains($current_fiscal_year)){
+            $years = $years->merge($current_fiscal_year);
+        }
+
         // $fiscal_year = Form::finalVerified()->latest()->pluck('year')->first();
 
         if((isset($fiscal_year)) && ($province == null) && ($district == null))
