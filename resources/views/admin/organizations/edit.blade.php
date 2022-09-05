@@ -57,7 +57,44 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.organization_helper') }}</span>
             </div>
 
-            <div class="form-group province-element">
+            <div class="form-group">
+                <label class="required" for="governance">{{ trans('cruds.organization.fields.governance') }}</label>
+                <select class="form-control select2 {{ $errors->has('governance') ? 'is-invalid' : '' }}" name="governance" id="governance" >
+                    <option value="">Select governance</option>
+                    @foreach($governances as $governance)
+                    
+                        <option value="{{ $governance->id }}" {{ $organization->governance_id == $governance->id ? 'selected' : '' }}>{{ $governance->title }}</option>
+
+                    @endforeach
+                </select>
+                @if($errors->has('governance'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('governance') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.organization.fields.governance_helper') }}</span>
+            </div>
+
+            <div class="form-group">
+                <label class="required" for="levels">{{ trans('cruds.organization.fields.level') }}</label>
+                <div style="padding-bottom: 4px">
+                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                </div>
+                <select class="form-control select2 {{ $errors->has('levels') ? 'is-invalid' : '' }}" name="levels[]" id="levels" multiple required>
+                    @foreach($levels as $id => $levels)
+                        <option value="{{ $id }}" {{ (in_array($id, old('levels', [])) || $organization->levels->contains($id)) ? 'selected' : '' }}>{{ $levels }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('levels'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('levels') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.organization.fields.level_helper') }}</span>
+            </div>
+
+            <div class="form-group province-element" id="div-province">
                 <label class="required" for="province">{{ trans('cruds.organization.fields.province') }}</label>
                 <select class="form-control select2 {{ $errors->has('province') ? 'is-invalid' : '' }}" name="province" id="province" >
                     <option value="">Select Province</option>
@@ -75,7 +112,7 @@
                 <span class="help-block">{{ trans('cruds.organization.fields.province_helper') }}</span>
             </div>
 
-            <div class="form-group district-select">
+            <div class="form-group district-select" id="div-district">
                 <label class="required" for="district">{{ trans('cruds.organization.fields.district') }}</label>
                 <select class="form-control select2 {{ $errors->has('district') ? 'is-invalid' : '' }}" name="district" id="district" >
                     <option value="">Select District</option>
@@ -143,6 +180,17 @@
 
 @section('scripts')
 <script>
+    var level = $("#type").val();
+    console.log(level);
+    if(level == 1)
+    {
+        $('#div-province').hide();
+        $('#province').prop('disabled', true);
+        $('#div-district').hide();
+        $('#district').prop('disabled',true);
+    }
+</script>
+<script>
 $('#name').change(function(e) {
     $.get('{{ route('admin.organizations.checkSlug') }}',
         { 'name': $(this).val() },
@@ -178,8 +226,18 @@ $('#name').change(function(e) {
     var type = $("#type").val();
     
     if(type == 1 || !type){
+        $('#div-province').hide();
+        $('#province').prop('disabled', true);
+        $('#div-district').hide();
+        $('#district').prop('disabled',true);
+
         document.querySelector('.active-field').style.display = 'none';
     }else{
+        $('#div-province').show();
+        $('#province').prop('disabled', false);
+        $('#div-district').show();
+        $('#district').prop('disabled',false);
+
         document.querySelector('.active-field').style.display = 'block';
 
     }

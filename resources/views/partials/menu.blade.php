@@ -109,12 +109,32 @@
             </li>
             @endcan
 
+            @can('governance_access')
+            <li class="nav-item {{ request()->is('admin/governances') || request()->is('admin/governances/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.governances.index') }}"
+                    class="nav-link ">
+                    <i class=" nav-icon fa fa-plus"></i>
+                    {{ trans('cruds.governance.title') }}
+                </a>
+            </li>
+            @endcan
+
             @can('type_access')
             <li class="nav-item {{ request()->is('admin/types') || request()->is('admin/types/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.types.index') }}"
                     class="nav-link ">
                     <i class=" nav-icon fa fa-plus"></i>
                     {{ trans('cruds.type.title') }}
+                </a>
+            </li>
+            @endcan
+
+            @can('level_access')
+            <li class="nav-item {{ request()->is('admin/levels') || request()->is('admin/levels/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.levels.index') }}"
+                    class="nav-link ">
+                    <i class=" nav-icon fa fa-plus"></i>
+                    {{ trans('cruds.level.title') }}
                 </a>
             </li>
             @endcan
@@ -159,21 +179,6 @@
             </li>
             @endcan
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
             @can('cms_access')
             <li class="nav-item nav-dropdown {{ request()->is('admins/permissions/*') || request()->is('admins/roles/*') || request()->is('admins/users/*') ? 'open' : '' }}">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
