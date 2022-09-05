@@ -120,6 +120,42 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Organizations(Ministry)</h5>
+                                <p class="card-text" style="font-size:20px;">{{$ministry ?? 0}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Organizations(Department)</h5>
+                                <p class="card-text" style="font-size:20px;">{{$department ?? 0}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Organization(District)</h5>
+                                <p class="card-text" style="font-size:20px;">{{$districtOrg ?? 0}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Organizations(Ilaka)</h5>
+                                <p class="card-text" style="font-size:20px;">{{$ilaka ?? 0}}</p>
+                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-layout container-fluid mt-5">
