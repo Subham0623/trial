@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreLevelRequest;
+use App\Http\Requests\UpdateLevelRequest;
+use App\Http\Requests\MassDestroyLevelRequest;
 use Gate;
 use App\Level;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +45,7 @@ class LevelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLevelRequest $request)
     {
         $data=[
             'title' => $request->title
@@ -87,7 +90,7 @@ class LevelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Level $level)
+    public function update(UpdateLevelRequest $request, Level $level)
     {
         $data = [
             'title' => $request->title
@@ -112,5 +115,13 @@ class LevelController extends Controller
         $level->delete();
 
         return back()->with('message','Type deleted successfully!');
+    }
+
+    public function massDestroy(MassDestroyLevelRequest $request)
+    {
+        Level::whereIn('id', request('ids'))->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
+
     }
 }

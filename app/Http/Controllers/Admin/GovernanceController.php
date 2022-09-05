@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreGovernanceRequest;
+use App\Http\Requests\UpdateGovernanceRequest;
+use App\Http\Requests\MassDestroyGovernanceRequest;
 use Gate;
 use App\Governance;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +45,7 @@ class GovernanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGovernanceRequest $request)
     {
         $data=[
             'title' => $request->title
@@ -87,7 +90,7 @@ class GovernanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Governance $governance)
+    public function update(UpdateGovernanceRequest $request, Governance $governance)
     {
         $data = [
             'title' => $request->title
@@ -112,5 +115,13 @@ class GovernanceController extends Controller
         $governance->delete();
 
         return back()->with('message','Governance deleted successfully!');
+    }
+
+    public function massDestroy(MassDestroyGovernanceRequest $request)
+    {
+        Governance::whereIn('id', request('ids'))->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
+
     }
 }

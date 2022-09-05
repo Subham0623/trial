@@ -37,7 +37,7 @@ class GroupsController extends Controller
     {
         abort_if(Gate::denies('group_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $permissions = Permission::ofAllowedPermissions()->pluck('title', 'id');
+        $permissions = Permission::ofAllowedPermissions()->pluck('display_name', 'id');
 
         return view('admin.groups.create', compact('permissions'));
     }
@@ -78,7 +78,7 @@ class GroupsController extends Controller
     {
         abort_if(Gate::denies('group_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $permissions = Permission::ofAllowedPermissions()->pluck('title', 'id');
+        $permissions = Permission::ofAllowedPermissions()->pluck('display_name', 'id');
         $group->load('permissions');
 
         return view('admin.groups.edit', compact('group','permissions'));

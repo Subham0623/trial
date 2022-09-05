@@ -133,7 +133,7 @@
                                                 points="25.5,53.5 39.5,67.5 72.5,34.5 "
                                             />
                                             </svg>
-                                            <span>{{$permission->title}}</span>
+                                            <span>{{$permission->display_name}}</span>
                                         </label>
                                     </div>
                                     @endforeach
