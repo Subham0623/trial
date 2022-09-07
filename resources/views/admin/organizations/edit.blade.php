@@ -131,8 +131,8 @@
             </div>
 
             <div class="form-group">
-                <label class="required" for="address">{{ trans('cruds.organization.fields.address') }}</label>
-                <input class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" type="text" name="address" id="address" value="{{ old('address', $organization->address) }}" required>
+                <label  for="address">{{ trans('cruds.organization.fields.address') }}</label>
+                <input class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" type="text" name="address" id="address" value="{{ old('address', $organization->address) }}" >
                 @if($errors->has('address'))
                     <div class="invalid-feedback">
                         {{ $errors->first('address') }}
@@ -142,8 +142,8 @@
             </div>
 
             <div class="form-group">
-                <label class="required" for="contact">{{ trans('cruds.organization.fields.contact') }}</label>
-                <input class="form-control {{ $errors->has('contact') ? 'is-invalid' : '' }}" type="text" name="contact" id="contact" value="{{ old('contact', $organization->contact) }}" required>
+                <label   for="contact">{{ trans('cruds.organization.fields.contact') }}</label>
+                <input class="form-control {{ $errors->has('contact') ? 'is-invalid' : '' }}" type="text" name="contact" id="contact" value="{{ old('contact', $organization->contact) }}" >
                 @if($errors->has('contact'))
                     <div class="invalid-feedback">
                         {{ $errors->first('contact') }}
@@ -182,12 +182,17 @@
 <script>
     var level = $("#type").val();
     console.log(level);
-    if(level == 1)
-    {
+
+    function disableProvince() {
         $('#div-province').hide();
-        $('#province').prop('disabled', true);
+        $('#province').prop('disabled', 'disabled');
         $('#div-district').hide();
-        $('#district').prop('disabled',true);
+        $('#district').prop('disabled', 'disabled');
+    }
+
+    if((level == 1) || (level == 2))
+    {
+        disableProvince();
     }
 </script>
 <script>
@@ -219,29 +224,44 @@ $('#name').change(function(e) {
 
   
 
-    
+    const oranizationType = document.querySelector('#type');
+    console.log(type.value, 'sss')
+    console.log('absbs')
+
+    if(type.value == 1 || !type.value ){
+
+        document.querySelector('.active-field').style.display = 'none';
+    } else{
+        document.querySelector('.active-field').style.display = 'block';
+
+    }
 
      $('#type').change(function() {
     
     var type = $("#type").val();
+    console.log(type, '1st')
     
-    if(type == 1 || !type){
-        $('#div-province').hide();
-        $('#province').prop('disabled', true);
-        $('#div-district').hide();
-        $('#district').prop('disabled',true);
-
-        document.querySelector('.active-field').style.display = 'none';
+    if(type == 1 || !type || type == 2){
+       disableProvince();
+        console.log('arrived types')
     }else{
         $('#div-province').show();
         $('#province').prop('disabled', false);
         $('#div-district').show();
         $('#district').prop('disabled',false);
 
-        document.querySelector('.active-field').style.display = 'block';
 
     }
 
+    if(type == 1 || !type)
+    {
+        document.querySelector('.active-field').style.display = 'none';
+
+    }
+    else{
+        document.querySelector('.active-field').style.display = 'block';
+
+    }
     
     if(type.length > 0)
     {
