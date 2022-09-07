@@ -88,8 +88,13 @@ class HomeController
         $published_forms = $published_forms->count();
         $subjectAreas = SubjectArea::active()->get();
 
+        $ministry = Organization::where('type_id',1)->count();
+        $department = Organization::where('type_id',2)->count();
+        $districtOrg = Organization::where('type_id',3)->count();
+        $ilaka = Organization::where('type_id',4)->count();
+
         return view('home',
-        compact('organizations','district','subjectAreas','provinces','districts','total_orgs','published_forms','highest_score','lowest_score','average_score','highestScoreOrgs','lowestScoreOrgs','topOrgs','lowOrgs','years','province','fiscal_year','submittedFormOrgs','forms'));
+        compact('organizations','district','subjectAreas','provinces','districts','total_orgs','published_forms','highest_score','lowest_score','average_score','highestScoreOrgs','lowestScoreOrgs','topOrgs','lowOrgs','years','province','fiscal_year','submittedFormOrgs','forms','ministry','department','districtOrg','ilaka'));
     }
     
     // public function index()

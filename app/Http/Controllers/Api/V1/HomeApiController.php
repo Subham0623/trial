@@ -63,6 +63,11 @@ class HomeApiController extends Controller
 
         $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
 
+        $ministry = Organization::where('type_id',1)->count();
+        $department = Organization::where('type_id',2)->count();
+        $districtOrg = Organization::where('type_id',3)->count();
+        $ilaka = Organization::where('type_id',4)->count();
+
         return response([
             'organizations'=> $organizations,
             'provinces' => $provinces,
@@ -76,6 +81,10 @@ class HomeApiController extends Controller
             'years' => $years,
             'submittedFormOrgs' => $submittedFormOrgs,
             'total_marks' => $total_marks,
+            'ministry'  => $ministry,
+            'department'  => $department,
+            'districtOrg' => $districtOrg,
+            'ilaka' => $ilaka,
             
             ]);
     }
