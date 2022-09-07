@@ -114,8 +114,8 @@
             </div>
 
             <div class="form-group">
-                <label class="required" for="address">{{ trans('cruds.organization.fields.address') }}</label>
-                <input class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" type="text" name="address" id="address" value="{{ old('address', '') }}" required>
+                <label  for="address">{{ trans('cruds.organization.fields.address') }}</label>
+                <input class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" type="text" name="address" id="address" value="{{ old('address', '') }}" >
                 @if($errors->has('address'))
                     <div class="invalid-feedback">
                         {{ $errors->first('address') }}
@@ -125,8 +125,8 @@
             </div>
 
             <div class="form-group">
-                <label class="required" for="contact">{{ trans('cruds.organization.fields.contact') }}</label>
-                <input class="form-control {{ $errors->has('contact') ? 'is-invalid' : '' }}" type="text" name="contact" id="contact" value="{{ old('contact', '') }}" required>
+                <label  for="contact">{{ trans('cruds.organization.fields.contact') }}</label>
+                <input class="form-control {{ $errors->has('contact') ? 'is-invalid' : '' }}" type="text" name="contact" id="contact" value="{{ old('contact', '') }}" >
                 @if($errors->has('contact'))
                     <div class="invalid-feedback">
                         {{ $errors->first('contact') }}
@@ -165,12 +165,17 @@
 
 @section('scripts')
 <script>
-    $('#div-province').hide();
-    $('#province').prop('disabled', 'disabled');
-    $('#div-district').hide();
-    $('#district').prop('disabled', 'disabled');
+    
 </script>
 <script>
+    function disableProvince() {
+        $('#div-province').hide();
+        $('#province').prop('disabled', 'disabled');
+        $('#div-district').hide();
+        $('#district').prop('disabled', 'disabled');
+    }
+    disableProvince();
+    
 $('#name').change(function(e) {
     $.get('{{ route('admin.organizations.checkSlug') }}',
         { 'name': $(this).val() },
@@ -207,14 +212,18 @@ $('#name').change(function(e) {
     }
     
     if(type .length > 0)
-    {
-        if(type != '1'){
+    {console.log((type != '1')&&(type != '2'))
+        if((type != '1')&&(type != '2')){
             $('#div-province').show();
             $('#province').prop('disabled', false);
             $('#div-district').show();
             $('#district').prop('disabled', false);
             document.querySelector('#organization-div').style.display = 'block';
         }
+        else{
+            disableProvince();
+        }
+        
 
 
         $.ajax({
