@@ -736,6 +736,8 @@ class HomeApiController extends Controller
                     $form->update([
                         
                         'final_verified' => 1,
+                        'is_audited' => 1,
+                        'is_verified' => 1,
                         'final_verified_by' => $user,
                         'final_verified_at' => Carbon::now()->toDateTimeString(),
                         'grade' => $grades['grade'],
@@ -757,6 +759,7 @@ class HomeApiController extends Controller
                     $form->update([
 
                         'is_audited' => 1,
+                        'is_verified' => 1,
                         'audited_by' => $user,
                         'audited_at' => Carbon::now()->toDateTimeString(),
 
@@ -776,6 +779,7 @@ class HomeApiController extends Controller
                     $form->update([
 
                         'is_verified' => 1,
+                        'status' =>1,
                         'verified_by' => $user,
                         'verified_at' => Carbon::now()->toDateTimeString(),
                     ]);
