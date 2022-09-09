@@ -829,28 +829,46 @@ class HomeApiController extends Controller
     {
         $roles = Auth::user()->roles()->pluck('id');
         $orgs = Auth::user()->organizations()->pluck('id');
+        $organizations = Auth::user()->organizations;
+        $forms = [];
 
         if($roles->contains(5))
         {
             $verified_forms = Auth::user()->verifiedForms()->get();
-            $forms = Form::whereIn('organization_id',$orgs)
+            $orgForms = Form::whereIn('organization_id',$orgs)
             ->where('status',1)
             ->where('verified_by',NULL)->get();
 
-            $forms = $forms->merge($verified_forms)->all();
-            // dd($forms);
+            $forms = $orgForms->merge($verified_forms);
+
+            foreach($organizations as $org)
+            {
+                foreach($org->childOrganizations as $child)
+                {
+                    $forms = $forms->merge($child->forms);
+                }
+            }
+            
             
         }
         elseif($roles->contains(4))
         {
             $audited_forms = Auth::user()->auditedForms()->get();
             
-            $forms = Form::whereIn('organization_id',$orgs)
+            $orgForms = Form::whereIn('organization_id',$orgs)
             // ->where('status',1)
             ->where('is_verified',1)
             ->where('audited_by',NULL)->get();
 
-            $forms = $forms->merge($audited_forms)->all();
+            $forms = $orgForms->merge($audited_forms);
+
+            foreach($organizations as $org)
+            {
+                foreach($org->childOrganizations as $child)
+                {
+                    $forms = $forms->merge($child->forms);
+                }
+            }
 
             // dd($forms);
 
@@ -859,14 +877,24 @@ class HomeApiController extends Controller
         {
             $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
             
-            $forms = Form::whereIn('organization_id',$orgs)
+            $orgforms = Form::whereIn('organization_id',$orgs)
             // ->where('status',1)
             // ->where('is_verified',1)
             ->where('is_audited',1)
             ->where('final_verified_by',NULL)
             ->get();
 
-            $forms = $forms->merge($final_verified_forms)->all();
+            $forms = $orgForms->merge($final_verified_forms);
+
+            foreach($organizations as $org)
+            {
+                foreach($org->childOrganizations as $child)
+                {
+                    $forms = $forms->merge($child->forms);
+                }
+            }
+
+            // $forms = $forms->merge($final_verified_forms)->all();
 
             // dd($forms);
 

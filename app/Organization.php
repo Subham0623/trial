@@ -71,9 +71,16 @@ class Organization extends Model
         $user = User::find(auth()->user()->id);
         
         if (!$user->isMainAdmin) {
-            // return $query->users();
-            return $user->organizations;
+            $user_org = $user->organizations;
+            $allowed_org = [];
+
+            foreach($user_org as $org) {
+                $allowed_org = $user_org->merge($org->childOrganizations);
+            }
+
+            return $allowed_org;
         }
+        
         return $query;
     }
 
