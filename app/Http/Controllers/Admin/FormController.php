@@ -63,15 +63,17 @@ class FormController extends Controller
             ->where('audited_by',NULL)->get();
 
             $forms = $orgForms->merge($audited_forms);
+
+            $organizations = Auth::user()->organizations;
             
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-                $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
-            }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     foreach($organization->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            //     $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
+            // }
 
             // dd($forms);  
 
@@ -89,17 +91,17 @@ class FormController extends Controller
 
             $forms = $orgForms->merge($final_verified_forms);
 
-            
+            $organizations = Auth::user()->organizations;
 
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     foreach($organization->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
 
-                $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
-            }
+            //     $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
+            // }
 
             // dd($forms);
 
@@ -130,6 +132,10 @@ class FormController extends Controller
         if($roles->contains(1) || $roles->contains(2))
         {
             $organizations = Organization::all();
+        }
+        elseif($roles->contains(4) || $roles->contains(6))
+        {
+            $organizations = Auth::user()->organizations;
         }
         else
         {
@@ -218,13 +224,13 @@ class FormController extends Controller
 
             $forms = $orgForms->merge($audited_forms);
 
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-            }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     foreach($organization->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            // }
             
             return $forms->pluck('id');
 
@@ -244,13 +250,13 @@ class FormController extends Controller
 
             $forms = $orgForms->merge($final_verified_forms);
 
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-            }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     foreach($organization->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            // }
             
             return $forms->pluck('id');
             //returns the forms of the organization as well as all its child organizations
@@ -267,6 +273,9 @@ class FormController extends Controller
             return $forms = null;
         }
     }
+
+
+   
     
     /**
      * Show the form for creating a new resource.
