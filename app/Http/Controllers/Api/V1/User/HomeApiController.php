@@ -877,7 +877,7 @@ class HomeApiController extends Controller
         {
             $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
             
-            $orgforms = Form::whereIn('organization_id',$orgs)
+            $orgForms = Form::whereIn('organization_id',$orgs)
             // ->where('status',1)
             // ->where('is_verified',1)
             ->where('is_audited',1)
