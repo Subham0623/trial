@@ -8,6 +8,7 @@
             <div class="col">
 
                 {{ trans('cruds.form.title_singular') }} {{ trans('global.list') }}
+                
             </div>
             <div class="col">
                 <div class="row">
@@ -15,7 +16,7 @@
                         <select name="organization" id="organization">
                             <option value = "">Select Organization</option>
                             @foreach($organizations as $organization)
-                                <option class = "organizations" value="{{ $organization->id }}" {{ $org == $organization->id ? 'selected' : '' }}>{{ $organization->name }}</option>
+                                <option class = "organizations" value="{{ $organization->id }}" {{ $org === $organization->id ? 'selected' : '' }}>{{ $organization->name }}</option>
                             @endforeach
                         </select>
                         <select name="year" id="year">
@@ -29,12 +30,20 @@
                 </div>
             </div>
         </div>
+        @can('access-sub-organization-forms')
+        <div class="recognize-event">
+                <button class="btn btn-primary" id="verified" data-id='1'>Verified Forms</button>
+                <button class="btn btn-primary" id="toBeVerified" data-id='2'>To Be Verified Forms</button>
+                <button class="btn btn-primary" id="child" data-id='3'>Sub-organization Forms</button>
+        </div>
+        @endcan
     </div>
         
 
     <div class="card-body">
         <div class="table-responsive">
             <table class=" table table-bordered table-striped table-hover datatable datatable-form">
+            
                 <thead>
                     <tr>
                         <th width="10">
@@ -263,5 +272,47 @@
         });
     })
   });
+</script>
+
+<script>
+    // let recognizeEvent = document.querySelector('.recognize-event');
+    document.querySelector('.recognize-event').addEventListener('click', function(e){
+        e.preventDefault();
+        const clickedButton = e.target.closest('.btn');
+        if(!clickedButton) return;
+        console.log(clickedButton.dataset.id, 'sss')
+        $.ajax({
+                url: "{{route('admin.verified-forms')}}",
+                type: "GET",
+                dataType: "json",
+                data:{'value':clickedButton.dataset.id},
+                success:function(data) 
+                {
+                    console.log(data);
+                    $('body').html(data.html);
+                    
+                }
+            });
+        
+    })
+
+    // $("#verified").click(function(){   
+    //     $.ajax({
+    //             url: "{{route('admin.verified-forms')}}",
+    //             type: "GET",
+    //             dataType: "json",
+    //             success:function(data) 
+    //             {
+    //                 console.log(data);
+    //                 $('body').html(data.html);
+                    
+    //             }
+    //         });
+            
+
+
+                    
+                
+    //     });
 </script>
 @endsection

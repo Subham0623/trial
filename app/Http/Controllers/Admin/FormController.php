@@ -167,7 +167,6 @@ class FormController extends Controller
         }
 
         $years = Form::groupBy('year')->pluck('year')->filter();
-
         $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles'))->render();
         // dd($html);
         return response()->json(array(
@@ -275,6 +274,61 @@ class FormController extends Controller
     }
 
 
+    public function verifiedForms(Request $request)
+    {
+        
+        $user = Auth::user();
+        $organizations = $user->organizations;
+        $roles = $user->roles()->pluck('id');
+        $years = Form::distinct()->pluck('year');
+        $org = 0;
+        $yr = 0;
+        
+       
+        if($roles->contains(5))
+        {
+            if($request->value == 1)
+            {
+
+                $forms = $user->verifiedForms()->get();
+            }
+            elseif($request->value == 2)
+            {
+                $forms = Form::whereIn('organization_id',$organizations->pluck('id'))
+                    ->where('status',1)
+                    ->where('verified_by',NULL)->get();
+            }
+            else
+            {
+                // $forms = new \Illuminate\Database\Eloquent\Collection;
+                $forms = collect();
+                foreach($organizations as $org)
+                {
+                    foreach($org->childOrganizations as $child)
+                    {
+                        
+                        // dd($forms);
+                        $forms = $forms->merge($child->forms); 
+                    }
+                }
+                // dd($forms);
+            }
+            
+        }
+
+        foreach($organizations as $organization)
+        {
+            $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
+        }
+        
+        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles'))->render();
+        // dd($html);
+        return response()->json(array(
+            'success' => true,
+            'html' => $html,
+        ));
+
+    }
    
     
     /**
