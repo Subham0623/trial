@@ -430,6 +430,11 @@ class PermissionsTableSeeder extends Seeder
                 'title' => 'level_access',
                 'display_name' => 'Access Level'
             ],
+            [
+                'id' => '85',
+                'title' => 'access-sub-organization-forms',
+                'display_name' => 'Access Sub-organizations Forms'
+            ]
         ];
 
         Permission::insert($permissions);

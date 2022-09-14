@@ -83,6 +83,7 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::post('/publish','FormController@changePublish')->name('form-publish');
             Route::get('/forms/organization','FormController@filter')->name('form-filter'); 
             Route::get('forms','FormController@index')->name('forms');  
+            Route::get('forms/verified-forms','FormController@verifiedForms')->name('verified-forms');
             
             Route::get('/province/districts','HomeController@provinceDistricts')->name('provinceDistricts');
             Route::get('/province/organizations','HomeController@list')->name('list');
