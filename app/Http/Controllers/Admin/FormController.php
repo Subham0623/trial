@@ -63,15 +63,17 @@ class FormController extends Controller
             ->where('audited_by',NULL)->get();
 
             $forms = $orgForms->merge($audited_forms);
+
+            $organizations = Auth::user()->organizations;
             
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-                $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
-            }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     foreach($organization->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            //     $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
+            // }
 
             // dd($forms);  
 
@@ -89,17 +91,17 @@ class FormController extends Controller
 
             $forms = $orgForms->merge($final_verified_forms);
 
-            
+            $organizations = Auth::user()->organizations;
 
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     foreach($organization->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
 
-                $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
-            }
+            //     $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
+            // }
 
             // dd($forms);
 
@@ -131,6 +133,10 @@ class FormController extends Controller
         {
             $organizations = Organization::all();
         }
+        elseif($roles->contains(4) || $roles->contains(6))
+        {
+            $organizations = Auth::user()->organizations;
+        }
         else
         {
             // $organizations = Auth::user()->organizations()->get();
@@ -161,7 +167,6 @@ class FormController extends Controller
         }
 
         $years = Form::groupBy('year')->pluck('year')->filter();
-
         $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles'))->render();
         // dd($html);
         return response()->json(array(
@@ -218,13 +223,13 @@ class FormController extends Controller
 
             $forms = $orgForms->merge($audited_forms);
 
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-            }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     foreach($organization->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            // }
             
             return $forms->pluck('id');
 
@@ -244,13 +249,13 @@ class FormController extends Controller
 
             $forms = $orgForms->merge($final_verified_forms);
 
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-            }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     foreach($organization->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            // }
             
             return $forms->pluck('id');
             //returns the forms of the organization as well as all its child organizations
@@ -267,6 +272,64 @@ class FormController extends Controller
             return $forms = null;
         }
     }
+
+
+    public function verifiedForms(Request $request)
+    {
+        
+        $user = Auth::user();
+        $organizations = $user->organizations;
+        $roles = $user->roles()->pluck('id');
+        $years = Form::distinct()->pluck('year');
+        $org = 0;
+        $yr = 0;
+        
+       
+        if($roles->contains(5))
+        {
+            if($request->value == 1)
+            {
+
+                $forms = $user->verifiedForms()->get();
+            }
+            elseif($request->value == 2)
+            {
+                $forms = Form::whereIn('organization_id',$organizations->pluck('id'))
+                    ->where('status',1)
+                    ->where('verified_by',NULL)->get();
+            }
+            else
+            {
+                // $forms = new \Illuminate\Database\Eloquent\Collection;
+                $forms = collect();
+                foreach($organizations as $org)
+                {
+                    foreach($org->childOrganizations as $child)
+                    {
+                        
+                        // dd($forms);
+                        $forms = $forms->merge($child->forms); 
+                    }
+                }
+                // dd($forms);
+            }
+            
+        }
+
+        foreach($organizations as $organization)
+        {
+            $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
+        }
+        
+        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles'))->render();
+        // dd($html);
+        return response()->json(array(
+            'success' => true,
+            'html' => $html,
+        ));
+
+    }
+   
     
     /**
      * Show the form for creating a new resource.
