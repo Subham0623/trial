@@ -54,6 +54,7 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('/organization/detail/{organization}','HomeController@organizationDetail')->name('organization-detail');
             Route::get('/filter','HomeController@filterOrg')->name('filter');
             Route::get('/index/filter','HomeController@filter')->name('filter-index');
+            Route::get('/index/filter2','HomeController@filter2')->name('filter2');
             includeRouteFiles(__DIR__ . '/AdminBackend/');
 
             
@@ -86,6 +87,8 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('forms/verified-forms','FormController@verifiedForms')->name('verified-forms');
             
             Route::get('/province/districts','HomeController@provinceDistricts')->name('provinceDistricts');
+            Route::get('/ministry/child-organizations','HomeController@childOrganizations')->name('childOrganizations');
+            Route::get('/district/child-organizations','HomeController@areas')->name('areas');
             Route::get('/province/organizations','HomeController@list')->name('list');
             Route::get('/district/organizations','HomeController@district');
 
