@@ -632,8 +632,70 @@ class HomeController
             $years = $years->merge($current_fiscal_year);
         }
 
-       if(isset($request->ministry) && $request->districtOrg == null && $request->department == null)
-       {
+        if(isset($fiscal_year) && $request->ministry == null && $request->districtOrg == null && $request->department == null)
+        {
+            $organizations = Organization::with('province','district')->get();
+            $total_orgs = $organizations->count();
+
+            $orgs = Organization::whereHas('forms',function($query) use ($fiscal_year){
+                $query->where('year',$fiscal_year)
+                ->where('status',1);
+            })->get();
+
+            $submittedFormOrgs = $orgs->count();
+            
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
+
+            $highest_score = Form::finalVerified()->where('year',$fiscal_year)->max('total_marks_finalVerifier');
+            // dd($highest_score->max('total_marks_finalVerifier'));
+            $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->min('total_marks_finalVerifier');
+            $average_score = Form::finalVerified()->where('year',$fiscal_year)->avg('total_marks_finalVerifier');
+
+            $highestScoreOrgs = Organization::whereHas('forms',function($query) use($highest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$highest_score);
+            })->get();
+
+            $lowestScoreOrgs = Organization::whereHas('forms',function($query) use($lowest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$lowest_score);
+            })->get();
+
+            $topOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','DESC')->with('organization','subjectAreas')->take(10)->get();
+
+            $topOrgs = [];
+            foreach($topOrgsForms as $top) {
+                $organization = Organization::find($top->organization_id);
+                if(isset($organization)) {
+
+                array_push($topOrgs,$organization);
+                }
+            }
+            // dd($topOrgs);
+            $lowOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','ASC')->with('organization','subjectAreas')->take(10)->get();
+
+            $lowOrgs = [];
+            foreach($lowOrgsForms as $low) {
+                $organization = Organization::find($low->organization_id);
+                if(isset($organization)) {
+
+                    array_push($lowOrgs,$organization);
+                }
+            }
+
+            $ministry = Organization::where('type_id',1)->get();
+            $total_ministry = $ministry->count();
+            $department = Organization::where('type_id',2)->count();
+            $districtOrg = Organization::where('type_id',3)->count();
+            $ilaka = Organization::where('type_id',4)->count();
+            $departments = [];
+            $districtOrgs = [];
+
+        }
+        elseif(isset($request->ministry) && $request->districtOrg == null && $request->department == null)
+        {
             $organizations = Organization::where('organization_id',$request->ministry)->get();
             $organizations = $organizations->push(Organization::findOrFail($request->ministry));
             $ids = $organizations->pluck('id');
@@ -684,6 +746,7 @@ class HomeController
                 array_push($lowOrgs,$organization);
             }
             }   
+            $total_ministry = 1;
             
             $departments = Organization::where('type_id',2)->where('organization_id',$request->ministry)->get();
             $department = $departments->count();
@@ -749,6 +812,7 @@ class HomeController
                 $ilaka = Organization::where('organization_id',$request->districtOrg ? $request->districtOrg : $request->department)->where('type_id',4)->count();
                 $departments = Organization::where('type_id',2)->where('organization_id',$request->ministry)->get();
                 $districtOrgs = Organization::where('type_id',3)->where('organization_id',$request->ministry)->get();
+                $total_ministry = 1;
                 
         }
 
@@ -758,7 +822,6 @@ class HomeController
         $subjectAreas = SubjectArea::active()->get();
         $submittedFormOrgs = $orgs->count();
         $ministry = Organization::where('type_id',1)->get();
-        $total_ministry = 1;
         
         $ministry_id = $request->ministry;
         $department_id = $request->department;

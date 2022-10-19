@@ -63,10 +63,10 @@ class HomeApiController extends Controller
 
         $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
 
-        $ministry = Organization::where('type_id',1)->count();
-        $department = Organization::where('type_id',2)->count();
-        $districtOrg = Organization::where('type_id',3)->count();
-        $ilaka = Organization::where('type_id',4)->count();
+        $ministry_count = Organization::where('type_id',1)->count();
+        $department_count = Organization::where('type_id',2)->count();
+        $districtOrg_count = Organization::where('type_id',3)->count();
+        $ilaka_count = Organization::where('type_id',4)->count();
 
         return response([
             'organizations'=> $organizations,
@@ -81,10 +81,10 @@ class HomeApiController extends Controller
             'years' => $years,
             'submittedFormOrgs' => $submittedFormOrgs,
             'total_marks' => $total_marks,
-            'ministry'  => $ministry,
-            'department'  => $department,
-            'districtOrg' => $districtOrg,
-            'ilaka' => $ilaka,
+            'ministry_count'  => $ministry_count,
+            'department_count'  => $department_count,
+            'districtOrg_count' => $districtOrg_count,
+            'ilaka_count' => $ilaka_count,
             
             ]);
     }
@@ -538,5 +538,217 @@ class HomeApiController extends Controller
             ]);
         }
         
+    }
+
+    public function childOrganizations(Request $request) 
+    {
+        if(isset($request->ministry))
+        {
+            $departments = Organization::where('type_id',2)->where('organization_id',$request->ministry)->pluck('name','id');
+            $districtOrgs = Organization::where('type_id',3)->where('organization_id',$request->ministry)->pluck('name','id');
+            return response(['departments'=>$departments,'districtOrgs'=>$districtOrgs]);
+        }
+    }
+
+    public function filter2(Request $request)
+    {
+        $fiscal_year = $request->fiscal_year;
+        $selected_ministry = $request->ministry;
+        $selected_department = $request->department;
+        $selected_districtOrg = $request->districtOrg;
+
+        $years = Form::finalVerified()->distinct()->pluck('year');
+
+        
+        if(isset($fiscal_year) && $selected_ministry == null && $selected_department == null && $selected_districtOrg == null)
+        {
+            $organizations = Organization::with('province','district','childOrganizations')->get();
+
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
+            $forms = $published_forms->pluck('id');
+            $published_forms = $published_forms->count();
+    
+            $highest_score = Form::finalVerified()->where('year',$fiscal_year)->max('total_marks_finalVerifier');
+            $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->min('total_marks_finalVerifier');
+            $average_score = Form::finalVerified()->where('year',$fiscal_year)->avg('total_marks_finalVerifier');
+    
+            $highestScoreOrgs = Organization::whereHas('forms',function($query) use($highest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$highest_score);
+            })->get();
+    
+            $lowestScoreOrgs = Organization::whereHas('forms',function($query) use($lowest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$lowest_score);
+            })->get();
+    
+            $topOrgs = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','DESC')->with('organization','subjectAreas')->take(10)->get();
+    
+            $lowOrgs = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','ASC')->with('organization','subjectAreas')->take(10)->get();
+            
+            $orgs = Organization::whereHas('forms',function($query) use ($fiscal_year){
+                $query->where('year',$fiscal_year)
+                ->where('status',1);
+            })->get();   
+
+            $ministries = Organization::where('type_id',1)->get();
+            $ministry_count = $ministries->count();
+            $departments = Organization::where('type_id',2)->get();
+            $department_count = $departments->count();
+            $districtOrgs = Organization::where('type_id',3)->get();
+            $districtOrg_count = $districtOrgs->count();
+            $ilaka_count = Organization::where('type_id',4)->count(); 
+        }
+        elseif(isset($selected_ministry) && $selected_department == null && $selected_districtOrg == null)
+        {
+            $organizations = Organization::where('organization_id',$selected_ministry)->with('childOrganizations')->get();
+            $organizations = $organizations->push(Organization::findOrFail($selected_ministry));
+            $ids = $organizations->pluck('id');
+            
+            $orgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use ($fiscal_year){
+                $query->where('year',$fiscal_year)
+                ->where('status',1);
+            })->get();
+            
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->get();
+            $forms = $published_forms->pluck('id');
+            $published_forms = $published_forms->count();
+
+            $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->max('total_marks_finalVerifier');
+            $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->min('total_marks_finalVerifier');
+            $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->avg('total_marks_finalVerifier');
+            
+            $highestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$highest_score);
+            })->get();
+
+            $lowestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($lowest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$lowest_score);
+            })->get();
+
+            $topOrgs = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->orderBy('total_marks_finalVerifier','DESC')->with('organization','subjectAreas')->take(10)->get();
+            $lowOrgs = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->orderBy('total_marks_finalVerifier','ASC')->with('organization','subjectAreas')->take(10)->get();
+
+            $highestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$highest_score);
+            })->get();
+    
+            $lowestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($lowest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$lowest_score);
+            })->get();
+            
+            $ministries = Organization::where('id',$selected_ministry)->get();
+            $ministry_count = $ministries->count();
+            $departments = Organization::where('type_id',2)->where('organization_id',$selected_ministry)->get();
+            $department_count = $departments->count();
+            $districtOrgs = Organization::where('type_id',3)->where('organization_id',$selected_ministry)->get();
+            $districtOrg_count = $districtOrgs->count();
+            $ilaka_count = Organization::where('type_id',4)->whereIn('organization_id',$districtOrgs->pluck('id'))->count();
+
+
+        }
+        else
+        {
+            $organizations = Organization::where('organization_id',$selected_districtOrg ? $selected_districtOrg : $selected_department)->get();
+            $organizations = $organizations->push(Organization::findOrFail($selected_districtOrg ? $selected_districtOrg : $selected_department));
+            $ids = $organizations->pluck('id');
+            
+
+            $orgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use ($fiscal_year){
+                $query->where('year',$fiscal_year)
+                ->where('status',1);
+            })->get();
+
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->get();
+            $forms = $published_forms->pluck('id');
+            $published_forms = $published_forms->count();
+
+            $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->max('total_marks_finalVerifier');
+            $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->min('total_marks_finalVerifier');
+            $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->avg('total_marks_finalVerifier');
+
+            $highestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$highest_score);
+            })->get();
+
+            $lowestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($lowest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$lowest_score);
+            })->get();
+
+            $topOrgs = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->orderBy('total_marks_finalVerifier','DESC')->with('organization','subjectAreas')->take(10)->get();
+            
+            $lowOrgs = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->orderBy('total_marks_finalVerifier','ASC')->with('organization','subjectAreas')->take(10)->get();
+
+            $highestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$highest_score);
+            })->get();
+    
+            $lowestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($lowest_score, $fiscal_year){
+                $query->finalVerified()
+                ->where('year',$fiscal_year)
+                ->where('total_marks_finalVerifier',$lowest_score);
+            })->get();
+            
+            $ministries = Organization::where('id',$selected_ministry)->get(); 
+            $ministry_count = $ministries->count();
+            $department_count = ($selected_districtOrg ? 0 : 1);
+            $districtOrg_count = ($selected_districtOrg ? 1 : 0);
+            $ilaka_count = Organization::where('organization_id',$selected_districtOrg ? $selected_districtOrg : $selected_department)->where('type_id',4)->count();
+            $departments = Organization::where('type_id',2)->where('organization_id',$selected_ministry)->get();
+            $districtOrgs = Organization::where('type_id',3)->where('organization_id',$selected_ministry)->get();
+            
+        }
+
+        $total_orgs = $organizations->count();
+
+        $submittedFormOrgs = $orgs->count();
+
+        $subjectAreas = SubjectArea::active()->with('activeParameters')->get();
+
+        $total_marks = $this->totalMarks($subjectAreas,$forms,$published_forms);
+        
+        return response([
+            'organizations'=> $organizations,
+            // 'provinces' => $provinces,
+            'total_orgs' => $total_orgs,
+            'published_forms' => $published_forms,
+            'highest_score' => $highest_score,
+            'lowest_score' => $lowest_score,
+            'average_score' => $average_score,
+            'topOrgs' => $topOrgs,
+            'lowOrgs' => $lowOrgs,
+            'years' => $years,
+            'subjectAreas' => $subjectAreas,
+            'total_marks' =>$total_marks,
+            'fiscal_year' => $fiscal_year,
+            'ministry_count' => $ministry_count,
+            'department_count' => $department_count,
+            'districtOrg_count' => $districtOrg_count,
+            'ilaka_count' => $ilaka_count,
+            'ministries' => $ministries,
+            'departments' => $departments,
+            'districtOrgs' => $districtOrgs,
+            'selected_ministry' => $selected_ministry,
+            'selected_department' => $selected_department,
+            'selected_districtOrg' => $selected_districtOrg,
+
+            ]);
+
     }
 }
