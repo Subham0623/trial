@@ -23,7 +23,7 @@
                                 style="font-size: 18px; font-weight: bold; color: black; margin-left: 5px;">Home</span>
                         </div>
                     </div> -->
-                    <div class="col-sm-3">
+                    {{-- <div class="col-sm-3">
                         <div class="position-relative form-group"><select name="fiscal_year" id="fiscalYearSelect"
                                 class="form-control filter">
                                 <option value="" disabled>Select Fiscal Year</option>
@@ -53,7 +53,7 @@
                                     {{$item->name}}</option>
                                 @endforeach
                             </select></div>
-                    </div>
+                    </div> 
                     <div class="col-sm-3" >
                         <a class="btn btn-primary" id="search" style="color: #fff">Search</a>
                     </div>
@@ -63,6 +63,62 @@
                                 <option value="0" disabled="">पालिका चयन गर्नुहोस</option>
                             </select></div>
                     </div> -->
+
+                </div>--}}
+                <div class="row">
+                <div class="col-sm-3">
+                        <div class="position-relative form-group"><select name="fiscal_year" id="fiscalYearSelect"
+                                class="form-control filter">
+                                <option value="" disabled>Select Fiscal Year</option>
+                                @foreach($years as $key => $year)
+                                <option value="{{$year}}"{{ $year == $fiscal_year ? 'selected' : '' }} >{{$year}}
+                                </option>
+                                @endforeach
+                            </select></div>
+                    </div>
+                <div class="col-sm-2">
+                    <div class="position-relative form-group"><select placeholder="Select Ministry" name="ministry"
+                            id="ministryId" class="form-control filter">
+                            <option value="">Select Ministry</option>
+                            @foreach($ministry as $item)
+                            <option value="{{$item->id}}" {{ $item->id == $ministry_id ? 'selected' : '' }}>
+                                {{$item->name}}</option>
+                            @endforeach
+                        </select></div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="position-relative form-group"><select placeholder="Select Department" name="department"
+                            id="departmentId" class="form-control filter">
+                            <option value="">Select Department</option>
+                            @foreach($departments as $item)
+                            <option value="{{$item->id}}" {{ $item->id == $department_id ? 'selected' : '' }}>
+                                {{$item->name}}</option>
+                            @endforeach
+                        </select></div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="position-relative form-group"><select placeholder="Select District" name="districtOrg"
+                            id="districtOrgId" class="form-control filter">
+                            <option value="">Select District</option>
+                            @foreach($districtOrgs as $item)
+                            <option value="{{$item->id}}" {{ $item->id == $districtOrg_id ? 'selected' : '' }}>
+                                {{$item->name}}</option>
+                            @endforeach
+                        </select></div>
+                </div>
+                {{-- <div class="col-sm-2">
+                    <div class="position-relative form-group"><select placeholder="Select Area" name="area"
+                            id="areaId" class="form-control filter">
+                            <option value="">Select Area</option>
+                            @foreach($ilakas as $item)
+                            <option value="{{$item->id}}">
+                                {{$item->name}}</option>
+                            @endforeach
+                        </select></div>
+                </div> --}}
+                <div class="col-sm-3" >
+                        <a class="btn btn-primary" id="filter" style="color: #fff">Search</a>
+                    </div>
                 </div>
 
                 <div class="row container-fluid first__custom-section" style="padding: 0; margin: 0 auto">
@@ -124,7 +180,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Total Organizations(Ministry)</h5>
-                                <p class="card-text" style="font-size:20px;">{{$ministry ?? 0}}</p>
+                                <p class="card-text" style="font-size:20px;">{{$total_ministry ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
                         </div>
@@ -397,7 +453,7 @@
 </div>
 @endsection
 @section('scripts')
-<script>
+<script defer>
     $('#provinceId').change(function () {
 
         var province = $('#provinceId').find(':selected').val();
@@ -411,6 +467,7 @@
                     province: province,
                 },
                 success: function (data) {
+                    console.log(data)
                     $("#districtId").empty();
                     $("#districtId").append("<option value=''>Select District</option>");
                     $.each(data, function (index, value) {
@@ -426,23 +483,61 @@
     });
 
 </script>
-<script>
+
+<script defer>
+    $('#ministryId').change(function () {
+
+        var ministry = $('#ministryId').find(':selected').val();
+        console.log(ministry);
+        if (ministry.length > 0) {
+            $.ajax({
+                type: 'GET',
+                url: '/admins/ministry/child-organizations',
+                data: {
+
+                    ministry: ministry,
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#departmentId").empty();
+                    $("#departmentId").append("<option value=''>Select Department</option>");
+                    $.each(data.departments, function (index, value) {
+                        $("#departmentId").append("<option value=" + index + ">" +
+                        value + "</option>");
+                    });
+                    $("#districtOrgId").empty();
+                    $("#districtOrgId").append("<option value=''>Select District</option>");
+                    $.each(data.districtOrgs, function (index, value) {
+                        $("#districtOrgId").append("<option value=" + index + ">" +
+                            value + "</option>");
+                    });
+
+                }
+            });
+        }
+
+
+});
+
+</script>
+
+
+<script defer>
     $(document).ready(function () {
         $('#search').click(function () {
             // e.preventDefault();
 
-            console.log('here');
+            console.log('hereeee');
 
             // var fiscal_year = $(this).val();
             var fiscal_year = $('#fiscalYearSelect').find(":selected").text();
             var province = $('#provinceId').find(':selected').val();
             var district = $('#districtId').find(':selected').val();
             // var organization = $('#organization').val();
-            console.log(fiscal_year);
-            console.log(province);
-            console.log(district);
 
             if (fiscal_year.length > 0) {
+            console.log(fiscal_year);
+
                 $.ajax({
                     url: "{{ route('admin.filter-index') }}",
 
@@ -464,5 +559,156 @@
         });
     });
 
+</script>
+    
+<script>
+$(document).ready(function () {
+        $('#filter').click(function () {
+            // e.preventDefault();
+
+            console.log('hereeee');
+
+            // var fiscal_year = $(this).val();
+            var fiscal_year = $('#fiscalYearSelect').find(":selected").text();
+            var ministry = $('#ministryId').find(":selected").val();
+            var department = $('#departmentId').find(':selected').val();
+            var districtOrg = $('#districtOrgId').find(':selected').val();
+            var area = $('#areaId').find(':selected').val();
+            // var organization = $('#organization').val();
+            console.log(fiscal_year);
+            console.log(department);
+            console.log(districtOrg);
+            // console.log(area);
+            // var organization = $('#organization').val();
+
+            $.ajax({
+                    url: "{{ route('admin.filter2') }}",
+
+                    type: 'GET',
+                    data: {
+                        fiscal_year: fiscal_year,
+                        ministry: ministry,
+                        department: department,
+                        districtOrg: districtOrg,
+                        area: area,
+                    },
+                    success: function (data) {
+                        $('body').html(data.html);
+                        console.log(data);
+                        // $("#departmentId").empty();
+                        // $("#departmentId").append("<option value=''>Select Department</option>");
+                        // $.each(data.childDepartments, function (index, value) {
+                        //     $("#departmentId").append("<option value=" + index +">" +
+                        //     value + "</option>");
+                        // });
+                        // $("#districtOrgId").empty();
+                        // $("#districtOrgId").append("<option value=''>Select District</option>");
+                        // $.each(data.childDistrictOrgs, function (index, value) {
+                        //     $("#districtOrgId").append("<option value=" + index + ">" +
+                        //         value + "</option>");
+                        // });
+
+                    }
+                });
+        });
+    });
+</script>
+
+<!-- <script>
+
+$('#ministryId').change((selectChildren));
+
+const searchButtonHandler = document.querySelector('#filter');
+
+const searchHandler = function () {
+            // e.preventDefault();
+
+            console.log('here');
+
+            // var fiscal_year = $(this).val();
+            var fiscal_year = $('#fiscalYearSelect').find(":selected").text();
+            var ministry = $('#ministryId').find(":selected").val();
+            var department = $('#departmentId').find(':selected').val();
+            var districtOrg = $('#districtOrgId').find(':selected').val();
+            var area = $('#areaId').find(':selected').val();
+            // var organization = $('#organization').val();
+            console.log(fiscal_year);
+            console.log(department);
+            console.log(districtOrg);
+            console.log(area);
+
+            
+                $.ajax({
+                    url: "{{ route('admin.filter2') }}",
+
+                    type: 'GET',
+                    data: {
+                        fiscal_year: fiscal_year,
+                        ministry: ministry,
+                        department: department,
+                        districtOrg: districtOrg,
+                        area: area,
+                    },
+                    success: function (data) {
+                        $('body').html(data.html);
+                        console.log(data);
+                        $("#departmentId").empty();
+                        $("#departmentId").append("<option value=''>Select Department</option>");
+                        $.each(data.childDepartments, function (index, value) {
+                            $("#departmentId").append("<option value=" + index +">" +
+                            value + "</option>");
+                        });
+                        $("#districtOrgId").empty();
+                        $("#districtOrgId").append("<option value=''>Select District</option>");
+                        $.each(data.childDistrictOrgs, function (index, value) {
+                            $("#districtOrgId").append("<option value=" + index + ">" +
+                                value + "</option>");
+                        });
+
+                    }
+                });
+            
+        }
+
+searchButtonHandler.addEventListener('click', function(e){
+    e.preventDefault();
+    console.log('called')
+    searchHandler();
+})  
+    // $(document).ready(function () {
+    //     $('#filter').click();
+    // });
+
+</script> -->
+
+<script defer>
+    $('#districtOrgId').change(function () {
+
+        var districtOrg = $('#districtOrgId').find(':selected').val();
+        console.log(districtOrg);
+        if (districtOrg.length > 0) {
+            $.ajax({
+                type: 'GET',
+                url: '/admins/district/child-organizations',
+                data: {
+
+                    districtOrg: districtOrg,
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#areaId").empty();
+                    $("#areaId").append("<option value=''>Select Area</option>");
+                    $.each(data, function (index, value) {
+                        $("#areaId").append("<option value=" + index + ">" +
+                        value + "</option>");
+                    });
+                    
+
+                }
+            });
+        }
+
+
+    });
 </script>
 @endsection

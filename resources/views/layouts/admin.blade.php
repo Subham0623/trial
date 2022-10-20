@@ -428,7 +428,7 @@
      
     </script>
     <script defer>
-      const navElements =  document.querySelectorAll('.nav-dropdown');
+      let navElements =  document.querySelectorAll('.nav-dropdown');
       navElements.forEach((element) => {
         element.addEventListener('click', function(e){
           const dropDownElement = e.target.closest('.nav-item');
