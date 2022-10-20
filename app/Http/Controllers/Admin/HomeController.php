@@ -706,11 +706,11 @@ class HomeController
                 ->where('status',1);
             })->get();
 
-            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->get();
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->get();
 
-            $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->max('total_marks_finalVerifier');
-            $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->min('total_marks_finalVerifier');
-            $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->avg('total_marks_finalVerifier');
+            $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->max('total_marks_finalVerifier');
+            $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->min('total_marks_finalVerifier');
+            $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->avg('total_marks_finalVerifier');
 
             $highestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
                 $query->finalVerified()
@@ -766,11 +766,11 @@ class HomeController
                 ->where('status',1);
             })->get();
 
-            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->get();
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->get();
 
-            $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->max('total_marks_finalVerifier');
-            $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->min('total_marks_finalVerifier');
-            $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('id',$ids)->avg('total_marks_finalVerifier');
+            $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->max('total_marks_finalVerifier');
+            $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->min('total_marks_finalVerifier');
+            $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->avg('total_marks_finalVerifier');
 
             $highestScoreOrgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
                 $query->finalVerified()
