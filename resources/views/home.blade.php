@@ -79,7 +79,7 @@
                 <div class="col-sm-2">
                     <div class="position-relative form-group"><select placeholder="Select Ministry" name="ministry"
                             id="ministryId" class="form-control filter">
-                            <option value="">Select Ministry</option>
+                            <option value="">मन्त्रालय/सङ्‍घीय निकाय</option>
                             @foreach($ministry as $item)
                             <option value="{{$item->id}}" {{ $item->id == $ministry_id ? 'selected' : '' }}>
                                 {{$item->name}}</option>
@@ -89,7 +89,7 @@
                 <div class="col-sm-3">
                     <div class="position-relative form-group"><select placeholder="Select Department" name="department"
                             id="departmentId" class="form-control filter">
-                            <option value="">Select Department</option>
+                            <option value="">विभाग/विभागस्तरीय कार्यालय</option>
                             @foreach($departments as $item)
                             <option value="{{$item->id}}" {{ $item->id == $department_id ? 'selected' : '' }}>
                                 {{$item->name}}</option>
@@ -117,7 +117,7 @@
                         </select></div>
                 </div> --}}
                 <div class="col-sm-3" >
-                        <a class="btn btn-primary" id="filter" style="color: #fff">Search</a>
+                        <a class="btn btn-primary" id="filter" style="color: #fff">खोज्नुहोस्</a>
                     </div>
                 </div>
 
@@ -125,7 +125,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Total Organizations</h5>
+                                <h5 class="card-title"><a href="/admins/organizations">व्यवस्थापन परीक्षण गरिएका जम्मा कार्यालय</a></h5>
                                 <p class="card-text" style="font-size:20px;">{{$total_orgs}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
@@ -143,7 +143,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Organizations(Submitted forms))</h5>
+                                <h5 class="card-title">स्वमूल्याङ्‍कन प्रतिवेदन प्राप्त भएका कार्यालय सङ्‍ख्या</h5>
                                 <p class="card-text" style="font-size:20px;">{{$submittedFormOrgs}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
@@ -152,7 +152,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Highest Score</h5>
+                                <h5 class="card-title">उच्चतम अङ्‍क प्राप्त गर्ने कार्यालय र प्राप्ताङ्‍क</h5>
                                 <p class="card-text" style="font-size:20px;">{{$highest_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
@@ -161,7 +161,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Lowest Score</h5>
+                                <h5 class="card-title">न्यूनतम अङ्‍क प्राप्त गर्ने कार्यालय र प्राप्ताङ्‍क</h5>
                                 <p class="card-text" style="font-size:20px;">{{$lowest_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
@@ -170,7 +170,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Average Score</h5>
+                                <h5 class="card-title">औसत प्राप्ताङ्‍क</h5>
                                 <p class="card-text" style="font-size:20px;">{{$average_score ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
@@ -179,7 +179,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Total Organizations(Ministry)</h5>
+                                <h5 class="card-title">व्यवस्थापन परीक्षण गरिएका मन्त्रालय</h5>
                                 <p class="card-text" style="font-size:20px;">{{$total_ministry ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
@@ -188,7 +188,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Total Organizations(Department)</h5>
+                                <h5 class="card-title">व्यवस्थापन परीक्षण गरिएका विभाग/विभागस्तरीय कार्यालय</h5>
                                 <p class="card-text" style="font-size:20px;">{{$department ?? 0}}</p>
                                 <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
@@ -203,15 +203,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <!-- <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Total Organizations(Ilaka)</h5>
                                 <p class="card-text" style="font-size:20px;">{{$ilaka ?? 0}}</p>
-                                <!-- <a href="#" class="btn btn-primary">View more</a> -->
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="card-layout container-fluid mt-5">
@@ -220,7 +219,7 @@
                             style="padding:0">
                             <div class="row table-heading w-100" style="transform: translateX(15px);">
                                 <div class="card-header" style="width: 100%; background: #fff">
-                                    <h6 class="sub-heading">10 organizations with highest score</h6>
+                                    <h6 class="sub-heading">उच्चतम अङ्‍क प्राप्त गर्ने कार्यालयहरू</h6>
                                 </div>
                             </div>
                             <div class="row table-responsive" style="transform: translateX(15px); height: 100%">
@@ -228,8 +227,8 @@
                                     style="flex: 1; margin-bottom: 0; height:100%">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th scope="col" style="border:none">S.N</th>
-                                            <th scope="col" style="border:none">Organizations</th>
+                                            <th scope="col" style="border:none">आ.व.</th>
+                                            <th scope="col" style="border:none">कार्यालय</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -260,7 +259,7 @@
                         <div class="card shadow border-0 text-center overflow-hidden" style="padding:0">
                             <div class="row table-heading w-100" style="transform: translateX(15px);">
                                 <div class="card-header" style="width: 100%; background: #fff">
-                                    <h6 class="sub-heading">10 organizations with lowest score</h6>
+                                    <h6 class="sub-heading">न्यूनतम अङ्‍क प्राप्त गर्ने कार्यालयहरू</h6>
                                 </div>
                             </div>
                             <div class="row table-responsive" style="transform: translateX(15px); height: 100%">
@@ -268,8 +267,8 @@
                                     style="flex: 1; margin-bottom: 0; height:100%">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th scope="col" style="border:none">S.N</th>
-                                            <th scope="col" style="border:none">Organizations</th>
+                                            <th scope="col" style="border:none">आ.व.</th>
+                                            <th scope="col" style="border:none">कार्यालय</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -335,6 +334,9 @@
                         </div> -->
 
                     </div>
+                </div>
+                <div>
+                   <a href="/admins/list-organizations"> व्यवस्थापन परीक्षण गरिएका कार्यालयहरू </a>
                 </div>
                 <div class="card-layout container-fluid mt-3">
                     <div class="row custom__table-alignment">

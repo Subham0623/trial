@@ -18,16 +18,24 @@
                 {{ trans('cruds.organization.title_singular') }} {{ trans('global.list') }}
             </div>
             <div class="col">
-                <div>
-                    
+                <div class="row">
+                    <div>
+                        <select name="level" id="level">
+                            <option value = "">Select Level of the Organization</option>
+                            @foreach($types as $type)
+                                <option class = "levels" value="{{ $type->id }}" {{ $selected_level === $type->id ? 'selected' : '' }}>{{ $type->title }}</option>
+                            @endforeach
+                        </select>
+                        <a class="btn btn-primary" id="search">Search</a>
+                    </div>
                 </div>
-                <form action="{{ route('admin.import') }}" method="POST" enctype="multipart/form-data">
+                <!-- <form action="{{ route('admin.import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="file" name="file" class="form-control">
                     <br>
                     <button class="btn btn-success">Import Organization Data</button>
                     <a href = "{{asset('/organizations.xlsx')}}"class="btn btn-success" style="color:white">Download Format</a>
-                </form>  
+                </form>   -->
 
             </div>
         </div>
@@ -175,5 +183,35 @@
     });
 });
 
+</script>
+<script>
+    $("#search").click(function(){
+            var selected_level = $('#level').val();
+            console.log(selected_level);
+
+            if(selected_level == '' )
+            {
+                alert('select any option first');
+            }
+            else{
+
+                $.ajax({
+                        url: "{{route('admin.type-organizations')}}",
+                        type: "GET",
+                        dataType: "json",
+                        data:{
+                            'type': selected_level,
+                        },
+                        success:function(data) {
+                            console.log(data);
+                            $('body').html(data.html);
+                        }
+                        });
+            }
+
+
+                    
+                
+        });
 </script>
 @endsection

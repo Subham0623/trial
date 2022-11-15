@@ -110,12 +110,15 @@ Route::middleware(['IsInstalled'])->group(function () {
             Route::get('organizations/download-format',function(){
                 return Illuminate\Support\Facades\Storage::download('organizations.xlsx');
             })->name('download-format');
-            Route::get('type/organizations','OrganizationController@type')->name('type-organizations');
+            Route::get('organizations/type-organizations','OrganizationController@type')->name('type-organizations');
             Route::post('organizations/import/organizations','OrganizationController@import')->name('import');
             Route::get('organizations/organization-province','OrganizationController@organizationProvince')->name('organization-province');
             Route::delete('organizations/destroy', 'OrganizationController@massDestroy')->name('organizations.massDestroy');
             Route::get('organizations/check-slug', 'OrganizationController@checkSlug')->name('organizations.checkSlug');
             Route::resource('organizations','OrganizationController');
+
+            Route::get('/list-organizations','HomeController@listOrganizations')->name('list-organizations');
+            Route::get('/filter/list-organizations','HomeController@filterListOrganizations')->name('filter-list-organizations');
             
     });
 

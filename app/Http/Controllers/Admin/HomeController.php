@@ -45,6 +45,8 @@ class HomeController
         
         $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
 
+        
+
         $highest_score = Form::finalVerified()->where('year',$fiscal_year)->max('total_marks_finalVerifier');
         // dd($highest_score->max('total_marks_finalVerifier'));
         $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->min('total_marks_finalVerifier');
@@ -55,6 +57,8 @@ class HomeController
             ->where('year',$fiscal_year)
             ->where('total_marks_finalVerifier',$highest_score);
         })->get();
+
+        // dd($highestScoreOrg = $highestScoreOrgs->first());
 
         $lowestScoreOrgs = Organization::whereHas('forms',function($query) use($lowest_score, $fiscal_year){
             $query->finalVerified()
@@ -570,10 +574,8 @@ class HomeController
     public function fiscalYear($fiscal_year,$organization,$form)
     {
 
-        
         $form_subject_area = [];
         if(isset($form)){
-
             $selected_subjectareas = $form->subjectAreas()->orderBy('id','ASC')->get();
             $selected_subjectareas->pluck('id');
 
@@ -835,4 +837,76 @@ class HomeController
             ));
     }
     
+    public function listOrganizations() 
+    {
+        // $fiscal_year = Form::finalVerified()->latest()->pluck('year')->first();
+        $fiscal_year = $this->currentFiscalYear(); 
+
+        //If no forms are submitted in the fiscal year then the fiscal year that we calculated will not be included in the dropdown so we added the $fiscal_year to $years in the code below
+        $years = Form::finalVerified()->distinct()->pluck('year');
+        if(!$years->contains($fiscal_year)){
+            $years = $years->merge($fiscal_year);
+        }
+        $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
+
+        $ministry = Organization::where('type_id',1)->get();
+        $departments = [];
+        $districtOrgs = [];
+
+        $ministry_id = null;
+        $department_id = null;
+        $districtOrg_id = null;
+
+        return view('list-organizations',compact('fiscal_year','years','ministry','departments','districtOrgs','ministry_id','department_id','districtOrg_id','published_forms'));
+    }
+
+    public function filterListOrganizations(Request $request)
+    {
+        // dd($request->all());
+        $ministry_id = $request->ministry;
+        $department_id = $request->department;
+        $districtOrg_id = $request->districtOrg;
+        $current_fiscal_year = $this->currentFiscalYear(); 
+
+        $fiscal_year = ($request->fiscal_year ? $request->fiscal_year : $current_fiscal_year);
+        
+        $years = Form::finalVerified()->distinct()->pluck('year');
+        if(!$years->contains($current_fiscal_year)){
+            $years = $years->merge($current_fiscal_year);
+        }
+
+
+        if(isset($fiscal_year) && $ministry_id == null && $department_id == null && $districtOrg_id == null)
+        {
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
+        }
+        elseif(isset($ministry_id) && $department_id == null && $districtOrg_id == null)
+        {
+            $organizations = Organization::where('organization_id',$ministry_id)->get();
+            $organizations = $organizations->push(Organization::findOrFail($request->ministry));
+            $ids = $organizations->pluck('id');
+
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->get();
+        }
+        else
+        {
+            $organizations = Organization::where('organization_id',$districtOrg_id ? $districtOrg_id : $department_id)->get();
+            $organizations = $organizations->push(Organization::findOrFail($districtOrg_id ? $districtOrg_id : $department_id));
+            $ids = $organizations->pluck('id');
+
+            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->get();
+        }
+
+        $ministry = Organization::where('type_id',1)->get();
+        $departments = Organization::where('type_id',2)->where('organization_id',$ministry_id)->get();
+        $districtOrgs = Organization::where('type_id',3)->where('organization_id',$ministry_id)->get();
+
+        $html = view('list-organizations',compact('ministry_id','department_id','districtOrg_id','ministry','published_forms','years','fiscal_year','departments','districtOrgs'))->render();
+        return response()->json(array(
+            'success' => true,
+            'html' => $html,
+            ));
+    }
+
+
 }

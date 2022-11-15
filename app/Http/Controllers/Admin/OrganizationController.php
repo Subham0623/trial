@@ -31,9 +31,12 @@ class OrganizationController extends Controller
         abort_if(Gate::denies('organization_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $organizations = Organization::with('province')->get();
+
+        $types = Type::all();
+        $selected_level = 0;
         
 
-        return view('admin.organizations.index',compact('organizations'));
+        return view('admin.organizations.index',compact('organizations','types','selected_level'));
     }
 
     /**
@@ -216,7 +219,17 @@ class OrganizationController extends Controller
 
     public function type(Request $request) 
     {
+        $selected_level = $request->type;
         $type = Type::find($request->type);
-        return $organizations = Organization::where('type_id',$type->type_id)->pluck('name','id');
+        $organizations = Organization::where('type_id',$type->id)->get();
+        $types = Type::all();
+
+        $html = view('admin.organizations.index', compact('organizations','types','selected_level'))->render();
+        // dd($html);
+        return response()->json(array(
+            'success' => true,
+            'html' => $html,
+        ));
     }
+
 }
