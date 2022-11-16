@@ -8,7 +8,13 @@ class RolesTableSeeder extends Seeder
 {
     public function run()
     {
-        \DB::table('roles')->delete(); 
+        //disable foreign key check for this connection before running seeders
+		\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        \DB::table('roles')->truncate(); 
+
+        //disable foreign key check for this connection before running seeders
+		DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $user = User::findOrFail(1);
         $roles = [
