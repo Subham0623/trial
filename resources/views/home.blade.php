@@ -247,10 +247,10 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                {{$top->total_marks_finalVerifier ?? }}
+                                                {{$top->total_marks_finalVerifier ?? ''}}
                                             </td>
                                             <td>
-                                                {{$top->grade ?? }}
+                                                {{$top->grade ?? ''}}
                                             </td>
 
                                         </tr>
