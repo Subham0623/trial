@@ -107,7 +107,7 @@ class HomeController
         $districtOrg_id = null;
 
         return view('home',
-        compact('organizations','district','subjectAreas','provinces','districts','total_orgs','published_forms','highest_score','lowest_score','average_score','highestScoreOrgs','lowestScoreOrgs','topOrgs','lowOrgs','years','province','fiscal_year','submittedFormOrgs','forms','ministry','department','districtOrg','ilaka','departments','districtOrgs','ilakas','total_ministry','ministry_id','department_id','districtOrg_id'));
+        compact('organizations','district','subjectAreas','provinces','districts','total_orgs','published_forms','highest_score','lowest_score','average_score','highestScoreOrgs','lowestScoreOrgs','topOrgs','lowOrgs','years','province','fiscal_year','submittedFormOrgs','forms','ministry','department','districtOrg','ilaka','departments','districtOrgs','ilakas','total_ministry','ministry_id','department_id','districtOrg_id','topOrgsForms','lowOrgsForms'));
     }
     
     // public function index()
@@ -535,7 +535,7 @@ class HomeController
 
         $form_subject_area = $this->fiscalYear($fiscal_year,$organization,$form);
         // dd($form_subject_area);
-        // dd($form);
+        dd($form->load('subjectAreas'));
         return view('admin.organizations.detail',compact('years','form','form_subject_area','organization','fiscal_year'));
         
     }

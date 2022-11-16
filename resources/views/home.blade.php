@@ -227,21 +227,30 @@
                                     style="flex: 1; margin-bottom: 0; height:100%">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th scope="col" style="border:none">आ.व.</th>
-                                            <th scope="col" style="border:none">कार्यालय</th>
+                                            <th scope="col" style="border:none">क्र.सं.</th>
+                                            <th scope="col" style="border:none">कार्यालयको नाम</th>
+                                            <th scope="col" style="border:none">प्राप्ताङ्‍क</th>
+                                            <th scope="col" style="border:none">ग्रेड</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if(count($topOrgs)>0)
-                                        @foreach($topOrgs as $key => $top)
+                                        
+                                        @foreach($topOrgsForms as $key => $top)
                                         <tr>
                                             <td>
                                                 {{$key+1}}
                                             </td>
                                             <td>
                                                 <a class="text-heading font-semibold"
-                                                    href="{{route('admin.organization-detail',[$top->id])}}">{{$top->name}}
+                                                    href="{{route('admin.organization-detail',[$top->organization->id])}}">{{$top->organization? $top->organization->name : ''}}
                                                 </a>
+                                            </td>
+                                            <td>
+                                                {{$top->total_marks_finalVerifier ?? }}
+                                            </td>
+                                            <td>
+                                                {{$top->grade ?? }}
                                             </td>
 
                                         </tr>
@@ -267,23 +276,30 @@
                                     style="flex: 1; margin-bottom: 0; height:100%">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th scope="col" style="border:none">आ.व.</th>
-                                            <th scope="col" style="border:none">कार्यालय</th>
+                                        <th scope="col" style="border:none">क्र.सं.</th>
+                                            <th scope="col" style="border:none">कार्यालयको नाम</th>
+                                            <th scope="col" style="border:none">प्राप्ताङ्‍क</th>
+                                            <th scope="col" style="border:none">ग्रेड</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if(count($lowOrgs)>0)
-                                        @foreach($lowOrgs as $key => $low)
+                                        @foreach($lowOrgsForms as $key => $low)
                                         <tr>
                                             <td>
                                                 {{$key+1}}
                                             </td>
                                             <td>
                                                 <a class="text-heading font-semibold"
-                                                    href="{{route('admin.organization-detail',[$low->id])}}">{{$low->name}}
+                                                    href="{{route('admin.organization-detail',[$low->organization->id])}}">{{$low->organization ? $low->organization->name : ''}}
                                                 </a>
                                             </td>
-
+                                            <td>
+                                                {{$low->total_marks_finalVerifier ?? ''}}
+                                            </td>
+                                            <td>
+                                                {{$low->grade ?? ''}}
+                                            </td>
                                         </tr>
                                         @endforeach
                                         @else
