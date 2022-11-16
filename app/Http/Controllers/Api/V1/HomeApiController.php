@@ -649,13 +649,13 @@ class HomeApiController extends Controller
                 ->where('total_marks_finalVerifier',$lowest_score);
             })->get();
             
-            $filter_ministries = Organization::where('type_id',$selected_ministry)->get();
+            $filter_ministries = Organization::where('id',$selected_ministry)->get();
             $ministry_count = $filter_ministries->count();
             $filter_departments = Organization::where('type_id',2)->where('organization_id',$selected_ministry)->get();
             $department_count = $filter_departments->count();
             $filter_districtOrgs = Organization::where('type_id',3)->where('organization_id',$selected_ministry)->get();
             $districtOrg_count = $filter_districtOrgs->count();
-            $ilaka_count = Organization::where('type_id',4)->whereIn('organization_id',$districtOrgs->pluck('id'))->count();
+            $ilaka_count = Organization::where('type_id',4)->whereIn('organization_id',$filter_districtOrgs->pluck('id'))->count();
 
 
         }
@@ -707,7 +707,8 @@ class HomeApiController extends Controller
                 ->where('total_marks_finalVerifier',$lowest_score);
             })->get();
             
-            $filter_ministry_count = Organization::where('id',$selected_ministry)->count();
+            $filter_ministries = Organization::where('id',$selected_ministry)->get();
+            $ministry_count = $filter_ministries->count();
             $department_count = ($selected_districtOrg ? 0 : 1);
             $districtOrg_count = ($selected_districtOrg ? 1 : 0);
             $ilaka_count = Organization::where('organization_id',$selected_districtOrg ? $selected_districtOrg : $selected_department)->where('type_id',4)->count();
