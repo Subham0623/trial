@@ -1,7 +1,6 @@
 <?php
 
     // Roles
-    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
-    Route::resource('roles', 'RolesController');
+    Route::delete('roles/destroy', 'Authorization\RolesController@massDestroy')->name('roles.massDestroy');
+    Route::resource('roles', 'Authorization\RolesController');
 
-       
