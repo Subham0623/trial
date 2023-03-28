@@ -11,7 +11,7 @@ class RolesTableSeeder extends Seeder
         //disable foreign key check for this connection before running seeders
 		\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        \DB::table('roles')->truncate(); 
+        \DB::table('roles')->truncate();
 
         //disable foreign key check for this connection before running seeders
 		DB::statement('SET FOREIGN_KEY_CHECKS=1;');
@@ -31,6 +31,21 @@ class RolesTableSeeder extends Seeder
             [
                 'id'    => 3,
                 'title' => 'User',
+                'created_by'    => $user->id,
+            ],
+            [
+                'id'    => 4,
+                'title' => 'Auditor',
+                'created_by'    => $user->id,
+            ],
+            [
+                'id'    => 5,
+                'title' => 'Organization Admin',
+                'created_by'    => $user->id,
+            ],
+            [
+                'id'    => 6,
+                'title' => 'Final Verifier',
                 'created_by'    => $user->id,
             ],
         ];

@@ -2,10 +2,11 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Organization;
 use \DateTimeInterface;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Authorization\User\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Form extends Model
@@ -112,5 +113,48 @@ class Form extends Model
     public function scopePublish($query)
     {
         return $query->where('publish',1);
+    }
+
+    public function scopeOfUser($query)
+    {
+        $auth_user = auth()->user();
+        $auth_user_roles = $auth_user->roles()->pluck('id');
+        $auth_user_organizations = $auth_user->organizations()->pluck('id');
+
+        $organizations = Organization::whereIn('id',$auth_user_organizations)->with('childOrganizations.childOrganizations.childOrganizations')->get();
+
+        $ids = collect();
+        foreach ($organizations as $organization) {
+            $ids = $ids->merge($organization->id);
+            if ($organization->childOrganizations->count()) {
+                foreach ($organization->childOrganizations as $subCategory) {
+                    $ids = $ids->merge($subCategory->id);
+                    if ($subCategory->childOrganizations->count()) {
+                        foreach ($subCategory->childOrganizations as $cat) {
+                            $ids = $ids->merge($cat->id);
+                            if ($cat->childOrganizations->count()) {
+                                $ids = $ids->merge($cat->childOrganizations->pluck('id'));
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        $auth_user_organizations_with_child_organizations = $ids;
+
+        if($auth_user_roles->contains('1') || $auth_user_roles->contains('2'))  //System-Admin OR IT-Admin
+        {
+            return $query;
+        }
+        elseif($auth_user_roles->contains('4') || $auth_user_roles->contains('6'))  //Auditor OR Final Verifier
+        {
+            return $query->whereIn('organization_id',$auth_user_organizations);
+        }
+        else
+        {
+            return $query->whereIn('organization_id',$auth_user_organizations_with_child_organizations);
+        }
     }
 }

@@ -69,7 +69,7 @@ class Organization extends Model
     public function scopeOfUsers($query)
     {
         $user = User::find(auth()->user()->id);
-        
+
         if (!$user->isMainAdmin) {
             $user_org = $user->organizations;
             $allowed_org = [];
@@ -80,7 +80,7 @@ class Organization extends Model
 
             return $allowed_org;
         }
-        
+
         return $query;
     }
 
@@ -112,5 +112,29 @@ class Organization extends Model
     public function levels()
     {
         return $this->belongsToMany(Level::class);
+    }
+
+    public function scopeOfUser($query)
+    {
+        $user = User::find(auth()->user()->id);
+
+        if (!$user->isMainAdmin) {
+            $user_org = $user->organizations;
+            $allowed_org = collect();
+
+            foreach($user_org as $org) {
+                $allowed_org = $allowed_org->merge($org->id);
+                if ($org->childOrganizations->count()) {
+                    $allowed_org = $allowed_org->merge($org->childOrganizations->pluck('id'));
+                }
+                if ($org->parentOrganization->count()) {
+                    $allowed_org = $allowed_org->merge($org->parentOrganization->id);
+                }
+            }
+            
+            return $query->whereIn('id',$allowed_org);
+        }
+
+        return $query;
     }
 }

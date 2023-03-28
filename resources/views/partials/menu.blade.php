@@ -148,7 +148,7 @@
                 </a>
             </li>
             @endcan
-            
+
             @can('subject_area_access')
             <li class="nav-item {{ request()->is('admin/subject-areas') || request()->is('admin/subject-areas/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.subject-areas.index') }}"
@@ -178,6 +178,16 @@
                 </a>
             </li>
             @endcan
+
+            {{-- @can('report_access') --}}
+            <li class="nav-item {{ request()->is('admin/list-organizations') || request()->is('admin/list-organizations/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.list-organizations') }}"
+                    class="nav-link ">
+                    <i class=" nav-icon fa fa-plus"></i>
+                    Report
+                </a>
+            </li>
+            {{-- @endcan --}}
 
             @can('cms_access')
             <li class="nav-item nav-dropdown {{ request()->is('admins/permissions/*') || request()->is('admins/roles/*') || request()->is('admins/users/*') ? 'open' : '' }}">

@@ -8,7 +8,7 @@
             <div class="col">
 
                 {{ trans('cruds.form.title_singular') }} {{ trans('global.list') }}
-                
+
             </div>
             <div class="col">
                 <div class="row">
@@ -26,7 +26,7 @@
                             @endforeach
                         </select>
                         <a class="btn btn-primary" id="search">Search</a>
-                    </div>   
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,12 +38,12 @@
         </div>
         @endcan
     </div>
-        
+
 
     <div class="card-body">
         <div class="table-responsive">
             <table class=" table table-bordered table-striped table-hover datatable datatable-form">
-            
+
                 <thead>
                     <tr>
                         <th width="10">
@@ -88,12 +88,12 @@
                         </th>
                         @endcan
                         <th>
-                            &nbsp;
+                            Actions
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     @foreach($forms as $key => $form)
                         <tr data-entry-id="{{ $form->id }}">
                             <td>
@@ -112,10 +112,10 @@
                                 {!! ($form->is_verified == 1) ? '<span class="badge badge-success">Submitted</span>' : ($form->is_verified == 0 ? '<span class="badge badge-info">Draft</span>' : '<span class="badge badge-danger">Reassigned</span>') !!}
                             </td>
                             <td>
-                            {!! ($form->is_audited == 1) ? '<span class="badge badge-success">Submitted</span>' : ($form->is_audited == 0 ? '<span class="badge badge-info">Draft</span>' : '<span class="badge badge-danger">Reassigned</span>') !!}
+                            {!! ($form->is_audited == 1) ? '<span class="badge badge-success">Audited</span>' : ($form->is_audited == 0 ? '<span class="badge badge-info">Draft</span>' : '<span class="badge badge-danger">Reassigned</span>') !!}
                             </td>
                             <td>
-                                {!! ($form->final_verified == 1) ? '<span class="badge badge-success">Submitted</span>' : '<span class="badge badge-info">Draft</span>' !!}</span>
+                                {!! ($form->final_verified == 1) ? '<span class="badge badge-success">Verified</span>' : '<span class="badge badge-info">Draft</span>' !!}</span>
                             </td>
                             <td>
                                 {{ $form->user ? $form->user->name : '' }}
@@ -139,15 +139,38 @@
                             @endcan
                             <td>
                                     @can('form_edit')
-                                        <a class="btn btn-xs btn-info" href="{{config('panel.homepage')}}/form/{{$form->id}}">
-                                            {{ trans('global.audit') }}
+                                        <a class="btn btn-xs btn-info" href="{{config('panel.homepage')}}/form/{{$form->id}}" target="_blank">
+                                            @php
+                                                $user_roles = auth()->user()->roles->pluck('id');
+
+                                            @endphp
+                                            @if($user_roles->contains(1) || $user_roles->contains(2))
+
+                                                {{ trans('global.view') }} / {{ trans('global.edit') }}
+
+                                            @elseif($user_roles->contains(4) || $user_roles->contains(5))
+                                                @if($form->audited_by)
+
+                                                    {{ trans('global.view') }}
+                                                @else
+                                                    {{ trans('global.audit') }}
+                                                @endif
+
+                                            @elseif($user_roles->contains(6))
+                                                @if($form->verified_by)
+
+                                                    {{ trans('global.view') }}
+                                                @else
+                                                    {{ trans('global.verify') }}
+                                                @endif
+                                            @endif
                                         </a>
-                                        @endcan   
+                                        @endcan
                                 </td>
 
                         </tr>
                     @endforeach
-                    
+
                 </tbody>
             </table>
         </div>
@@ -250,17 +273,17 @@
             }
 
 
-                    
-                
+
+
         });
 </script>
 
 <script>
     $(function() {
     $('.toggle-class').change(function() {
-        var publish = $(this).prop('checked') == true ? 1 : 0; 
-        var form_id = $(this).data('id'); 
-         
+        var publish = $(this).prop('checked') == true ? 1 : 0;
+        var form_id = $(this).data('id');
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -286,33 +309,33 @@
                 type: "GET",
                 dataType: "json",
                 data:{'value':clickedButton.dataset.id},
-                success:function(data) 
+                success:function(data)
                 {
                     console.log(data);
                     $('body').html(data.html);
-                    
+
                 }
             });
-        
+
     })
 
-    // $("#verified").click(function(){   
+    // $("#verified").click(function(){
     //     $.ajax({
     //             url: "{{route('admin.verified-forms')}}",
     //             type: "GET",
     //             dataType: "json",
-    //             success:function(data) 
+    //             success:function(data)
     //             {
     //                 console.log(data);
     //                 $('body').html(data.html);
-                    
+
     //             }
     //         });
-            
 
 
-                    
-                
+
+
+
     //     });
 </script>
 @endsection

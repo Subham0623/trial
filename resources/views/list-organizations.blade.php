@@ -15,7 +15,7 @@
                     <div class="col-sm-2">
                         <div class="position-relative form-group"><select placeholder="Select Ministry" name="ministry"
                             id="ministryId" class="form-control filter">
-                            <option value="">मन्त्रालय/सङ्‍घीय निकाय</option>
+                            <option value="">--- मन्त्रालय/सङ्‍घीय निकाय ---</option>
                             @foreach($ministry as $item)
                             <option value="{{$item->id}}" {{ $item->id == $ministry_id ? 'selected' : '' }}>
                                 {{$item->name}}</option>
@@ -26,7 +26,7 @@
                 <div class="col-sm-3">
                     <div class="position-relative form-group"><select placeholder="Select Department" name="department"
                             id="departmentId" class="form-control filter">
-                            <option value="">विभाग/विभागस्तरीय कार्यालय</option>
+                            <option value="">--- विभाग/विभागस्तरीय कार्यालय ---</option>
                             @foreach($departments as $item)
                             <option value="{{$item->id}}" {{ $item->id == $department_id ? 'selected' : '' }}>
                                 {{$item->name}}</option>
@@ -62,7 +62,7 @@
 <div class="card-body">
         <div class="table-responsive">
             <table class=" table table-bordered table-striped table-hover datatable datatable-list">
-            
+
                 <thead>
                     <tr>
                         <th width="10">
@@ -86,7 +86,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     @foreach($published_forms as $key => $item)
                         <tr data-entry-id="{{ $item->id }}">
                             <td>
@@ -112,7 +112,7 @@
 
                         </tr>
                     @endforeach
-                    
+
                 </tbody>
             </table>
         </div>
@@ -210,7 +210,7 @@
                 success: function (data) {
                     console.log(data);
                     $("#departmentId").empty();
-                    $("#departmentId").append("<option value=''>निकाय	विभाग/विभागस्तरीय कार्यालय</option>");
+                    $("#departmentId").append("<option value=''>--- विभाग/विभागस्तरीय कार्यालय ---</option>");
                     $.each(data.departments, function (index, value) {
                         $("#departmentId").append("<option value=" + index + ">" +
                         value + "</option>");
@@ -260,7 +260,7 @@ $(document).ready(function () {
                         districtOrg: districtOrg,
                     },
                     success: function (data) {
-                        console.log('remika');
+                        console.log(data);
                         $('body').html(data.html);
                         console.log(data);
 

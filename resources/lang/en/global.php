@@ -6,6 +6,7 @@ return [
     'allRightsReserved'                    => 'All rights reserved.',
     'areYouSure'                           => 'Are you sure?',
     'audit'                                => 'Audit',
+    'verify'                                => 'Verify',
     'clickHereToVerify'                    => 'Click here to verify',
     'create'                               => 'Add',
     'dashboard'                            => 'Dashboard',
