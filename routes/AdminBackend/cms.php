@@ -1,7 +1,7 @@
 <?php
 
 Route::group([
-    'namespace' => 'CMS', 
+    'namespace' => 'CMS',
 ], function () {
     includeRouteFiles(__DIR__ . '/CMS/');
 });
