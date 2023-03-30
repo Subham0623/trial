@@ -900,8 +900,8 @@ class HomeController
         }
 
         $ministry = Organization::where('type_id',1)->ofUser()->get();
-        $departments = Organization::where('type_id',2)->where('organization_id',$ministry_id)->get();
-        $districtOrgs = Organization::where('type_id',3)->where('organization_id',$ministry_id)->get();
+        $departments = Organization::where('type_id',2)->where('organization_id',$ministry_id)->ofUser()->get();
+        $districtOrgs = Organization::where('type_id',3)->where('organization_id',$ministry_id)->ofUser()->get();
 
         $html = view('list-organizations',compact('ministry_id','department_id','districtOrg_id','ministry','published_forms','years','fiscal_year','departments','districtOrgs'))->render();
         return response()->json(array(
