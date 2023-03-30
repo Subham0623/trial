@@ -72,13 +72,16 @@ class Organization extends Model
 
         if (!$user->isMainAdmin) {
             $user_org = $user->organizations;
-            $allowed_org = [];
+            $allowed_org = collect();
 
             foreach($user_org as $org) {
-                $allowed_org = $user_org->merge($org->childOrganizations);
+                $allowed_org = $allowed_org->merge($org->id);
+                if ($org->childOrganizations->count()) {
+                    $allowed_org = $allowed_org->merge($org->childOrganizations->pluck('id'));
+                }
             }
 
-            return $allowed_org;
+            return $query->whereIn('id',$allowed_org);
         }
 
         return $query;
@@ -127,11 +130,17 @@ class Organization extends Model
                 if ($org->childOrganizations->count()) {
                     $allowed_org = $allowed_org->merge($org->childOrganizations->pluck('id'));
                 }
-                if ($org->parentOrganization->count()) {
-                    $allowed_org = $allowed_org->merge($org->parentOrganization->id);
+                if ($org->parentOrganization && $org->parentOrganization->count()) {
+                    $parent = $org->parentOrganization->load('parentOrganization');
+                    $allowed_org = $allowed_org->merge($parent->id);
+                    if($parent->parentOrganization)
+                    {
+
+                        $allowed_org = $allowed_org->merge($parent->parentOrganization->id);
+                    }
                 }
             }
-            
+            // dd($allowed_org);
             return $query->whereIn('id',$allowed_org);
         }
 

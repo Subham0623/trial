@@ -852,10 +852,10 @@ class HomeController
 
         $ministry = Organization::where('type_id',1)->ofUser()->get();
         // dd($ministry);
-        $departments = [];
-        $districtOrgs = [];
+        $departments = Organization::where('type_id',2)->ofUser()->get();;
+        $districtOrgs = Organization::where('type_id',3)->ofUser()->get();;
 
-        $ministry_id = null;
+        $ministry_id = $ministry->first()->id;
         $department_id = null;
         $districtOrg_id = null;
 
