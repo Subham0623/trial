@@ -165,7 +165,7 @@
                                                 {{ trans('global.view') }} / {{ trans('global.edit') }}
 
                                             @elseif($user_roles->contains(4))
-                                                @if($form->audited_by)
+                                                @if($form->is_audited == 1)
 
                                                     {{ trans('global.view') }}
                                                 @else
@@ -173,7 +173,7 @@
                                                 @endif
 
                                             @elseif($user_roles->contains(5))
-                                                @if($form->verified_by)
+                                                @if($form->is_verified == 1)
 
                                                     {{ trans('global.view') }}
                                                 @else
@@ -181,7 +181,7 @@
                                                 @endif
 
                                             @elseif($user_roles->contains(6))
-                                                @if($form->final_verified_by)
+                                                @if($form->final_verified == 1)
 
                                                     {{ trans('global.view') }}
                                                 @else
