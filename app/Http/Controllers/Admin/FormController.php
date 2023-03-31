@@ -9,9 +9,29 @@ use App\Form;
 use App\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Auth;
+use Carbon\Carbon;
+use Pratiksh\Nepalidate\Facades\NepaliDate;
 
 class FormController extends Controller
 {
+    public function currentFiscalYear()
+    {
+        $date = toBS(Carbon::now());
+        $arr = explode("-", $date);
+        if($arr[1] <= 3)
+        {
+            $y = $arr[0]-1;
+            $fiscal_year = $y.'/'.(substr($arr[0],-2));
+        }
+        else
+        {
+            $y = (substr($arr[0], -2))+1;
+            $fiscal_year = $arr[0].'/'.$y;
+
+        }
+        return $fiscal_year;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,6 +50,9 @@ class FormController extends Controller
         $yr = 0;
         $forms = [];
         $organizations = [];
+
+        $fiscal_year = $this->currentFiscalYear();
+
         if($roles->contains(5))
         {
             $verified_forms = Auth::user()->verifiedForms()->get();
@@ -117,7 +140,8 @@ class FormController extends Controller
             $forms = [];
             $organizations = Organization::all();
         }
-        return view('admin.forms.index',compact('forms','organizations','years','org','yr','roles'));
+        
+        return view('admin.forms.index',compact('forms','organizations','years','org','yr','roles','fiscal_year'));
     }
 
 

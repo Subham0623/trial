@@ -1,6 +1,25 @@
 @extends('layouts.admin')
 @section('content')
 
+@php
+    $user_roles = auth()->user()->roles->pluck('id');
+
+@endphp
+
+@if($user_roles->contains(5))
+    @if(!$forms->pluck('year')->contains($fiscal_year))
+        @can('form_create')
+        <div style="margin-bottom: 10px;" class="row">
+            <div class="col-lg-12">
+                <a class="btn btn-success" href="{{ config('panel.homepage')}}/form" target="_blank">
+                    {{ trans('global.fill') }} {{ trans('cruds.form.title_singular') }}
+                </a>
+            </div>
+        </div>
+        @endcan
+    @endif
+@endif
+
 <div class="card">
     <div class="card-header">
         <div class ="row">
@@ -140,10 +159,7 @@
                             <td>
                                     @can('form_edit')
                                         <a class="btn btn-xs btn-info" href="{{config('panel.homepage')}}/form/{{$form->id}}" target="_blank">
-                                            @php
-                                                $user_roles = auth()->user()->roles->pluck('id');
 
-                                            @endphp
                                             @if($user_roles->contains(1) || $user_roles->contains(2))
 
                                                 {{ trans('global.view') }} / {{ trans('global.edit') }}
@@ -157,7 +173,7 @@
                                                 @endif
 
                                             @elseif($user_roles->contains(6))
-                                                @if($form->verified_by)
+                                                @if($form->final_verified_by)
 
                                                     {{ trans('global.view') }}
                                                 @else
