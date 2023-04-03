@@ -84,7 +84,7 @@
                                     <span class="badge badge-info">{{ $item->title }}</span>
                                 @endforeach
                             </td>
-                            <<td>
+                            <td>
                                 @foreach($user->organizations as $key => $item)
                                     <span class="badge badge-info">{{ $item->name }}</span>
                                 @endforeach
@@ -96,7 +96,7 @@
                                     </a>
                                 @endcan
 
-                                
+
                                 @can('user_edit')
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.users.edit', $user->id) }}">
                                         {{ trans('global.edit') }}
