@@ -90,9 +90,6 @@
                             {{ trans('cruds.form.fields.created_by') }}
                         </th>
                         <th>
-                            {{ trans('cruds.form.fields.verified_by') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.form.fields.audited_by') }}
                         </th>
                         <th>
@@ -135,9 +132,6 @@
                             </td>
                             <td>
                                 {!! ($form->final_verified == 1) ? '<span class="badge badge-success">Verified</span>' : '<span class="badge badge-info">Draft</span>' !!}</span>
-                            </td>
-                            <td>
-                                {{ $form->user ? $form->user->name : '' }}
                             </td>
                             <td>
                                 {{ $form->verifiedBy ? $form->verifiedBy->name : '' }}
