@@ -83,8 +83,8 @@
                             <table class="table table-responsive table-bordered">
                                 <thead>
                                     <tr>
-                                        <th id="fam" style = "width:100%;">S.N. </th>
-                                        <th id="fam">Subject Area</th>
+                                        <th id="fam" >S.N. </th>
+                                        <th id="fam" style = "width:100%;">Subject Area</th>
                                         <th id="rmc">Self Verified Marks</th>
                                         <th id="es">Final Verifier Marks</th>
                                     </tr>

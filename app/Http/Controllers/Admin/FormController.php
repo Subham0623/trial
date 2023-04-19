@@ -63,16 +63,16 @@ class FormController extends Controller
 
             $forms = $orgForms->merge($verified_forms);
 
+            $organizations = Auth::user()->organizations;
 
-
-            foreach(Auth::user()->organizations as $organization)
-            {
-                foreach($organization->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-                $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
-            }
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     // foreach($organization->childOrganizations as $child)
+            //     // {
+            //     //     $forms = $forms->merge($child->forms);
+            //     // }
+            //     $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
+            // }
             // dd($forms);
 
         }
@@ -140,7 +140,7 @@ class FormController extends Controller
             $forms = [];
             $organizations = Organization::all();
         }
-        
+
         return view('admin.forms.index',compact('forms','organizations','years','org','yr','roles','fiscal_year'));
     }
 
@@ -152,6 +152,7 @@ class FormController extends Controller
         // dd(Auth::user());
         $organizations = [];
         $roles = Auth::user()->roles()->pluck('id');
+        $fiscal_year = $this->currentFiscalYear();
 
         if($roles->contains(1) || $roles->contains(2))
         {
@@ -163,12 +164,12 @@ class FormController extends Controller
         }
         else
         {
-            // $organizations = Auth::user()->organizations()->get();
-            foreach(Auth::user()->organizations as $organization)
-            {
-                $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
-                // dd($organizations);
-            }
+            $organizations = Auth::user()->organizations;
+            // foreach(Auth::user()->organizations as $organization)
+            // {
+            //     $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
+            //     // dd($organizations);
+            // }
         }
 
         $org = $request->organization;
@@ -191,7 +192,7 @@ class FormController extends Controller
         }
 
         $years = Form::groupBy('year')->pluck('year')->filter();
-        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles'))->render();
+        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles','fiscal_year'))->render();
         // dd($html);
         return response()->json(array(
             'success' => true,
@@ -307,7 +308,7 @@ class FormController extends Controller
         $years = Form::distinct()->pluck('year');
         $org = 0;
         $yr = 0;
-
+        $fiscal_year = $this->currentFiscalYear();
 
         if($roles->contains(5))
         {
@@ -345,7 +346,7 @@ class FormController extends Controller
             $organizations = Auth::user()->organizations->merge($organization->childOrganizations);
         }
 
-        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles'))->render();
+        $html = view('admin.forms.index', compact('forms','organizations','years','yr','org','roles','fiscal_year'))->render();
         // dd($html);
         return response()->json(array(
             'success' => true,
