@@ -73,7 +73,7 @@
         font-size: .8rem;
       }
 
-      .view-site:hover, 
+      .view-site:hover,
       .view-site:hover i {
         color: blue !important;
       }
@@ -109,7 +109,7 @@
     .sidebar .nav-dropdown-toggle span{
       flex: 1 !important;
       height: 15px;
-      display: flex; 
+      display: flex;
     align-items: center;
     }
 
@@ -130,7 +130,7 @@
           @if(isset($setting))
             <img class="navbar-brand-full" src="{{asset('storage/uploads/logo/'.$setting->logo)}}" alt="{{$setting->title}}" width="50">
             <img class="navbar-brand-minimized" src="{{asset('storage/uploads/favicon/'.$setting->favicon)}}" alt="{{$setting->title}}" width="40">
-          @else 
+          @else
             <span class="navbar-brand-full">{{ trans('panel.site_title') }}</span>
             <span class="navbar-brand-minimized">{{ trans('panel.site_title') }}</span>
           @endif
@@ -138,11 +138,11 @@
         <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show" >
             <span class="navbar-toggler-icon"></span>
         </button>
-        
+
         <ul class="nav navbar-nav ml-2">
           <li class="nav-item view__site-container">
               <a class="nav-link view-site" href="{{config('panel.homepage')}}" role="button" target="_blank">
-                  View Site 
+                  View Site
                   <i class="fas fa-share"></i>
               </a>
           </li>
@@ -195,7 +195,7 @@
         </ul>
         <div class="dropdown d-flex custom__align">
           <div class="align d-flex align-items-center">
-            <span class="admin-name">Hi, {{Auth::user()->name}}</span>
+            <span class="admin-name">Hi, {{Auth::user()->name}} {{ Auth::user()->organizations()->first() ? '('.Auth::user()->organizations()->first()->name.')' : ''}}</span>
             <a href="javascript:void(0)" class="chip ml-3" data-toggle="dropdown" aria-expanded="false">
               <span class="avatar" style="
                     background-image: url({{asset('User.png')}});
@@ -281,7 +281,7 @@
 
 
     <script src="{{ asset('js/main.js') }}"></script>
-    
+
     <script>
         $(function() {
           let copyButtonTrans = '{{ trans('global.datatables.copy') }}'
@@ -425,7 +425,7 @@
     @yield('scripts')
     <script>
       $('#message').delay(5000).slideUp(300);
-     
+
     </script>
     <script defer>
       let navElements =  document.querySelectorAll('.nav-dropdown');

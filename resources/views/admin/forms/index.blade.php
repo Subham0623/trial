@@ -1,6 +1,25 @@
 @extends('layouts.admin')
 @section('content')
 
+@php
+    $user_roles = auth()->user()->roles->pluck('id');
+
+@endphp
+
+@if($user_roles->contains(5))
+    @if(!$forms->pluck('year')->contains($fiscal_year))
+        @can('form_create')
+        <div style="margin-bottom: 10px;" class="row">
+            <div class="col-lg-12">
+                <a class="btn btn-success" href="{{ config('panel.homepage')}}/form" target="_blank">
+                    {{ trans('global.fill') }} {{ trans('cruds.form.title_singular') }}
+                </a>
+            </div>
+        </div>
+        @endcan
+    @endif
+@endif
+
 <div class="card">
     <div class="card-header">
         <div class ="row">
@@ -8,7 +27,7 @@
             <div class="col">
 
                 {{ trans('cruds.form.title_singular') }} {{ trans('global.list') }}
-                
+
             </div>
             <div class="col">
                 <div class="row">
@@ -26,7 +45,7 @@
                             @endforeach
                         </select>
                         <a class="btn btn-primary" id="search">Search</a>
-                    </div>   
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,12 +57,12 @@
         </div>
         @endcan
     </div>
-        
+
 
     <div class="card-body">
         <div class="table-responsive">
             <table class=" table table-bordered table-striped table-hover datatable datatable-form">
-            
+
                 <thead>
                     <tr>
                         <th width="10">
@@ -71,9 +90,6 @@
                             {{ trans('cruds.form.fields.created_by') }}
                         </th>
                         <th>
-                            {{ trans('cruds.form.fields.verified_by') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.form.fields.audited_by') }}
                         </th>
                         <th>
@@ -88,12 +104,12 @@
                         </th>
                         @endcan
                         <th>
-                            &nbsp;
+                            Actions
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     @foreach($forms as $key => $form)
                         <tr data-entry-id="{{ $form->id }}">
                             <td>
@@ -112,13 +128,10 @@
                                 {!! ($form->is_verified == 1) ? '<span class="badge badge-success">Submitted</span>' : ($form->is_verified == 0 ? '<span class="badge badge-info">Draft</span>' : '<span class="badge badge-danger">Reassigned</span>') !!}
                             </td>
                             <td>
-                            {!! ($form->is_audited == 1) ? '<span class="badge badge-success">Submitted</span>' : ($form->is_audited == 0 ? '<span class="badge badge-info">Draft</span>' : '<span class="badge badge-danger">Reassigned</span>') !!}
+                            {!! ($form->is_audited == 1) ? '<span class="badge badge-success">Audited</span>' : ($form->is_audited == 0 ? '<span class="badge badge-info">Draft</span>' : '<span class="badge badge-danger">Reassigned</span>') !!}
                             </td>
                             <td>
-                                {!! ($form->final_verified == 1) ? '<span class="badge badge-success">Submitted</span>' : '<span class="badge badge-info">Draft</span>' !!}</span>
-                            </td>
-                            <td>
-                                {{ $form->user ? $form->user->name : '' }}
+                                {!! ($form->final_verified == 1) ? '<span class="badge badge-success">Verified</span>' : '<span class="badge badge-info">Draft</span>' !!}</span>
                             </td>
                             <td>
                                 {{ $form->verifiedBy ? $form->verifiedBy->name : '' }}
@@ -139,15 +152,43 @@
                             @endcan
                             <td>
                                     @can('form_edit')
-                                        <a class="btn btn-xs btn-info" href="{{config('panel.homepage')}}/form/{{$form->id}}">
-                                            {{ trans('global.audit') }}
+                                        <a class="btn btn-xs btn-info" href="{{config('panel.homepage')}}/form/{{$form->id}}" target="_blank">
+
+                                            @if($user_roles->contains(1) || $user_roles->contains(2))
+
+                                                {{ trans('global.view') }} / {{ trans('global.edit') }}
+
+                                            @elseif($user_roles->contains(4))
+                                                @if($form->is_audited == 1)
+
+                                                    {{ trans('global.view') }}
+                                                @else
+                                                    {{ trans('global.audit') }}
+                                                @endif
+
+                                            @elseif($user_roles->contains(5))
+                                                @if($form->is_verified == 1)
+
+                                                    {{ trans('global.view') }}
+                                                @else
+                                                    {{ trans('global.audit') }}
+                                                @endif
+
+                                            @elseif($user_roles->contains(6))
+                                                @if($form->final_verified == 1)
+
+                                                    {{ trans('global.view') }}
+                                                @else
+                                                    {{ trans('global.verify') }}
+                                                @endif
+                                            @endif
                                         </a>
-                                        @endcan   
+                                        @endcan
                                 </td>
 
                         </tr>
                     @endforeach
-                    
+
                 </tbody>
             </table>
         </div>
@@ -250,17 +291,17 @@
             }
 
 
-                    
-                
+
+
         });
 </script>
 
 <script>
     $(function() {
     $('.toggle-class').change(function() {
-        var publish = $(this).prop('checked') == true ? 1 : 0; 
-        var form_id = $(this).data('id'); 
-         
+        var publish = $(this).prop('checked') == true ? 1 : 0;
+        var form_id = $(this).data('id');
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -286,33 +327,33 @@
                 type: "GET",
                 dataType: "json",
                 data:{'value':clickedButton.dataset.id},
-                success:function(data) 
+                success:function(data)
                 {
                     console.log(data);
                     $('body').html(data.html);
-                    
+
                 }
             });
-        
+
     })
 
-    // $("#verified").click(function(){   
+    // $("#verified").click(function(){
     //     $.ajax({
     //             url: "{{route('admin.verified-forms')}}",
     //             type: "GET",
     //             dataType: "json",
-    //             success:function(data) 
+    //             success:function(data)
     //             {
     //                 console.log(data);
     //                 $('body').html(data.html);
-                    
+
     //             }
     //         });
-            
 
 
-                    
-                
+
+
+
     //     });
 </script>
 @endsection

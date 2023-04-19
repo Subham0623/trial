@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Form;
 use App\Models\Authorization\User\User;
-use App\Notifications\FormVerfiedNotification;
+use App\Notifications\FormVerifiedNotification;
 use Illuminate\Support\Facades\Notification;
 
 class SendFormVerifiedJob implements ShouldQueue
@@ -42,7 +42,7 @@ class SendFormVerifiedJob implements ShouldQueue
         $admins = $admins->merge($this->form->organization->users()->get());
 
         if($admins) {
-            Notification::send($admins, new FormVerfiedNotification($this->form, route('admin.forms')));
+            Notification::send($admins, new FormVerifiedNotification($this->form, route('admin.forms')));
         }
     }
 }

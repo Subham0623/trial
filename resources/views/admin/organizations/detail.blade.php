@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="card-layout container pb-5">
-                    <h4 class="sub-heading">Organization Information</h4>
+                    <h4 class="sub-heading">Organization Information:</h4>
                     <div class="progress-section">
                         <div class="row">
                             <div class="col-md-12">
@@ -60,7 +60,7 @@
                                     <li class="list-group-item">
                                         <h5>District</h5> <span>{{$organization->district ? $organization->district->name : ''}}</span>
                                     </li>
-                                    
+
                                     <li class="list-group-item">
                                         <h5>Contact</h5>
                                         <span>{{$organization->contact ?? ''}}</span>
@@ -74,21 +74,19 @@
 
                 <div class="card-layout container">
                     <div class="row">
-                        <div class="col mb-3 col-12 text-center">
+                        <div class="col mb-3 col-12">
                             <div class="row table-heading">
-                                <div class="col-md-6">
-                                    <h6 class="sub-heading">Marks for each subject area</h6>
+                                <div class="col-md-12">
+                                    <h4 class="sub-heading">Marks for each subject area:</h4>
                                 </div>
                             </div>
                             <table class="table table-responsive table-bordered">
                                 <thead>
                                     <tr>
-                                        <th id="fam" style = "width:100%;">S.N. </th>
-                                        <th id="fam">Subject Area</th>
-                                        <th id="rmc">Marks by user</th>
-                                        <th id="rmc">Marks by verifier</th>
-                                        <th>Marks by auditor</th>
-                                        <th id="es">Marks by final verifier</th>
+                                        <th id="fam" >S.N. </th>
+                                        <th id="fam" style = "width:100%;">Subject Area</th>
+                                        <th id="rmc">Self Verified Marks</th>
+                                        <th id="es">Final Verifier Marks</th>
                                     </tr>
 
                                 </thead>
@@ -104,9 +102,7 @@
                                     <tr>
                                         <th scope="row">{{$key+1}}</th>
                                         <td style="min-width: 180px;">{{$subjectArea->title}}</td>
-                                        <td style="min-width: 180px;">{{$item->marks ?? ''}}</td>
                                         <td style="min-width: 180px;">{{$item->marksByVerifier ?? ''}}</td>
-                                        <td style="min-width: 180px;">{{$item->marksByAuditor ?? ''}}</td>
                                         <td style="min-width: 180px;">{{$item->marksByFinalVerifier ?? ''}}</td>
                                     </tr>
                                     @endforeach
@@ -124,10 +120,10 @@
 
                 <div class="card-layout container">
                     <div class="row">
-                        <div class="col mb-3 col-12 text-center">
+                        <div class="col mb-3 col-12 ">
                             <div class="row table-heading">
-                                <div class="col-md-6">
-                                    <h6 class="sub-heading">Form Detail</h6>
+                                <div class="col-md-12">
+                                    <h4 class="sub-heading">Form Detail:</h4>
                                 </div>
                             </div>
                             <table class="table table-responsive table-bordered">
@@ -136,10 +132,8 @@
                                         <th id="fam">S.N. </th>
                                         <th id="fam">Parameters</th>
                                         <th id="fr">Is Applicable?</th>
-                                        <th id="rmc">Marks by user</th>
-                                        <th id="rmc">Marks by verifier</th>
-                                        <th>Marks by auditor</th>
-                                        <th id="es">Marks by final verifier</th>
+                                        <th id="rmc">Self Verified Marks</th>
+                                        <th id="es">Final Verified Marks</th>
                                     </tr>
 
                                 </thead>
@@ -153,9 +147,7 @@
                                         <td style="min-width: 180px;">
                                             {{$parameter->pivot->is_applicable == 0 ? 'Yes' : 'No'}}
                                         </td>
-                                        <td style="min-width: 180px;">{{$parameter->pivot->marks ?? ''}}</td>
                                         <td style="min-width: 180px;">{{$parameter->pivot->marksByVerifier ?? ''}}</td>
-                                        <td style="min-width: 180px;">{{$parameter->pivot->marksByAuditor ?? ''}}</td>
                                         <td style="min-width: 180px;">{{$parameter->pivot->marksByFinalVerifier ?? ''}}
                                         </td>
                                     </tr>
