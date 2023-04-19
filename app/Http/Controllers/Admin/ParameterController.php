@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input; 
+use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreParameterRequest;
 use App\Http\Requests\UpdateParameterRequest;
@@ -27,7 +27,7 @@ class ParameterController extends Controller
     {
         abort_if(Gate::denies('parameter_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $parameters = Parameter::all();
+        $parameters = Parameter::orderBy('sort')->get();
 
         return view('admin.parameters.index',compact('parameters'));
     }
@@ -41,7 +41,7 @@ class ParameterController extends Controller
     {
         abort_if(Gate::denies('parameter_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $subject_areas = SubjectArea::all();
+        $subject_areas = SubjectArea::orderBy('sort')->get();
         $parameter = Parameter::latest()->first();
         $sort = ($parameter)?$parameter->sort + 5:1;
 
@@ -73,7 +73,7 @@ class ParameterController extends Controller
         // dd($data);
         $parameter = Parameter::create($data);
 
-    
+
         foreach ($request->addmore as $key => $value) {
             // dd($value['title']);
             $option = Option::create([
@@ -84,8 +84,8 @@ class ParameterController extends Controller
             ]);
         }
 // dd($option);
-            
-        
+
+
             foreach ($request->addmore1 as $key => $value) {
                 // dd('here');dd($value['title']);
                 Document::create([
@@ -94,10 +94,10 @@ class ParameterController extends Controller
                     'status' => $value['status']
                 ]);
             }
-        
+
 
         return redirect()->route('admin.parameters.index')->with('message','New Parameter added successfully!');
-        
+
     }
 
     /**
@@ -123,7 +123,7 @@ class ParameterController extends Controller
     {
         abort_if(Gate::denies('parameter_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $subject_areas = SubjectArea::all();
+        $subject_areas = SubjectArea::orderBy('sort')->get();
 
         return view('admin.parameters.edit',compact('parameter','subject_areas'));
     }
@@ -162,10 +162,10 @@ class ParameterController extends Controller
         if(isset($request->addmore))
         {
 
-            foreach ($request->addmore as $key => $value) 
+            foreach ($request->addmore as $key => $value)
             {
                 // dd($value['points']);
-                
+
                 if(isset($value['title']))
                 {
                     Option::create([
@@ -174,9 +174,9 @@ class ParameterController extends Controller
                         'parameter_id' => $parameter->id,
                         'status' => $value['status']
                     ]);
-    
+
                 }
-                
+
             }
         }
 
@@ -188,20 +188,20 @@ class ParameterController extends Controller
         if(isset($request->addmore1))
         {
 
-            foreach ($request->addmore1 as $key => $value) 
+            foreach ($request->addmore1 as $key => $value)
             {
                 // dd($value['status']);
-                
+
                 if(isset($value['title']))
                 {
-    
+
                     Document::create([
                         'title' => $value['title'],
                         'parameter_id' => $parameter->id,
                         'status' => $value['status']
                     ]);
                 }
-                
+
             }
         }
 
@@ -243,11 +243,11 @@ class ParameterController extends Controller
     public function changeStatus(Request $request)
     {
         abort_if(Gate::denies('parameter_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
+
         $parameter = Parameter::find($request->parameter_id);
         $parameter->status = $request->status;
         $parameter->save();
-  
+
         return response()->json(['success'=>'Status changed successfully.']);
     }
 }

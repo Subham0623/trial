@@ -23,7 +23,7 @@ class SubjectAreaController extends Controller
     {
         abort_if(Gate::denies('subject_area_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $subject_areas = SubjectArea::all();
+        $subject_areas = SubjectArea::orderBy('sort')->get();
 
         return view('admin.subjectareas.index', compact('subject_areas'));
 
@@ -38,10 +38,10 @@ class SubjectAreaController extends Controller
     {
         abort_if(Gate::denies('subject_area_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        
+
             $subject_area = SubjectArea::latest()->first();
             $sort = ($subject_area)?$subject_area->sort + 5:1;
-        
+
         // dd($sort);
         return view('admin.subjectareas.create',compact('sort'));
     }
@@ -59,9 +59,9 @@ class SubjectAreaController extends Controller
             'sort' => $request->sort,
             'status' => $request->status,
         ];
-        
+
         $subject_area = SubjectArea::create($data);
-        
+
         return redirect()->route('admin.subject-areas.index')->with('message','New Subject Area added successfully!');
 
     }
@@ -148,11 +148,11 @@ class SubjectAreaController extends Controller
     public function changeStatus(Request $request)
     {
         abort_if(Gate::denies('subject_area_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
+
         $subjectArea = SubjectArea::find($request->subjectArea_id);
         $subjectArea->status = $request->status;
         $subjectArea->save();
-  
+
         return response()->json(['success'=>'Status changed successfully.']);
     }
 }

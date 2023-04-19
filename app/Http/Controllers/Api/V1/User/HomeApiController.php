@@ -28,7 +28,12 @@ class HomeApiController extends Controller
 {
     public function form()
     {
-        $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
+        $subject_areas = SubjectArea::active()->with(['activeParameters' => function($query) {
+            $query->with('activeOptions','activeDocuments')->orderBy('sort');
+        }])
+        ->orderBy('sort')
+        ->get();
+
         $selected_options = [];
         return response([
             'subject_areas' => $subject_areas,
@@ -255,7 +260,12 @@ class HomeApiController extends Controller
             {
                 $selected_options = $this->selectedOptions($form);
 
-                $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
+                // $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
+                $subject_areas = SubjectArea::active()->with(['activeParameters' => function($query) {
+                    $query->with('activeOptions','activeDocuments')->orderBy('sort');
+                }])
+                ->orderBy('sort')
+                ->get();
 
                 return response([
                     'subject_areas' => $subject_areas,
@@ -267,7 +277,12 @@ class HomeApiController extends Controller
             {
                 $selected_options = $this->selectedOptions($form);
 
-                $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
+                // $subject_areas = SubjectArea::active()->with('activeParameters.activeOptions','activeParameters.activeDocuments')->get();
+                $subject_areas = SubjectArea::active()->with(['activeParameters' => function($query) {
+                            $query->with('activeOptions','activeDocuments')->orderBy('sort');
+                        }])
+                        ->orderBy('sort')
+                        ->get();
 
                 return response([
                     'subject_areas' => $subject_areas,
