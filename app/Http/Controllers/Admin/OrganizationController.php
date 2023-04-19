@@ -30,11 +30,11 @@ class OrganizationController extends Controller
     {
         abort_if(Gate::denies('organization_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $organizations = Organization::with('province')->get();
+        $organizations = Organization::with('province')->ofUsers()->get();
 
         $types = Type::all();
         $selected_level = 0;
-        
+
 
         return view('admin.organizations.index',compact('organizations','types','selected_level'));
     }
@@ -74,7 +74,7 @@ class OrganizationController extends Controller
             'district_id'       => $request->district,
             'address'           => $request->address,
             'type_id'           => $request->type,
-            'organization_id'   => $request->organization, 
+            'organization_id'   => $request->organization,
             'governance_id'     => $request->governance
         ];
         // dd($data);
@@ -83,7 +83,7 @@ class OrganizationController extends Controller
         $organization->levels()->sync($request->input('levels', []));
 
         return redirect()->route('admin.organizations.index')->with('message','New Organization added successfully!');
-        
+
     }
 
     /**
@@ -182,10 +182,10 @@ class OrganizationController extends Controller
         // dd($request->province);
         $province = Province::findOrFail($request->province);
         return District::where('province_id',$request->province)->pluck('name','id');
-        
+
     }
 
-    public function import(Request $request) 
+    public function import(Request $request)
     {
         $request->validate([
                 'file'=>'required|mimes:xlsx'
@@ -197,27 +197,27 @@ class OrganizationController extends Controller
         // }catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
         //     $failures = $e->failures();
         //     // dd($failures);
-             
-        //       foreach ($failures as $key => $failure) { 
+
+        //       foreach ($failures as $key => $failure) {
         //         $failure->row(); // row that went wrong
-        //          $failure->attribute(); // 
+        //          $failure->attribute(); //
         //         // $failure->errors() = $failure->errors()[0];
         //         // dd($failure);
         //         $new_error = $failure->errors();
-                
+
         //          $failure->values(); // The values of the row that has failed.
-        //          throw new \Maatwebsite\Excel\Validators\ValidationException($failure->getMessage()); 
-                 
+        //          throw new \Maatwebsite\Excel\Validators\ValidationException($failure->getMessage());
+
         //     }
         // }
 
-        
-           
+
+
         return redirect()->route('admin.organizations.index')->with('message','New Organizations added successfully!');
-        
+
     }
 
-    public function type(Request $request) 
+    public function type(Request $request)
     {
         $selected_level = $request->type;
         $type = Type::find($request->type);

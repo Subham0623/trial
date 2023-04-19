@@ -25,7 +25,7 @@ class HomeController
         $districts = [];
 
         // $fiscal_year = Form::finalVerified()->latest()->pluck('year')->first();
-        $fiscal_year = $this->currentFiscalYear(); 
+        $fiscal_year = $this->currentFiscalYear();
 
         //If no forms are submitted in the fiscal year then the fiscal year that we calculated will not be included in the dropdown so we added the $fiscal_year to $years in the code below
         $years = Form::finalVerified()->distinct()->pluck('year');
@@ -42,10 +42,10 @@ class HomeController
         })->get();
 
         $submittedFormOrgs = $orgs->count();
-        
+
         $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
 
-        
+
 
         $highest_score = Form::finalVerified()->where('year',$fiscal_year)->max('total_marks_finalVerifier');
         // dd($highest_score->max('total_marks_finalVerifier'));
@@ -100,7 +100,7 @@ class HomeController
 
         $departments = [];
         $districtOrgs = [];
-        $ilakas = []; 
+        $ilakas = [];
 
         $ministry_id = null;
         $department_id = null;
@@ -109,7 +109,7 @@ class HomeController
         return view('home',
         compact('organizations','district','subjectAreas','provinces','districts','total_orgs','published_forms','highest_score','lowest_score','average_score','highestScoreOrgs','lowestScoreOrgs','topOrgs','lowOrgs','years','province','fiscal_year','submittedFormOrgs','forms','ministry','department','districtOrg','ilaka','departments','districtOrgs','ilakas','total_ministry','ministry_id','department_id','districtOrg_id','topOrgsForms','lowOrgsForms'));
     }
-    
+
     // public function index()
     // {
     //     $provinces = Province::all();
@@ -144,10 +144,10 @@ class HomeController
     //         ->where('total_marks_finalVerifier',$lowest_score);
     //     })->get();
 
-        
 
 
-        
+
+
 
     //     // $org = Organization::where('district_id',$district_id)->get();
     //     return view('home',compact('organizations','provinces','districts','auditors','finalVerifiers','draft','submitted','verified','final_verified','audited'));
@@ -176,21 +176,21 @@ class HomeController
     public function list(Request $request)
     {
         $province = Province::findOrFail($request->province);
-        
+
         $organizations = Organization::where('province_id',$request->province)->with('province','district')->get();
-        
+
         return $organizations;
-        
+
     }
 
     public function district(Request $request)
     {
         $district = District::findOrFail($request->district);
-        
+
         $organizations = Organization::where('district_id',$request->district)->with('district','province')->get();
-        
+
         return $organizations;
-        
+
     }
 
     public function provinceDistricts(Request $request)
@@ -201,14 +201,14 @@ class HomeController
 
     }
 
-    
-   
+
+
     /**
      * requestIf the province and district are set, return organizations where province and district are equal
      * to the request. If only province is set, return organizations where province is equal to the
-     * request. If only district is set, return organizations where district is equal to the 
-     * 
-     * @param Request request 
+     * request. If only district is set, return organizations where district is equal to the
+     *
+     * @param Request request
      */
     public function search(Request $request)
     {
@@ -229,14 +229,14 @@ class HomeController
             $organizations = Organization::where('district_id',$request->district)->get();
             return $organizations;
         }
-       
+
     }
 
     public function filter(Request $request)
     {
-        $current_fiscal_year = $this->currentFiscalYear(); 
+        $current_fiscal_year = $this->currentFiscalYear();
 
-        
+
         $fiscal_year = ($request->fiscal_year ? $request->fiscal_year : $current_fiscal_year);
         $province = $request->province;
         $district = $request->district;
@@ -266,23 +266,23 @@ class HomeController
             })->get();
 
             $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
-    
+
             $highest_score = Form::finalVerified()->where('year',$fiscal_year)->max('total_marks_finalVerifier');
             $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->min('total_marks_finalVerifier');
             $average_score = Form::finalVerified()->where('year',$fiscal_year)->avg('total_marks_finalVerifier');
-    
+
             $highestScoreOrgs = Organization::whereHas('forms',function($query) use($highest_score, $fiscal_year){
                 $query->finalVerified()
                 ->where('year',$fiscal_year)
                 ->where('total_marks_finalVerifier',$highest_score);
             })->get();
-    
+
             $lowestScoreOrgs = Organization::whereHas('forms',function($query) use($lowest_score, $fiscal_year){
                 $query->finalVerified()
                 ->where('year',$fiscal_year)
                 ->where('total_marks_finalVerifier',$lowest_score);
             })->get();
-    
+
             $topOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','DESC')->with('organization','subjectAreas')->take(10)->get();
 
             $topOrgs = [];
@@ -294,7 +294,7 @@ class HomeController
             }
             }
         // dd($topOrgs);
-            
+
             $lowOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','ASC')->with('organization','subjectAreas')->take(10)->get();
 
             $lowOrgs = [];
@@ -304,9 +304,9 @@ class HomeController
 
                 array_push($lowOrgs,$organization);
             }
-            }            
+            }
         }
-        
+
         if(isset($province))
         {
             $districts = District::where('province_id',$province)->get();
@@ -324,43 +324,43 @@ class HomeController
                     $query->where('province_id',$province)
                     ->where('district_id',$district);
                 })->get();
-    
+
                 $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($province, $district){
                     $query->where('province_id',$province)
                     ->where('district_id',$district);
                 })->max('total_marks_finalVerifier');
                 // dd($highest_score);
-                
-    
+
+
                 $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($province, $district){
                     $query->where('province_id',$province)
                     ->where('district_id',$district);
                 })->min('total_marks_finalVerifier');
-    
+
                 $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($province, $district){
                     $query->where('province_id',$province)
                     ->where('district_id',$district);
                 })->avg('total_marks_finalVerifier');
-    
+
                 $highestScoreOrgs = Organization::where('province_id',$province)->where('district_id',$district)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
                     $query->finalVerified()
                     ->where('year',$fiscal_year)
                     ->where('total_marks_finalVerifier',$highest_score);
-                })->get(); 
-                
+                })->get();
+
                 $lowestScoreOrgs = Organization::where('province_id',$province)->where('district_id',$district)->whereHas('forms',function($query) use($lowest_score, $fiscal_year){
                     $query->finalVerified()
                     ->where('year',$fiscal_year)
                     ->where('total_marks_finalVerifier',$lowest_score);
                 })->get();
-        
+
                 $topOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','DESC')->with('organization','subjectAreas')->take(10)->get();
 
                 $topOrgs = [];
                 foreach($topOrgsForms as $top) {
                     $organization = Organization::where('id',$top->organization_id)->where('province_id',$province)->where('district_id',$district)->first();
                     if(isset($organization)) {
-                    
+
                         array_push($topOrgs,$organization);
                     }
                 }
@@ -371,7 +371,7 @@ class HomeController
                 foreach($lowOrgsForms as $low) {
                     $organization = Organization::where('id',$low->organization_id)->where('province_id',$province)->where('district_id',$district)->first();
                     if(isset($organization)) {
-                    
+
                         array_push($lowOrgs,$organization);
                     }
                 }
@@ -389,32 +389,32 @@ class HomeController
                 $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($province){
                     $query->where('province_id',$province);
                 })->get();
-    
+
                 $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($province){
                     $query->where('province_id',$province);
                 })->max('total_marks_finalVerifier');
-                
-    
+
+
                 $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($province){
                     $query->where('province_id',$province);
                 })->min('total_marks_finalVerifier');
-    
+
                 $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($province){
                     $query->where('province_id',$province);
                 })->avg('total_marks_finalVerifier');
-    
+
                 $highestScoreOrgs = Organization::where('province_id',$province)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
                     $query->finalVerified()
                     ->where('year',$fiscal_year)
                     ->where('total_marks_finalVerifier',$highest_score);
-                })->get(); 
-                
+                })->get();
+
                 $lowestScoreOrgs = Organization::where('province_id',$province)->whereHas('forms',function($query) use($lowest_score, $fiscal_year){
                     $query->finalVerified()
                     ->where('year',$fiscal_year)
                     ->where('total_marks_finalVerifier',$lowest_score);
                 })->get();
-        
+
                 $topOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','DESC')->with('organization','subjectAreas')->take(10)->get();
 // dd($topOrgsForms);
                 $topOrgs = [];
@@ -455,55 +455,55 @@ class HomeController
         //         $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($district){
         //             $query->where('district_id',$district);
         //         })->get();
-    
+
         //         $highest_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($district){
         //             $query->where('district_id',$district);
         //         })->max('total_marks_finalVerifier');
         //         // dd($highest_score);
-    
+
         //         $lowest_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($district){
         //             $query->where('district_id',$district);
         //         })->min('total_marks_finalVerifier');
-    
+
         //         $average_score = Form::finalVerified()->where('year',$fiscal_year)->whereHas('organization',function($query) use($district){
         //             $query->where('district_id',$district);
         //         })->avg('total_marks_finalVerifier');
-    
+
         //         $highestScoreOrgs = Organization::where('district_id',$district)->whereHas('forms',function($query) use($highest_score, $fiscal_year){
         //             $query->finalVerified()
         //             ->where('year',$fiscal_year)
         //             ->where('total_marks_finalVerifier',$highest_score);
-        //         })->get(); 
-                
+        //         })->get();
+
         //         $lowestScoreOrgs = Organization::where('district_id',$district)->whereHas('forms',function($query) use($lowest_score, $fiscal_year){
         //             $query->finalVerified()
         //             ->where('year',$fiscal_year)
         //             ->where('total_marks_finalVerifier',$lowest_score);
         //         })->get();
-        
+
         //         $topOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','DESC')->with('organization','subjectAreas')->take(10)->get();
 
         //         $topOrgs = [];
         //         foreach($topOrgsForms as $top) {
         //             $organization = Organization::where('id',$top->organization_id)->where('district_id',$district)->first();
         //         if(isset($organization)) {
-                    
+
         //             array_push($topOrgs,$organization);
         //         }
         //         }
-                
+
         //         $lowOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->orderBy('total_marks_finalVerifier','ASC')->with('organization','subjectAreas')->take(10)->get();
 
         //         $lowOrgs = [];
         //         foreach($lowOrgsForms as $low) {
         //             $organization = Organization::where('id',$low->organization_id)->where('district_id',$district)->first();
         //             if(isset($organization)) {
-                    
+
         //                 array_push($lowOrgs,$organization);
         //             }
         //         }
         //     }
-            
+
         // }
         //     // dd($districts);
         $total_orgs = $organizations->count();
@@ -520,8 +520,8 @@ class HomeController
             'province' => $province,
             'district' => $district,
         ));
-    
-        
+
+
     }
 
     public function organizationDetail(Request $request, Organization $organization)
@@ -537,7 +537,7 @@ class HomeController
         // dd($form_subject_area);
         // dd($form->load('subjectAreas'));
         return view('admin.organizations.detail',compact('years','form','form_subject_area','organization','fiscal_year'));
-        
+
     }
 
     public function filterOrg(Request $request)
@@ -558,9 +558,9 @@ class HomeController
             $selected_subjectareas->pluck('id');
 
             $form_subject_area = FormSubjectArea::where('form_id',$form->id)->whereIn('subject_area_id',$selected_subjectareas->pluck('id'))->orderBy('subject_area_id')->get();
-            
+
         }
-        
+
 
         $html = view('admin.organizations.detail',compact('years','form','form_subject_area','organization','fiscal_year'))->render();
         // dd($html);
@@ -568,7 +568,7 @@ class HomeController
             'success' => true,
             'html' => $html,
         ));
-        
+
     }
 
     public function fiscalYear($fiscal_year,$organization,$form)
@@ -580,9 +580,9 @@ class HomeController
             $selected_subjectareas->pluck('id');
 
             $form_subject_area = FormSubjectArea::where('form_id',$form->id)->whereIn('subject_area_id',$selected_subjectareas->pluck('id'))->orderBy('subject_area_id')->get();
-            
+
         }
-        
+
     return $form_subject_area;
     }
 
@@ -604,7 +604,7 @@ class HomeController
         return $fiscal_year;
     }
 
-    public function childOrganizations(Request $request) 
+    public function childOrganizations(Request $request)
     {
         if(isset($request->ministry))
         {
@@ -625,7 +625,7 @@ class HomeController
 
     public function filter2(Request $request)
     {
-        $current_fiscal_year = $this->currentFiscalYear(); 
+        $current_fiscal_year = $this->currentFiscalYear();
 
         $fiscal_year = ($request->fiscal_year ? $request->fiscal_year : $current_fiscal_year);
 
@@ -645,7 +645,7 @@ class HomeController
             })->get();
 
             $submittedFormOrgs = $orgs->count();
-            
+
             $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
 
             $highest_score = Form::finalVerified()->where('year',$fiscal_year)->max('total_marks_finalVerifier');
@@ -701,7 +701,7 @@ class HomeController
             $organizations = Organization::where('organization_id',$request->ministry)->get();
             $organizations = $organizations->push(Organization::findOrFail($request->ministry));
             $ids = $organizations->pluck('id');
-            
+
 
             $orgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use ($fiscal_year){
                 $query->where('year',$fiscal_year)
@@ -737,7 +737,7 @@ class HomeController
             }
             }
         // dd($topOrgs);
-            
+
             $lowOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->orderBy('total_marks_finalVerifier','ASC')->with('organization','subjectAreas')->take(10)->get();
 
             $lowOrgs = [];
@@ -747,21 +747,21 @@ class HomeController
 
                 array_push($lowOrgs,$organization);
             }
-            }   
+            }
             $total_ministry = 1;
-            
+
             $departments = Organization::where('type_id',2)->where('organization_id',$request->ministry)->get();
             $department = $departments->count();
             $districtOrgs = Organization::where('type_id',3)->where('organization_id',$request->ministry)->get();
             $districtOrg = $districtOrgs->count();
             $ilaka = Organization::where('type_id',4)->whereIn('organization_id',$districtOrgs->pluck('id'))->count();
-        } 
+        }
         else
         {
             $organizations = Organization::where('organization_id',$request->districtOrg ? $request->districtOrg : $request->department)->get();
             $organizations = $organizations->push(Organization::findOrFail($request->districtOrg ? $request->districtOrg : $request->department));
             $ids = $organizations->pluck('id');
-            
+
 
             $orgs = Organization::whereIn('id',$ids)->whereHas('forms',function($query) use ($fiscal_year){
                 $query->where('year',$fiscal_year)
@@ -797,7 +797,7 @@ class HomeController
             }
             }
         // dd($topOrgs);
-            
+
             $lowOrgsForms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->orderBy('total_marks_finalVerifier','ASC')->with('organization','subjectAreas')->take(10)->get();
 
             $lowOrgs = [];
@@ -807,15 +807,15 @@ class HomeController
 
                 array_push($lowOrgs,$organization);
             }
-            } 
-            
+            }
+
                 $department = ($request->districtOrg ? 0 : 1);
                 $districtOrg = ($request->districtOrg ? 1 : 0);
                 $ilaka = Organization::where('organization_id',$request->districtOrg ? $request->districtOrg : $request->department)->where('type_id',4)->count();
                 $departments = Organization::where('type_id',2)->where('organization_id',$request->ministry)->get();
                 $districtOrgs = Organization::where('type_id',3)->where('organization_id',$request->ministry)->get();
                 $total_ministry = 1;
-                
+
         }
 
         $total_orgs = $organizations->count();
@@ -824,7 +824,7 @@ class HomeController
         $subjectAreas = SubjectArea::active()->get();
         $submittedFormOrgs = $orgs->count();
         $ministry = Organization::where('type_id',1)->get();
-        
+
         $ministry_id = $request->ministry;
         $department_id = $request->department;
         $districtOrg_id = $request->districtOrg;
@@ -836,24 +836,26 @@ class HomeController
             'html' => $html,
             ));
     }
-    
-    public function listOrganizations() 
+
+    public function listOrganizations()
     {
+        // dd(auth()->user()->roles);
         // $fiscal_year = Form::finalVerified()->latest()->pluck('year')->first();
-        $fiscal_year = $this->currentFiscalYear(); 
+        $fiscal_year = $this->currentFiscalYear();
 
         //If no forms are submitted in the fiscal year then the fiscal year that we calculated will not be included in the dropdown so we added the $fiscal_year to $years in the code below
         $years = Form::finalVerified()->distinct()->pluck('year');
         if(!$years->contains($fiscal_year)){
             $years = $years->merge($fiscal_year);
         }
-        $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
+        $published_forms = Form::ofUser()->finalVerified()->where('year',$fiscal_year)->get();
 
-        $ministry = Organization::where('type_id',1)->get();
-        $departments = [];
-        $districtOrgs = [];
+        $ministry = Organization::where('type_id',1)->ofUser()->get();
+        // dd($ministry);
+        $departments = Organization::where('type_id',2)->ofUser()->get();;
+        $districtOrgs = Organization::where('type_id',3)->ofUser()->get();;
 
-        $ministry_id = null;
+        $ministry_id = $ministry->first()->id;
         $department_id = null;
         $districtOrg_id = null;
 
@@ -866,10 +868,10 @@ class HomeController
         $ministry_id = $request->ministry;
         $department_id = $request->department;
         $districtOrg_id = $request->districtOrg;
-        $current_fiscal_year = $this->currentFiscalYear(); 
+        $current_fiscal_year = $this->currentFiscalYear();
 
         $fiscal_year = ($request->fiscal_year ? $request->fiscal_year : $current_fiscal_year);
-        
+
         $years = Form::finalVerified()->distinct()->pluck('year');
         if(!$years->contains($current_fiscal_year)){
             $years = $years->merge($current_fiscal_year);
@@ -878,7 +880,7 @@ class HomeController
 
         if(isset($fiscal_year) && $ministry_id == null && $department_id == null && $districtOrg_id == null)
         {
-            $published_forms = Form::finalVerified()->where('year',$fiscal_year)->get();
+            $published_forms = Form::ofUser()->finalVerified()->where('year',$fiscal_year)->get();
         }
         elseif(isset($ministry_id) && $department_id == null && $districtOrg_id == null)
         {
@@ -897,9 +899,9 @@ class HomeController
             $published_forms = Form::finalVerified()->where('year',$fiscal_year)->whereIn('organization_id',$ids)->get();
         }
 
-        $ministry = Organization::where('type_id',1)->get();
-        $departments = Organization::where('type_id',2)->where('organization_id',$ministry_id)->get();
-        $districtOrgs = Organization::where('type_id',3)->where('organization_id',$ministry_id)->get();
+        $ministry = Organization::where('type_id',1)->ofUser()->get();
+        $departments = Organization::where('type_id',2)->where('organization_id',$ministry_id)->ofUser()->get();
+        $districtOrgs = Organization::where('type_id',3)->where('organization_id',$ministry_id)->ofUser()->get();
 
         $html = view('list-organizations',compact('ministry_id','department_id','districtOrg_id','ministry','published_forms','years','fiscal_year','departments','districtOrgs'))->render();
         return response()->json(array(

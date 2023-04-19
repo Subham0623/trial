@@ -53,7 +53,7 @@
                                     {{$item->name}}</option>
                                 @endforeach
                             </select></div>
-                    </div> 
+                    </div>
                     <div class="col-sm-3" >
                         <a class="btn btn-primary" id="search" style="color: #fff">Search</a>
                     </div>
@@ -79,7 +79,7 @@
                 <div class="col-sm-2">
                     <div class="position-relative form-group"><select placeholder="Select Ministry" name="ministry"
                             id="ministryId" class="form-control filter">
-                            <option value="">मन्त्रालय/सङ्‍घीय निकाय</option>
+                            <option value="">---मन्त्रालय/सङ्‍घीय निकाय---</option>
                             @foreach($ministry as $item)
                             <option value="{{$item->id}}" {{ $item->id == $ministry_id ? 'selected' : '' }}>
                                 {{$item->name}}</option>
@@ -235,7 +235,7 @@
                                     </thead>
                                     <tbody>
                                         @if(count($topOrgs)>0)
-                                        
+
                                         @foreach($topOrgsForms as $key => $top)
                                         <tr>
                                             <td>
@@ -325,7 +325,7 @@
                                         <tr>
                                             <th class="toplevel">S.N. </th>
                                             <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
-                                            
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -352,7 +352,7 @@
                     </div>
                 </div>
                 <div>
-                   <a href="/admins/list-organizations"> व्यवस्थापन परीक्षण गरिएका कार्यालयहरू </a>
+                   <a href="{{ route('admin.list-organizations') }}"> व्यवस्थापन परीक्षण गरिएका कार्यालयहरू </a>
                 </div>
                 <div class="card-layout container-fluid mt-3">
                     <div class="row custom__table-alignment">
@@ -423,7 +423,7 @@
                                 </table>
                             </div>
                         </div>
-                        
+
 
                         <!-- <div class="col mb-3 col-6 text-center">
                             <div class="row table-heading">
@@ -437,7 +437,7 @@
                                         <tr>
                                             <th class="toplevel">S.N. </th>
                                             <th id="fam" style="width: 100%;" class="toplevel">Organizations</th>
-                                            
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -578,7 +578,7 @@
     });
 
 </script>
-    
+
 <script>
 $(document).ready(function () {
         $('#filter').click(function () {
@@ -655,7 +655,7 @@ const searchHandler = function () {
             console.log(districtOrg);
             console.log(area);
 
-            
+
                 $.ajax({
                     url: "{{ route('admin.filter2') }}",
 
@@ -685,14 +685,14 @@ const searchHandler = function () {
 
                     }
                 });
-            
+
         }
 
 searchButtonHandler.addEventListener('click', function(e){
     e.preventDefault();
     console.log('called')
     searchHandler();
-})  
+})
     // $(document).ready(function () {
     //     $('#filter').click();
     // });
@@ -720,7 +720,7 @@ searchButtonHandler.addEventListener('click', function(e){
                         $("#areaId").append("<option value=" + index + ">" +
                         value + "</option>");
                     });
-                    
+
 
                 }
             });
