@@ -131,7 +131,7 @@ class HomeApiController extends Controller
             else
             {
                 return response([
-                    'message'=> 'Your organization has already submitted the form'
+                    'message'=> 'Your organization has already submitted the form for this fiscal year.'
                 ]);
             }
         }
@@ -317,7 +317,6 @@ class HomeApiController extends Controller
 
         $form = Form::findOrFail($form->id);
 
-        // dd($form);
         if(isset($form)){
             if($request->mode == 'options') {
                 $form_subject_area = FormSubjectArea::updateOrCreate([
@@ -404,7 +403,7 @@ class HomeApiController extends Controller
                                             ]);
                                             $form->update([
                                                 'audited_by'=>$user->id,
-                                                'is_verified' => ($parameter['reassign'] == 1 ? 2 : $form->is_verified),
+                                                // 'is_verified' => ($parameter['reassign'] == 1 ? 2 : 1),
                                             ]);
                                         }
                                         elseif($roles->contains(6) && $form->final_verified == 0)
@@ -416,7 +415,7 @@ class HomeApiController extends Controller
                                             ]);
                                             $form->update([
                                                 'final_verified_by'=>$user->id,
-                                                'is_audited' => ($parameter['reassign'] == 1 ? 2 : $form->is_audited),
+                                                // 'is_audited' => ($parameter['reassign'] == 1 ? 2 : 1),
                                             ]);
 
                                         }
@@ -453,7 +452,6 @@ class HomeApiController extends Controller
                                         }
                                         elseif(($form->is_verified == 0) || ($form->is_verified == 2))
                                         {
-
                                             $form_detail = FormDetail::updateOrCreate([
                                                 'form_subject_area_id' => $form_subject_area->id,
                                                 'parameter_id' => $parameter['id'],
@@ -485,7 +483,7 @@ class HomeApiController extends Controller
                                                 ]);
                                                 $form->update([
                                                     'audited_by' => $user->id,
-                                                    'is_verified' => ($parameter['reassign'] == 1 ? 2 : $form->is_verified),
+                                                    // 'is_verified' => ($parameter['reassign'] == 1 ? 2 : 1),
                                                 ]);
                                             }
                                             elseif($roles->contains(6) && $form->is_final_verified == 0)
@@ -495,7 +493,7 @@ class HomeApiController extends Controller
                                                 ]);
                                                 $form->update([
                                                     'final_verified_by'=>$user->id,
-                                                    'is_audited' => ($parameter['reassign'] == 1 ? 2 : $form->is_audited),
+                                                    // 'is_audited' => ($parameter['reassign'] == 1 ? 2 : 1),
                                                 ]);
                                             }
                                             else
@@ -661,6 +659,8 @@ class HomeApiController extends Controller
                     $total_marks_finalVerifier = $form->form_subjectareas->sum('marksByFinalVerifier');
 
                     $form->update([
+                        'is_verified' => ($roles->contains(4) ? ($form->form_subjectareas()->where('status_auditor',2)->count()>0 ? 2 : 1) : $form->is_verified),
+                        'is_audited' => ($roles->contains(6) ? ($form->form_subjectareas()->where('status_final_verifier',2)->count()>0 ? 2 : 1) : $form->is_audited),
                         'total_marks' => $total_marks,
                         'total_marks_verifier' => $total_marks_verifier,
                         'total_marks_auditor' => $total_marks_auditor,
