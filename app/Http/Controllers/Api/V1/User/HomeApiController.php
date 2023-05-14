@@ -480,6 +480,7 @@ class HomeApiController extends Controller
                                             {
                                                 $form_detail->update([
                                                     'reassign' => $parameter['reassign'],
+                                                    'marksByAuditor' => $max_points,
                                                 ]);
                                                 $form->update([
                                                     'audited_by' => $user->id,
@@ -490,6 +491,7 @@ class HomeApiController extends Controller
                                             {
                                                 $form_detail->update([
                                                     'reassign' => $parameter['reassign'],
+                                                    'marksByFinalVerifier' => $max_points,
                                                 ]);
                                                 $form->update([
                                                     'final_verified_by'=>$user->id,
