@@ -132,7 +132,7 @@ class HomeApiController extends Controller
             {
                 return response([
                     'message'=> 'Your organization has already submitted the form for this fiscal year.'
-                ]);
+                ],422);
             }
         }
 
@@ -650,7 +650,8 @@ class HomeApiController extends Controller
                         'marksByFinalVerifier'=> $totalByFinalVerifier,
                         'status_verifier'=> ((($roles->contains(5)) && ($c1 == $c2)) ? 1 : $form_subject_area->status_verifier),
                         'status_auditor' => ($roles->contains(4) ? (($count>0)?2 : 1):$form_subject_area->status_auditor),
-                        'status_final_verifier' => (($roles->contains(6) || $roles->contains(4)) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
+                        'status_final_verifier' => ($roles->contains(6) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
+                        // 'status_final_verifier' => (($roles->contains(6) || $roles->contains(4)) ? (($count>0)?2 : 1): $form_subject_area->status_final_verifier),
                     ]);
 
                     $total_marks = $form->form_subjectareas->sum('marks');
@@ -849,65 +850,70 @@ class HomeApiController extends Controller
 
         if($roles->contains(5))
         {
-            $verified_forms = Auth::user()->verifiedForms()->get();
+            $verified_forms = Auth::user()->verifiedForms()->with('organization')->get();
             $orgForms = Form::whereIn('organization_id',$orgs)
             ->where('status',1)
-            ->where('verified_by',NULL)->get();
+            ->where('verified_by',NULL)
+            ->with('organization')
+            ->get();
 
             $forms = $orgForms->merge($verified_forms);
 
-            foreach($organizations as $org)
-            {
-                foreach($org->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-            }
+            // foreach($organizations as $org)
+            // {
+            //     foreach($org->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            // }
 
 
         }
         elseif($roles->contains(4))
         {
-            $audited_forms = Auth::user()->auditedForms()->get();
+            $audited_forms = Auth::user()->auditedForms()->with('organization')->get();
 
             $orgForms = Form::whereIn('organization_id',$orgs)
             // ->where('status',1)
             ->where('is_verified',1)
-            ->where('audited_by',NULL)->get();
+            ->where('audited_by',NULL)
+            ->with('organization')
+            ->get();
 
             $forms = $orgForms->merge($audited_forms);
 
-            foreach($organizations as $org)
-            {
-                foreach($org->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-            }
+            // foreach($organizations as $org)
+            // {
+            //     foreach($org->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            // }
 
             // dd($forms);
 
         }
         elseif($roles->contains(6))
         {
-            $final_verified_forms = Auth::user()->finalVerifiedForms()->get();
+            $final_verified_forms = Auth::user()->finalVerifiedForms()->with('organization')->get();
 
             $orgForms = Form::whereIn('organization_id',$orgs)
             // ->where('status',1)
             // ->where('is_verified',1)
             ->where('is_audited',1)
             ->where('final_verified_by',NULL)
+            ->with('organization')
             ->get();
 
             $forms = $orgForms->merge($final_verified_forms);
 
-            foreach($organizations as $org)
-            {
-                foreach($org->childOrganizations as $child)
-                {
-                    $forms = $forms->merge($child->forms);
-                }
-            }
+            // foreach($organizations as $org)
+            // {
+            //     foreach($org->childOrganizations as $child)
+            //     {
+            //         $forms = $forms->merge($child->forms);
+            //     }
+            // }
 
             // $forms = $forms->merge($final_verified_forms)->all();
 
@@ -916,11 +922,11 @@ class HomeApiController extends Controller
         }
         elseif($roles->contains(3))
         {
-            $forms = Form::whereIn('organization_id',$orgs)->with('user')->get();
+            $forms = Form::whereIn('organization_id',$orgs)->with('user','organization')->get();
         }
         elseif($roles->contains(1) || $roles->contains(2))
         {
-            $forms = Form::all();
+            $forms = Form::with('organization')->get();
         }
         else
         {
