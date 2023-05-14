@@ -123,7 +123,7 @@
                                 {{$item->total_marks_finalVerifier ?? ''}}
                             </td>
                             <td>
-                                {{($item->total_marks_finalVerifier / $total_param)*100}} %
+                                {{round(($item->total_marks_finalVerifier / $total_param)*100,2)}} %
                             </td>
                             <td>
                                 {{$item->remarks ?? ''}}

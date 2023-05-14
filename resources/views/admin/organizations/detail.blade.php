@@ -114,7 +114,7 @@
                                         <td style="min-width: 180px;">{{$parameter_count}}</td>
                                         <td style="min-width: 180px;">{{$fullmarks_subjectarea}}</td>
                                         <td style="min-width: 180px;">{{$item->marksByFinalVerifier ?? ''}}</td>
-                                        <td style="min-width: 180px;">{{($item->marksByFinalVerifier / $fullmarks_subjectarea) * 100 ?? ''}} %</td>
+                                        <td style="min-width: 180px;">{{ round(($item->marksByFinalVerifier / $fullmarks_subjectarea) * 100,2) ?? ''}} %</td>
                                     </tr>
                                     @php
 
@@ -136,7 +136,7 @@
                                     <th >{{ $total_parameters }}</th>
                                     <th >{{ $full_marks }}</th>
                                     <th >{{ $total_marks }}</th>
-                                    <th >{{ ($total_marks / $full_marks)*100 }} %</th>
+                                    <th >{{ round(($total_marks / $full_marks)*100,2) }} %</th>
                                 </tfoot>
                             </table>
                         </div>
