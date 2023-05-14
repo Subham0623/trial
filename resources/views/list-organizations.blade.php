@@ -74,8 +74,20 @@
                         <th>
                             कार्यालयको नाम
                         </th>
+                        <th id="rmc">
+                            सूचक संख्या
+                        </th>
+                        <th id="rmc">
+                            पूर्णाङ्क
+                        </th>
                         <th>
                             प्राप्ताङ्‍क
+                        </th>
+                        <th>
+                            प्राप्ताङ्क प्रतिशत
+                        </th>
+                        <th>
+                            स्तर
                         </th>
                         <th>
                             ग्रेड
@@ -86,7 +98,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $total_param = App\Parameter::where('status',1)->count();
 
+                    @endphp
                     @foreach($published_forms as $key => $item)
                         <tr data-entry-id="{{ $item->id }}">
                             <td>
@@ -99,7 +114,19 @@
                                 {{ $item->organization ? $item->organization->name : '' }}
                             </td>
                             <td>
+                                {{$total_param}}
+                            </td>
+                            <td>
+                                {{$total_param}}
+                            </td>
+                            <td>
                                 {{$item->total_marks_finalVerifier ?? ''}}
+                            </td>
+                            <td>
+                                {{($item->total_marks_finalVerifier / $total_param)*100}} %
+                            </td>
+                            <td>
+                                {{$item->remarks ?? ''}}
                             </td>
                             <td>
                                 {{$item->grade}}
@@ -180,7 +207,9 @@
 @endsection
 
 @section('scripts')
+@parent
 <script>
+    $(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
     $.extend(true, $.fn.dataTable.defaults, {
@@ -192,6 +221,7 @@
         $($.fn.dataTable.tables(true)).DataTable()
             .columns.adjust();
     });
+});
 </script>
 
 <script defer>

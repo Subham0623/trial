@@ -83,28 +83,46 @@
                             <table class="table table-responsive table-bordered">
                                 <thead>
                                     <tr>
-                                        <th id="fam" >S.N. </th>
-                                        <th id="fam" style = "width:100%;">Subject Area</th>
-                                        <th id="rmc">Self Verified Marks</th>
-                                        <th id="es">Final Verifier Marks</th>
+                                        <th id="fam" >क्र.सं.</th>
+                                        <th id="fam" style = "width:100%;">विषयक्षेत्र</th>
+                                        <th id="rmc">सूचक संख्या</th>
+                                        <th id="rmc">पूर्णाङ्क</th>
+                                        <th id="es">प्राप्ताङ्क</th>
+                                        <th id="rmc">प्रतिशत</th>
                                     </tr>
 
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $total_parameters = 0;
+                                        $full_marks = 0;
+                                        $total_marks = 0;
+                                    @endphp
                                     @if($form !== null)
                                     @foreach($form_subject_area as $key => $item)
 
                                     @php
-                                    $subjectArea = App\SubjectArea::where('id',$item->subject_area_id)->first();
+                                    $subjectArea = App\SubjectArea::where('id',$item->subject_area_id)->with('activeParameters')->first();
                                     $i = 1;
+                                    $parameter_count = $subjectArea->activeParameters()->count();
+                                    $fullmarks_subjectarea = $parameter_count;
                                     @endphp
 
                                     <tr>
                                         <th scope="row">{{$key+1}}</th>
                                         <td style="min-width: 180px;">{{$subjectArea->title}}</td>
-                                        <td style="min-width: 180px;">{{$item->marksByVerifier ?? ''}}</td>
+                                        <td style="min-width: 180px;">{{$parameter_count}}</td>
+                                        <td style="min-width: 180px;">{{$fullmarks_subjectarea}}</td>
                                         <td style="min-width: 180px;">{{$item->marksByFinalVerifier ?? ''}}</td>
+                                        <td style="min-width: 180px;">{{($item->marksByFinalVerifier / $fullmarks_subjectarea) * 100 ?? ''}} %</td>
                                     </tr>
+                                    @php
+
+                                        $total_parameters += $parameter_count;
+                                        $full_marks += $fullmarks_subjectarea;
+                                        $total_marks +=  $item->marksByFinalVerifier;
+                                    @endphp
+
                                     @endforeach
                                     @else
                                     <tr>
@@ -112,6 +130,14 @@
                                     </tr>
                                     @endif
                                 </tbody>
+                                <tfoot>
+                                    <th ></th>
+                                    <th style = "width:100%;">जम्मा</th>
+                                    <th >{{ $total_parameters }}</th>
+                                    <th >{{ $full_marks }}</th>
+                                    <th >{{ $total_marks }}</th>
+                                    <th >{{ ($total_marks / $full_marks)*100 }} %</th>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -129,17 +155,26 @@
                             <table class="table table-responsive table-bordered">
                                 <thead>
                                     <tr>
-                                        <th id="fam">S.N. </th>
-                                        <th id="fam">Parameters</th>
+                                        <th id="fam">क्र.सं.</th>
+                                        <th id="fam">सूचकको नाम</th>
                                         <th id="fr">Is Applicable?</th>
-                                        <th id="rmc">Self Verified Marks</th>
-                                        <th id="es">Final Verified Marks</th>
+                                        {{-- <th id="rmc">Self Verified Marks</th> --}}
+                                        <th id="es">प्राप्ताङ्क</th>
+                                        <th id="es">विषयक्षेत्र</th>
+                                        <th id="es">कैफियत</th>
                                     </tr>
 
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $total = 0;
+                                    @endphp
                                     @if($form !== null)
                                     @foreach($form_subject_area as $subjectArea)
+                                    @php
+                                    $subjectarea = App\SubjectArea::where('id',$item->subject_area_id)->first();
+
+                                    @endphp
                                     @foreach($subjectArea->parameters as $key => $parameter)
                                     <tr>
                                         <th scope="row">{{$i++}}</th>
@@ -147,10 +182,15 @@
                                         <td style="min-width: 180px;">
                                             {{$parameter->pivot->is_applicable == 0 ? 'Yes' : 'No'}}
                                         </td>
-                                        <td style="min-width: 180px;">{{$parameter->pivot->marksByVerifier ?? ''}}</td>
+                                        {{-- <td style="min-width: 180px;">{{$parameter->pivot->marksByVerifier ?? ''}}</td> --}}
                                         <td style="min-width: 180px;">{{$parameter->pivot->marksByFinalVerifier ?? ''}}
                                         </td>
+                                        <td style="min-width: 180px;">{{$subjectarea->title}}</td>
+                                        <td style="min-width: 180px;">{{$parameter->remarks}}</td>
                                     </tr>
+                                    @php
+                                        $total += $parameter->pivot->marksByFinalVerifier;
+                                    @endphp
                                     @endforeach
                                     @endforeach
                                     @else
@@ -159,6 +199,17 @@
                                     </tr>
                                     @endif
                                 </tbody>
+                                <tfoot>
+                                    <th scope="row"></th>
+                                    <th style="min-width: 180px;">जम्मा</th>
+                                    <th style="min-width: 180px;">
+                                    </th>
+                                    <th style="min-width: 180px;">
+                                        {{$total}}
+                                    </th>
+                                    <th style="min-width: 180px;"></th>
+                                    <th style="min-width: 180px;"></th>
+                                </tfoot>
                                 <input type="hidden" value="{{$organization->id}}" id="organization">
                             </table>
                         </div>

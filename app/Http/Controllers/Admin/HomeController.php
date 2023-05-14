@@ -851,7 +851,7 @@ class HomeController
         $published_forms = Form::ofUser()->finalVerified()->where('year',$fiscal_year)->get();
 
         $ministry = Organization::where('type_id',1)->ofUser()->get();
-        // dd($ministry);
+        // dd($published_forms);
         $departments = Organization::where('type_id',2)->ofUser()->get();;
         $districtOrgs = Organization::where('type_id',3)->ofUser()->get();;
 
