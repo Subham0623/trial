@@ -557,7 +557,7 @@ class HomeController
             $selected_subjectareas = $form->subjectAreas()->orderBy('id','ASC')->get();
             $selected_subjectareas->pluck('id');
 
-            $form_subject_area = FormSubjectArea::where('form_id',$form->id)->whereIn('subject_area_id',$selected_subjectareas->pluck('id'))->orderBy('subject_area_id')->get();
+            $form_subject_area = FormSubjectArea::where('form_id',$form->id)->whereIn('subject_area_id',$selected_subjectareas->pluck('id'))->with('selected_subjectareas')->orderBy('subject_area_id')->get();
 
         }
 
@@ -579,7 +579,7 @@ class HomeController
             $selected_subjectareas = $form->subjectAreas()->orderBy('id','ASC')->get();
             $selected_subjectareas->pluck('id');
 
-            $form_subject_area = FormSubjectArea::where('form_id',$form->id)->whereIn('subject_area_id',$selected_subjectareas->pluck('id'))->orderBy('subject_area_id')->get();
+            $form_subject_area = FormSubjectArea::where('form_id',$form->id)->whereIn('subject_area_id',$selected_subjectareas->pluck('id'))->with('selected_subjectareas')->orderBy('subject_area_id')->get();
 
         }
 

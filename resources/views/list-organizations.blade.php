@@ -60,90 +60,93 @@
 </div>
 
 <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-list">
-
-                <thead>
-                    <tr>
-                        <th width="10">
-
-                        </th>
-                        <th>
-                            क्र.सं.
-                        </th>
-                        <th>
-                            कार्यालयको नाम
-                        </th>
-                        <th id="rmc">
-                            सूचक संख्या
-                        </th>
-                        <th id="rmc">
-                            पूर्णाङ्क
-                        </th>
-                        <th>
-                            प्राप्ताङ्‍क
-                        </th>
-                        <th>
-                            प्राप्ताङ्क प्रतिशत
-                        </th>
-                        <th>
-                            स्तर
-                        </th>
-                        <th>
-                            ग्रेड
-                        </th>
-                        <th>
-                            प्रतिवेदन हेर्नुहोस्
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $total_param = App\Parameter::where('status',1)->count();
-
-                    @endphp
-                    @foreach($published_forms as $key => $item)
-                        <tr data-entry-id="{{ $item->id }}">
-                            <td>
-
-                            </td>
-                            <td>
-                                {{ $key+1 }}
-                            </td>
-                            <td>
-                                {{ $item->organization ? $item->organization->name : '' }}
-                            </td>
-                            <td>
-                                {{$total_param}}
-                            </td>
-                            <td>
-                                {{$total_param}}
-                            </td>
-                            <td>
-                                {{$item->total_marks_finalVerifier ?? ''}}
-                            </td>
-                            <td>
-                                {{round(($item->total_marks_finalVerifier / $total_param)*100,2)}} %
-                            </td>
-                            <td>
-                                {{$item->remarks ?? ''}}
-                            </td>
-                            <td>
-                                {{$item->grade}}
-                            </td>
-                            <td>
-                                <a class="text-heading font-semibold"
-                                    href="{{route('admin.organization-detail',[$item->organization->id])}}">प्रतिवेदन फाइल
-                                </a>
-                            </td>
-
-                        </tr>
-                    @endforeach
-
-                </tbody>
-            </table>
-        </div>
+    <div class="col-md-12">
+        <h4 class="sub-heading"> आ.व. {{ $fiscal_year }} मा व्यवस्थापन परीक्षणको मूल्याङ्कनका आधारमा निकायगत स्तर वर्गीकरण सम्बन्धी विवरण </h4>
     </div>
+    <div class="table-responsive">
+        <table class=" table table-bordered table-striped table-hover datatable datatable-list">
+
+            <thead>
+                <tr>
+                    <th width="10">
+
+                    </th>
+                    <th>
+                        क्र.सं.
+                    </th>
+                    <th>
+                        कार्यालयको नाम
+                    </th>
+                    <th id="rmc">
+                        सूचक संख्या
+                    </th>
+                    <th id="rmc">
+                        पूर्णाङ्क
+                    </th>
+                    <th>
+                        प्राप्ताङ्‍क
+                    </th>
+                    <th>
+                        प्राप्ताङ्क प्रतिशत
+                    </th>
+                    <th>
+                        स्तर
+                    </th>
+                    <th>
+                        ग्रेड
+                    </th>
+                    <th>
+                        प्रतिवेदन हेर्नुहोस्
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $total_param = App\Parameter::where('status',1)->count();
+
+                @endphp
+                @foreach($published_forms as $key => $item)
+                    <tr data-entry-id="{{ $item->id }}">
+                        <td>
+
+                        </td>
+                        <td>
+                            {{ $key+1 }}
+                        </td>
+                        <td>
+                            {{ $item->organization ? $item->organization->name : '' }}
+                        </td>
+                        <td>
+                            {{$total_param}}
+                        </td>
+                        <td>
+                            {{$total_param}}
+                        </td>
+                        <td>
+                            {{$item->total_marks_finalVerifier ?? ''}}
+                        </td>
+                        <td>
+                            {{round(($item->total_marks_finalVerifier / $total_param)*100,2)}} %
+                        </td>
+                        <td>
+                            {{$item->remarks ?? ''}}
+                        </td>
+                        <td>
+                            {{$item->grade}}
+                        </td>
+                        <td>
+                            <a class="text-heading font-semibold"
+                                href="{{route('admin.organization-detail',[$item->organization->id])}}">प्रतिवेदन फाइल
+                            </a>
+                        </td>
+
+                    </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 <!-- <div class="card-layout container-fluid mt-3">

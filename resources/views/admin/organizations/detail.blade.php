@@ -77,7 +77,7 @@
                         <div class="col mb-3 col-12">
                             <div class="row table-heading">
                                 <div class="col-md-12">
-                                    <h4 class="sub-heading">Marks for each subject area:</h4>
+                                    <h4 class="sub-heading">आ.व. {{ $fiscal_year }} को विषयक्षेत्र अनुसार व्यवस्थापन परीक्षण मूल्याङ्कन विवरण :</h4>
                                 </div>
                             </div>
                             <table class="table table-responsive table-bordered">
@@ -103,7 +103,7 @@
 
                                     @php
                                     $subjectArea = App\SubjectArea::where('id',$item->subject_area_id)->with('activeParameters')->first();
-                                    $i = 1;
+
                                     $parameter_count = $subjectArea->activeParameters()->count();
                                     $fullmarks_subjectarea = $parameter_count;
                                     @endphp
@@ -149,7 +149,7 @@
                         <div class="col mb-3 col-12 ">
                             <div class="row table-heading">
                                 <div class="col-md-12">
-                                    <h4 class="sub-heading">Form Detail:</h4>
+                                    <h4 class="sub-heading">आ.व. {{ $fiscal_year }} को सूचक अनुसारको प्राप्ताङ्क विवरण :</h4>
                                 </div>
                             </div>
                             <table class="table table-responsive table-bordered">
@@ -177,7 +177,7 @@
                                     @endphp
                                     @foreach($subjectArea->parameters as $key => $parameter)
                                     <tr>
-                                        <th scope="row">{{$i++}}</th>
+                                        <th scope="row">{{$key+1}}</th>
                                         <td style="min-width: 180px;">{{$parameter->title}}</td>
                                         <td style="min-width: 180px;">
                                             {{$parameter->pivot->is_applicable == 0 ? 'Yes' : 'No'}}
@@ -195,7 +195,7 @@
                                     @endforeach
                                     @else
                                     <tr>
-                                        <th colspan="7">No data found</th>
+                                        <th colspan="6">No data found</th>
                                     </tr>
                                     @endif
                                 </tbody>
@@ -215,6 +215,107 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="card-layout container">
+                    <div class="row">
+                        <div class="col mb-3 col-12">
+                            <div class="row table-heading">
+                                <div class="col-md-12">
+                                    <h4 class="sub-heading">आ.व. {{ $fiscal_year }} को प्राप्ताङ्कका आधारमा विषयक्षेत्र अनुसार सूचक विश्लेषण विवरण :</h4>
+                                </div>
+                            </div>
+                            <table class="table table-responsive table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th id="fam" rowspan="2">क्र.सं.</th>
+                                        <th id="fam" style = "width:100%;" rowspan="2">विषयक्षेत्र</th>
+                                        <th id="rmc" colspan="6">प्राप्ताङ्कका आधारमा सूचक विश्लेषण</th>
+
+                                    </tr>
+
+                                    <tr>
+                                        <th id="rmc">0</th>
+                                        <th id="es">0.25</th>
+                                        <th id="rmc">0.5</th>
+                                        <th id="rmc">0.75</th>
+                                        <th id="es">1</th>
+                                        <th id="rmc">जम्मा</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $total_parameters = 0;
+                                        $total_count = [
+                                            "0.00" => 0,
+                                            "0.25" => 0,
+                                            "0.50" => 0,
+                                            "0.75" => 0,
+                                            "1.00" => 0
+                                        ];
+                                    @endphp
+                                    @if($form !== null)
+                                        @foreach($form_subject_area as $key => $item)
+
+                                            @php
+                                                $subjectArea = App\SubjectArea::where('id',$item->subject_area_id)->with('activeParameters')->first();
+
+                                                // Define the possible values for "marksByFinalVerifier"
+                                                $possibleValues = ["0.00", "0.25", "0.50", "0.75", "1.00"];
+
+                                                // Group the data by "marksByFinalVerifier" and count the occurrences
+                                                $collection = $item->selected_subjectareas;
+                                                $form_subject_area_parameter_seperated_by_marks_count = $collection->groupBy(function ($item) {
+                                                        return $item['marksByFinalVerifier'] ?? '0.00';
+                                                    })
+                                                    ->mapWithKeys(function ($items, $key) use ($possibleValues) {
+                                                        return [$key => count($items)];
+                                                    })
+                                                    ->union(collect($possibleValues)->flip()->map(function () {
+                                                        return 0;
+                                                    }))
+                                                    ->sortKeys();
+
+                                                $total_parameter_count = $form_subject_area_parameter_seperated_by_marks_count->values()->sum();
+                                            @endphp
+
+                                            <tr>
+                                                <th scope="row">{{$key+1}}</th>
+                                                <td style="min-width: 180px;">{{$subjectArea->title}}</td>
+                                                @foreach ($form_subject_area_parameter_seperated_by_marks_count as $key => $value)
+                                                    <td style="min-width: 180px;">{{ $value }}</td>
+                                                    @php
+                                                        $total_count[$key] += $value;
+                                                    @endphp
+                                                @endforeach
+                                                <td style="min-width: 180px;">{{$total_parameter_count}}</td>
+                                            </tr>
+
+                                            @php
+                                                $total_parameters += $total_parameter_count;
+                                            @endphp
+
+                                        @endforeach
+
+                                    @else
+                                        <tr>
+                                            <th colspan="8">No data found</th>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                                <tfoot>
+                                    <th ></th>
+                                    <th style = "width:100%;">जम्मा</th>
+                                    @foreach ($total_count as $value)
+                                        <th >{{ $value }}</th>
+                                    @endforeach
+                                    <th >{{ $total_parameters }}</th>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
         </div>
